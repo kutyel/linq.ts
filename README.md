@@ -1,0 +1,2 @@
+# linq
+LinQ for TypeScript!
