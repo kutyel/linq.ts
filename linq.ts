@@ -1,105 +1,187 @@
+import * as Immutable from 'immutable';
+
 /**
  * LinQ.ts
  *
- * TODO:
- * - Copy comments from LinQ .NET specification
- * - Copy implementations from _ (lodash)
+ * Documentation from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/s6hkc2c4(v=vs.110).aspx)
+ * 
+ * TODO: Unit tests with AVA
  *
  * Created by Flavio Corpa (kutyel)
  * Copyright © 2016 Flavio Corpa. All rights reserved.
  *
  */
-module LinQ {
+export class List<T> {
+
+    private _elements: Immutable.List<T>;
 
     /**
-     * List<T>
+     * Defaults the elements of the list
      */
-    export class List<T> {
+    constructor(elements: Immutable.List<T> = Immutable.List<T>()) {
+        this._elements = elements;
+    }
+        
+    /**
+     * Adds an object to the end of the List<T>.
+     */
+    public Add(element: T): Immutable.List<T> {
+        return this._elements.push(element);
+    }
 
-        private _elements: T[];
+    /**
+     * Adds the elements of the specified collection to the end of the List<T>.
+     */
+    public AddRange(elements: T[]): Immutable.List<T> {
+        return this._elements.push(...elements);
+    }
 
-        /**
-         * Defaults the elements of the list
-         */
-        constructor(elements: T[] = []) {
-            this._elements = elements;
-        }
-
-        /**
-         * Adds an element to the generic list
-         * @param {T} element Element to be added
-         */
-        public Add(element: T) {
-            this._elements.push(element);
-        }
-
-        /**
-         * Adds a list of elements to the generic list
-         * @param {T[]} elements List of elements to be added
-         */
-        public AddRange(elements: T[]) {
-            this._elements.push(...elements);
-        }
-
-        /**
-         * Returns length of the generic list
-         * @return {number} Length of the generic list
-         */
-        public Length(): number {
-            return this._elements.length;
-        }
-
-        /**
-         * Fist
-         * @return {T} First element of the generic list
-         */
-        public Fist(): T {
-            return this._elements[0];
-        }
-
-        /**
-         * Last
-         * @return {T} Last element of the generic list
-         */
-        public Last(): T {
-            return this._elements[this._elements.length - 1];
-        }
-
-        /**
-         * IndexOf
-         * @param {T} element The element to locate in the list
-         * @param {number} fromIndex The list index at which to begin the search
-         */
-        public IndexOf(element: T, fromIndex?: number): number {
-            return this._elements.indexOf(element, fromIndex);
-        }
-
-        /**
-         * Contains
-         * @param {T} element Element to locate in the list
-         * @return {boolean} Whether the element is contained in the list or not
-         */
-        public Contains(element: T): boolean {
-            // return this._elements.includes(element); // TODO: uncomment this when includes() makes it to TypeScript
-            return this._elements.indexOf(element) > -1;
-        }
-
-        /**
-         * Select
-         * @param {Function} cb Callback function or lambda
-         * @return {T[]} Transformed list of elements
-         */
-        public Select(cb: (value: T, index: number, list: T[]) => T): T[] {
-            return this._elements.map(cb);
-        }
-
-        /**
-         * Where
-         * @param {Function} cb Callback function or lambda
-         * @return {T[]} Filtered list of elements
-         */
-        public Where(cb: (value: T, index: number, list: T[]) => boolean): T[] {
-            return this._elements.filter(cb);
-        }
+    // TODO: Aggregate
+     
+    // TODO: All
+    
+    // TODO: Any
+     
+    // TODO: Average
+    
+    // TODO: Concat
+    
+    /**
+     * Determines whether an element is in the List<T>.
+     */
+    public Contains(element: T): boolean {
+        return this._elements.includes(element);
+    }
+    
+    /**
+     * Returns the number of elements in a sequence.
+     */
+    public Count(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): number {
+        return this._elements.count(predicate);
+    }
+     
+    // TODO: DefaultIfEmpty
+    
+    // TODO: Distinct
+     
+    /**
+     * Returns the element at a specified index in a sequence.
+     */
+    public ElementAt(index: number): T {
+        return this._elements[index];
+    }
+    
+    // TODO: ElementAtOrDefault
+     
+    // TODO: Except
+    
+    /**
+     * Returns the first element of a sequence.
+     */
+    public First(): T {
+        return this._elements.first();
+    }
+     
+    // TODO: FirstOrDefault
+    
+    // TODO: ForEach
+    
+    // TODO: GroupBy
+    
+    // TODO: GroupJoin
+    
+    // TODO: Intersect
+    
+    // TODO: Join
+    
+    /**
+     * Returns the last element of a sequence.
+     */
+    public Last(): T {
+        return this._elements.last();
+    }
+    
+    // TODO: LastOrDefault
+    
+    // TODO: Max
+    
+    // TODO: Min
+    
+    // TODO: OrderBy
+    
+    // TODO: OrderByDescending
+    
+    // TODO: ThenBy
+    
+    // TODO: ThenByDescending
+    
+    // TODO: Range
+    
+    // TODO: Repeat
+    
+    // TODO: Reverse
+    
+    /**
+     * Projects each element of a sequence into a new form.
+     */
+    public Select(mapper: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => T): Immutable.Iterable<number, T> {
+        return this._elements.map(mapper);
+    }
+    
+    // TODO: SelectMany
+    
+    // TODO: SequenceEqual
+    
+    // TODO: Single
+    
+    // TODO: SingleOrDefault
+    
+    // TODO: Skip
+    
+    // TODO: SkipWhile
+    
+    // TODO: Sum
+    
+    // TODO: Take
+    
+    // TODO: TakeWhile
+    
+    /**
+     * ToArray
+     */
+    public ToArray(): T[] {
+        return this._elements.toArray();
+    }
+    
+    // TODO: ToDictionary
+    
+    /**
+     * ToList
+     */
+    public ToList(): Immutable.List<T> {
+        return this._elements.toList();
+    }
+    
+    /**
+     * ToMap
+     */
+    public ToMap(): Immutable.Map<number, T> {
+        return this._elements.toMap();
+    }
+    
+    // TODO: Union
+    
+    /**
+     * Filters a sequence of values based on a predicate.
+     */
+    public Where(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): Immutable.Iterable<number, T> {
+        return this._elements.filter(predicate);
+    }
+    
+    /**
+     * Zip
+     */
+    public Zip(iterables: Immutable.Iterable<T, T>[]): Immutable.Iterable.Indexed<T> {
+        return this._elements.zip(...iterables);
     }
 }
