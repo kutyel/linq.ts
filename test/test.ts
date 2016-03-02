@@ -176,8 +176,14 @@ test('SkipWhile', t => {
     t.fail();
 });
 
-test('Sum', t => {
-    t.fail();
+test('Sum', t => {    
+    let people = new List<Person>([
+        {Name: "Alice", Age: 25},
+        {Name: "Bob"  , Age: 50},
+        {Name: "Cathy", Age: 15}
+    ]);    
+    t.is(new List<number>([2,3,5]).Sum(), 10);
+    t.is(people.Sum(x => x.Age), 90);
 });
 
 test('Take', t => {
