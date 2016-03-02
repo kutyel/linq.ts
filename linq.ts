@@ -210,7 +210,12 @@ export class List<T> {
     
     // TODO: SkipWhile Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
     
-    // TODO: Sum Computes the sum of the sequence of Decimal values that are obtained by invoking a transform function on each element of the input sequence.
+    /**
+     * Computes the sum of the sequence of number values that are obtained by invoking a transform function on each element of the input sequence.
+     */
+    public Sum(TSource: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any = f => f): number {
+        return this._elements.map(TSource).reduce((ac, v) => {ac += v; return ac;}, 0);
+    }
     
     // TODO: Take Returns a specified number of contiguous elements from the start of a sequence.
     
