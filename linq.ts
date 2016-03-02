@@ -4,8 +4,6 @@ import * as Immutable from 'immutable';
  * LinQ.ts
  *
  * Documentation from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/s6hkc2c4(v=vs.110).aspx)
- * 
- * TODO: Unit tests with AVA
  *
  * Created by Flavio Corpa (@kutyel)
  * Copyright © 2016 Flavio Corpa. All rights reserved.
@@ -18,8 +16,8 @@ export class List<T> {
     /**
      * Defaults the elements of the list
      */
-    constructor(elements: Immutable.List<T> = Immutable.List<T>()) {
-        this._elements = elements;
+    constructor(elements: T[] = []) {
+        this._elements = Immutable.List<T>(elements);
     }
         
     /**
