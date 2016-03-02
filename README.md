@@ -10,7 +10,9 @@ LinQ + TypeScript + Immutable
 
 ## Tests
 
-`npm test`
+```
+npm test
+```
 
 Powered by [AVA](https://github.com/sindresorhus/ava)
 
