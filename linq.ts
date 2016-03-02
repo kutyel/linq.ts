@@ -223,7 +223,12 @@ export class List<T> {
         return this._elements.toArray();
     }
     
-    // TODO: ToDictionary Creates a Dictionary<TKey, TValue> from an List<T> according to a specified key selector function.
+    /**
+     * Creates a Dictionary<TKey, TValue> from an List<T> according to a specified key selector function.
+     */
+    public ToDictionary(TKey: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any, TValue?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): any {
+        return this._elements.reduce((o, v, i) => { o[this._elements.map(TKey)[i]] = TValue ? this._elements.map(TValue)[i] : v; return o; }, {});
+    }
     
     /**
      * Creates a List<T> from an Immutable.List<T>.
