@@ -2,7 +2,6 @@
     "compilerOptions": {
         "declaration": true,
         "module": "commonjs",
-        "sourceMap": true,
         "target": "es5"
     }
 }
