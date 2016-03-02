@@ -16,7 +16,11 @@
         "typescript",
         "immutable"
     ],
-    "author": "Flavio Corpa (@kutyel)",
+    "author": {
+        "name": "Flavio Corpa",
+        "email": "flaviocorpa@gmail.com",
+        "url": "https://github.com/kutyel"
+    },
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/kutyel/linq/issues"
