@@ -1,35 +1,36 @@
 {
-    "name": "linqts",
-    "version": "0.1.0",
-    "description": "LinQ + TypeScript + Immutable",
-    "main": "linq.ts",
-    "scripts": {
-        "start": "tsc -w",
-        "test": "ava --tap | tap-nyan"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+ssh://git@github.com/kutyel/linq.git"
-    },
-    "keywords": [
-        "linq",
-        "typescript",
-        "immutable"
-    ],
-    "author": {
-        "name": "Flavio Corpa",
-        "email": "flaviocorpa@gmail.com",
-        "url": "https://github.com/kutyel"
-    },
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/kutyel/linq/issues"
-    },
-    "homepage": "https://github.com/kutyel/linq#readme",
-    "dependencies": {
-        "immutable": "^3.7.6"
-    },
-    "devDependencies": {
-        "ava": "^0.11.0"
-    }
+  "name": "linqts",
+  "version": "0.1.0",
+  "description": "LinQ + TypeScript + Immutable",
+  "main": "linq.ts",
+  "scripts": {
+    "start": "tsc -w",
+    "test": "tsc && ava --tap | tap-nyan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kutyel/linq.git"
+  },
+  "keywords": [
+    "linq",
+    "typescript",
+    "immutable"
+  ],
+  "author": {
+    "name": "Flavio Corpa",
+    "email": "flaviocorpa@gmail.com",
+    "url": "https://github.com/kutyel"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kutyel/linq/issues"
+  },
+  "homepage": "https://github.com/kutyel/linq#readme",
+  "dependencies": {
+    "immutable": "^3.7.6"
+  },
+  "devDependencies": {
+    "ava": "^0.11.0",
+    "tsc": "^1.20150623.0"
+  }
 }
