@@ -5,7 +5,10 @@ import {List} from '../linq';
  * AVA tests
  */
 
-// TODO: test custom interfaces / objects
+interface Person {
+    Name: string;
+    Age: number;
+}
 
 test('Add', t => {
     t.is(new List<string>().Add('hey'), new List<string>(['hey']));
@@ -189,8 +192,14 @@ test('ToArray', t => {
     t.is(new List<number>([1,2,3,4,5]).ToArray(), [1,2,3,4,5]);
 });
 
-test('ToDictionary', t => {
-    t.fail();
+test('ToDictionary', t => {        
+    let people = new List<Person>([
+        {Name: "Alice", Age: 25},
+        {Name: "Bob"  , Age: 50},
+        {Name: "Cathy", Age: 15}
+    ]);    
+    t.is(people.ToDictionary(x => x.Name, x => x.Age), {Alice: 25, Bob: 50, Cathy: 15});
+    t.same(people.ToDictionary(x => x.Name), {Alice: {Name: "Alice", Age: 25}, Bob: {Name: "Bob"  , Age: 50}, Cathy: {Name: "Cathy", Age: 15}});
 });
 
 test('ToList', t => {
