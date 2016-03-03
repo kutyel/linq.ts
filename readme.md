@@ -1,4 +1,4 @@
-# LinQ.ts
+# LinQ to TypeScript
 
 LinQ + TypeScript + Immutable
 
