@@ -6,7 +6,6 @@ interface Person {
     Age: number;
 }
 
-
 /**
  * AVA tests
  */
