@@ -1,14 +1,15 @@
 import test from 'ava';
 import {List} from '../linq';
 
-/**
- * AVA tests
- */
-
 interface Person {
     Name: string;
     Age: number;
 }
+
+
+/**
+ * AVA tests
+ */
 
 test('Add', t => {
     t.is(new List<string>().Add('hey'), new List<string>(['hey']));
@@ -31,7 +32,7 @@ test('Any', t => {
 });
     
 test('Average', t => {
-    t.fail(); // t.is(new List<number>([2, 3, 5, 10]).Average(x => x), 5);
+    t.is(new List<number>([2, 3, 5, 10]).Average(x => x), 5);
 });
 
 test('Concat', t => {
@@ -74,6 +75,7 @@ test('Except', t => {
 
 test('First', t => {
     t.is(new List<string>(['hey', 'hola', 'que', 'tal']).First(), 'hey');
+    t.is(new List<number>([1,2,3,4,5]).First(x => x > 2), 3);
     t.notOk(new List<string>().First());
 });
    
@@ -104,6 +106,7 @@ test('Join', t => {
 
 test('Last', t => {
     t.is(new List<string>(['hey', 'hola', 'que', 'tal']).Last(), 'tal');
+    t.is(new List<number>([1,2,3,4,5]).Last(x => x > 2), 5);
     t.notOk(new List<string>().Last());
 });
 
@@ -217,9 +220,14 @@ test('Union', t => {
 });
 
 test('Where', t => {
-    t.is(new List<string>(['hey', 'hola', 'que', 'tal']).Where(x => x.length > 3), new List<string>(['hola']));
+    t.is(new List<string>(['hey', 'hola', 'que', 'tal']).Where(x => x.length > 3).Select(x => x + 'a'), new List<string>(['hola']));
 });
 
 test('Zip', t => {
     t.fail();
+});
+
+test('Chain', t => {
+    t.is(new List<number>([1,2,3,4,5]).Where(x => x > 3).Select(y => y * 2).ToArray(), [8, 10]);
+    t.is(new List<number>([1,2,3,4,5]).Where(x => x > 3).Select(y => y + 'a').ToArray(), ['4a', '5a']);
 });
