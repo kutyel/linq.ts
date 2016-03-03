@@ -1,6 +1,6 @@
 # LinQ for TypeScript
 
-LinQ + TypeScript + Immutable
+![linqts](https://github.com/kutyel/linq/linqts.png)
 
 ## Install
 
