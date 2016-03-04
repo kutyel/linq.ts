@@ -60,15 +60,15 @@ export class List<T> {
     /**
      * Computes the average of a sequence of number values that are obtained by invoking a transform function on each element of the input sequence.
      */
-    public Average(fn) {
-        return this._elements;
+    public Average(TSource: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any = f => f): number {
+        return this._elements.map(TSource).reduce((ac, v) => {ac += v; return ac;}, 0) / this._elements.map(TSource).count();
     }    
     
     /**
      * Concatenates two sequences.
      */
-    public Concat(list: List<T>): Immutable.Iterable<number, T>  {
-        return this._elements.concat(list);
+    public Concat(list: List<T>): List<T>  {
+        return new List<T>(this._elements.concat(list).toArray());
     }
     
     /**
