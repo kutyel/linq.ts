@@ -18,7 +18,7 @@ export class List<T> {
     /**
      * Defaults the elements of the list
      */
-    constructor(elements: T[] = []) {
+    constructor(elements?: T[]) {
         this._elements = Immutable.List<T>(elements);
     }
         
@@ -60,7 +60,7 @@ export class List<T> {
     /**
      * Computes the average of a sequence of number values that are obtained by invoking a transform function on each element of the input sequence.
      */
-    public Average(TSource: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any = f => f): number {
+    public Average(TSource?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => number): number {
         return this._elements.map(TSource).reduce((ac, v) => {ac += v; return ac;}, 0) / this._elements.map(TSource).count();
     }    
     
@@ -91,14 +91,14 @@ export class List<T> {
      * Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
      */
     public DefaultIfEmpty(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
      * Returns distinct elements from a sequence by using the default equality comparer to compare values.
      */
     public Distinct(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
      
     /**
@@ -119,7 +119,7 @@ export class List<T> {
      * Produces the set difference of two sequences by using the default equality comparer to compare values.
      */
     public Except(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
@@ -158,21 +158,21 @@ export class List<T> {
      * The default equality comparer is used to compare keys.
      */
     public GroupJoin(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
      */
     public Intersect(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
      * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
      */
     public Join(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
@@ -223,14 +223,14 @@ export class List<T> {
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      */
     public ThenBy(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      */
     public ThenByDescending(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
@@ -265,21 +265,21 @@ export class List<T> {
      * Projects each element of a sequence to an IEnumerable<T> and flattens the resulting sequences into one sequence.
      */
     public SelectMany(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
      * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
      */
     public SequenceEqual(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
     public Single(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
@@ -287,42 +287,42 @@ export class List<T> {
      * this method throws an exception if there is more than one element in the sequence.
      */
     public SingleOrDefault(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**
      * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
      */
-    public Skip(fn) {
-        return this._elements;
+    public Skip(amount: number): List<T> {
+        return new List<T>(this._elements.skip(amount).toArray());
     }
     
     /**
      * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
      */
-    public SkipWhile(fn) {
-        return this._elements;
+    public SkipWhile(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T> {
+        return new List<T>(this._elements.skipWhile(predicate).toArray());
     }
     
     /**
      * Computes the sum of the sequence of number values that are obtained by invoking a transform function on each element of the input sequence.
      */
-    public Sum(TSource: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any = f => f): number {
+    public Sum(TSource?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => number): number {
         return this._elements.map(TSource).reduce((ac, v) => {ac += v; return ac;}, 0);
     }
     
     /**
      * Returns a specified number of contiguous elements from the start of a sequence.
      */
-    public Take(fn) {
-        return this._elements;
+    public Take(amount: number): List<T> {
+        return new List<T>(this._elements.take(amount).toArray());
     }
     
     /**
      * Returns elements from a sequence as long as a specified condition is true.
      */
-    public TakeWhile(fn) {
-        return this._elements;
+    public TakeWhile(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T> {
+        return new List<T>(this._elements.takeWhile(predicate).toArray());
     }
     
     /**
@@ -337,11 +337,11 @@ export class List<T> {
      */
     public ToDictionary(TKey: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any,
                         TValue?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): any {
-        return this._elements.reduce((o, v, i) => { o[this._elements.map(TKey)[i]] = TValue ? this._elements.map(TValue)[i] : v; return o; }, {});
+        return this._elements.reduce((o, v, i) => { o[this.Select(TKey)[i]] = TValue ? this.Select(TValue)[i] : v; return o; });
     }
     
     /**
-     * Creates a List<T> from an Immutable.List<T>.
+     * Creates an Immutable.List<T> from a List<T>.
      */
     public ToList(): Immutable.List<T> {
         return this._elements.toList();
@@ -351,7 +351,7 @@ export class List<T> {
      * Produces the set union of two sequences by using the default equality comparer.
      */
     public Union(fn) {
-        return this._elements;
+        return this._elements; // TODO
     }
     
     /**

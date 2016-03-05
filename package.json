@@ -5,7 +5,8 @@
   "main": "linq.ts",
   "scripts": {
     "start": "tsc -w",
-    "test": "tsc && ava"
+    "test": "tsc && ava",
+    "nyan": "ava --tap | tap-nyan"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,6 @@
   },
   "devDependencies": {
     "ava": "^0.11.0",
-    "tsc": "^1.20150623.0"
+    "typescript": "^1.8.7"
   }
 }
