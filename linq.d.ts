@@ -38,7 +38,7 @@ export declare class List<T> {
     /**
      * Computes the average of a sequence of number values that are obtained by invoking a transform function on each element of the input sequence.
      */
-    Average(TSource?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): number;
+    Average(TSource?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => number): number;
     /**
      * Concatenates two sequences.
      */
@@ -171,23 +171,23 @@ export declare class List<T> {
     /**
      * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
      */
-    Skip(fn: any): Immutable.List<T>;
+    Skip(amount: number): List<T>;
     /**
      * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
      */
-    SkipWhile(fn: any): Immutable.List<T>;
+    SkipWhile(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T>;
     /**
      * Computes the sum of the sequence of number values that are obtained by invoking a transform function on each element of the input sequence.
      */
-    Sum(TSource?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): number;
+    Sum(TSource?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => number): number;
     /**
      * Returns a specified number of contiguous elements from the start of a sequence.
      */
-    Take(fn: any): Immutable.List<T>;
+    Take(amount: number): List<T>;
     /**
      * Returns elements from a sequence as long as a specified condition is true.
      */
-    TakeWhile(fn: any): Immutable.List<T>;
+    TakeWhile(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T>;
     /**
      * Copies the elements of the List<T> to a new array.
      */
@@ -197,7 +197,7 @@ export declare class List<T> {
      */
     ToDictionary(TKey: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any, TValue?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): any;
     /**
-     * Creates a List<T> from an Immutable.List<T>.
+     * Creates an Immutable.List<T> from a List<T>.
      */
     ToList(): Immutable.List<T>;
     /**
