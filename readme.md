@@ -17,6 +17,10 @@ let arr = new List<number>([1,2,3,4,5])
     .ToArray(); // => [8, 10]
 ```
 
+## Sample
+
+[![https://gyazo.com/10fb5070746bc5251828cbd9033a69a8](https://i.gyazo.com/10fb5070746bc5251828cbd9033a69a8.gif)](https://gyazo.com/10fb5070746bc5251828cbd9033a69a8)
+
 ## Tests
 
 ```
