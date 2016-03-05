@@ -21,7 +21,7 @@ test('Add range', t => {
 // test('Aggregate', t => {
 //     t.fail();
 // })
-    
+
 test('All', t => {
     t.true(new List<string>(['hey', 'hola', 'que', 'tal']).All(x => typeof x === 'string'));
 });
@@ -29,7 +29,7 @@ test('All', t => {
 test('Any', t => {
     t.true(new List<string>(['hey', 'hola', 'que', 'tal']).Any(x => x === 'hola'));
 });
-    
+
 test('Average', t => {
     t.is(new List<number>([2, 3, 5, 10]).Average(x => x), 5);
 });
@@ -47,7 +47,7 @@ test('Contains', t => {
 test('Count', t => {
     t.is(new List<string>(['hey', 'hola', 'que', 'tal']).Count(), 4);
 });
-    
+
 // test('DefaultIfEmpty', t => {
 //     t.fail();
 // });
@@ -55,7 +55,7 @@ test('Count', t => {
 // test('Distinct', t => {
 //     t.fail();
 // });
-    
+
 test('ElementAt', t => {
     let a = new List<string>(['hey', 'hola', 'que', 'tal']);
     t.is(a.ElementAt(0), 'hey')
@@ -67,7 +67,7 @@ test('ElementAtOrDefault', t => {
     t.is(a.ElementAtOrDefault(0), 'hey');
     t.is(a.ElementAtOrDefault(4), 0);
 });
-    
+
 // test('Except', t => {
 //     t.fail();
 // });
@@ -77,7 +77,7 @@ test('First', t => {
     t.is(new List<number>([1,2,3,4,5]).First(x => x > 2), 3);
     t.notOk(new List<string>().First());
 });
-   
+
 test('FirstOrDefault', t => {
     t.is(new List<string>(['hey', 'hola', 'que', 'tal']).FirstOrDefault(), 'hey');
     t.is(new List<string>().FirstOrDefault(), 0);
@@ -178,12 +178,12 @@ test('Select', t => {
 //     t.fail();
 // });
 
-test('Sum', t => {    
+test('Sum', t => {
     let people = new List<Person>([
         {Name: "Alice", Age: 25},
         {Name: "Bob"  , Age: 50},
         {Name: "Cathy", Age: 15}
-    ]);    
+    ]);
     // t.is(new List<number>([2,3,5]).Sum(), 10); // TODO: fix this case
     t.is(people.Sum(x => x.Age), 90);
 });
@@ -200,12 +200,12 @@ test('ToArray', t => {
     t.is(new List<number>([1,2,3,4,5]).ToArray().join(), '1,2,3,4,5');
 });
 
-test('ToDictionary', t => {        
+test('ToDictionary', t => {
     let people = new List<Person>([
         {Name: "Alice", Age: 25},
         {Name: "Bob"  , Age: 50},
         {Name: "Cathy", Age: 15}
-    ]);    
+    ]);
     t.not(people.ToDictionary(x => x.Name, x => x.Age)['Alice'], 25); // TODO
     // t.same(people.ToDictionary(x => x.Name)['Alice'], {Name: "Alice", Age: 25});
 });

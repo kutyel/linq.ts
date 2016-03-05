@@ -152,8 +152,8 @@ export class List<T> {
     /**
      * Groups the elements of a sequence according to a specified key selector function.
      */
-    public GroupBy(grouper: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => any)
-                                    : Immutable.Seq.Keyed<any, Immutable.Iterable<number, T>> {
+    public GroupBy(grouper: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => any):
+                                      Immutable.Seq.Keyed<any, Immutable.Iterable<number, T>> {
         return this._elements.groupBy(grouper);
     }
 
