@@ -68,7 +68,7 @@ export class List<T> {
      * Concatenates two sequences.
      */
     public Concat(list: List<T>): List<T>  {
-        return new List<T>(this._elements.concat(list).toArray());
+        return this.AddRange(list.ToArray());
     }
     
     /**
@@ -105,14 +105,14 @@ export class List<T> {
      * Returns the element at a specified index in a sequence.
      */
     public ElementAt(index: number): T {
-        return this._elements[index];
+        return this._elements.toArray()[index];
     }
     
     /**
      * Returns the element at a specified index in a sequence or a default value if the index is out of range.
      */
     public ElementAtOrDefault(index: number): any {
-        return this._elements.count() ?  this.ElementAt(index) : 0;
+        return this.ElementAt(index) || 0;
     }
      
     /**
@@ -208,15 +208,15 @@ export class List<T> {
     /**
      * Sorts the elements of a sequence in ascending order according to a key.
      */
-    public OrderBy(comparator?: (a: T, b: T) => number): Immutable.Iterable<number, T> {
-        return this._elements.sort(comparator);
+    public OrderBy(comparator?: (a: T, b: T) => number): List<T> {
+        return new List<T>(this._elements.sort(comparator).toArray());
     }
     
     /**
      * Sorts the elements of a sequence in descending order according to a key.
      */
-    public OrderByDescending(comparator?: (a: T, b: T) => number): Immutable.Iterable<number, T> {
-        return this._elements.sort(comparator).reverse();
+    public OrderByDescending(comparator?: (a: T, b: T) => number): List<T> {
+        return new List<T>(this._elements.sort(comparator).reverse().toArray());
     }
     
     /**
@@ -250,8 +250,8 @@ export class List<T> {
     /**
      * Reverses the order of the elements in the entire List<T>.
      */
-    public Reverse(): Immutable.Iterable<number, T> {
-        return this._elements.reverse();
+    public Reverse(): List<T> {
+        return new List<T>(this._elements.reverse().toArray());
     }
     
     /**
