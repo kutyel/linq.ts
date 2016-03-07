@@ -41,7 +41,7 @@ export class List<T> {
      */
     public Aggregate(accumulator: (accum: any, value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => any,
                      initialValue?: T): any {
-        this._elements.reduce(accumulator, initialValue);
+        return this._elements.reduce(accumulator, initialValue);
     }
 
     /**
@@ -94,14 +94,14 @@ export class List<T> {
      * Returns the elements of the specified sequence or the type parameter's default value
      * in a singleton collection if the sequence is empty.
      */
-    public DefaultIfEmpty(fn): T {
+    public DefaultIfEmpty(): T {
         return this._elements.first(); // TODO
     }
 
     /**
      * Returns distinct elements from a sequence by using the default equality comparer to compare values.
      */
-    public Distinct(fn) {
+    public Distinct() {
         return this._elements; // TODO
     }
 
@@ -122,7 +122,7 @@ export class List<T> {
     /**
      * Produces the set difference of two sequences by using the default equality comparer to compare values.
      */
-    public Except(fn) {
+    public Except() {
         return this._elements; // TODO
     }
 
@@ -161,7 +161,7 @@ export class List<T> {
      * Correlates the elements of two sequences based on equality of keys and groups the results.
      * The default equality comparer is used to compare keys.
      */
-    public GroupJoin(fn) {
+    public GroupJoin() {
         return this._elements; // TODO
     }
 
@@ -175,7 +175,7 @@ export class List<T> {
     /**
      * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
      */
-    public Join(fn) {
+    public Join() {
         return this._elements; // TODO
     }
 
@@ -226,28 +226,30 @@ export class List<T> {
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      */
-    public ThenBy(fn) {
+    public ThenBy() {
         return this._elements; // TODO
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      */
-    public ThenByDescending(fn) {
+    public ThenByDescending() {
         return this._elements; // TODO
     }
 
     /**
      * Generates a sequence of integral numbers within a specified range.
      */
-    public Range(fn) {
-        return this._elements; // TODO: Use an ES6 Generator!
+    public *Range(start: number, count: number): IterableIterator<number> {
+        for (let i: number = start; i <= count; i++) {
+            yield i;
+        }
     }
 
     /**
      * Generates a sequence that contains one repeated value.
      */
-    public Repeat(fn) {
+    public Repeat() {
         return this._elements; // TODO: Use an ES6 Generator!
     }
 
@@ -268,21 +270,21 @@ export class List<T> {
     /**
      * Projects each element of a sequence to an IEnumerable<T> and flattens the resulting sequences into one sequence.
      */
-    public SelectMany(fn) {
+    public SelectMany() {
         return this._elements; // TODO
     }
 
     /**
      * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
      */
-    public SequenceEqual(fn) {
+    public SequenceEqual() {
         return this._elements; // TODO
     }
 
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
-    public Single(fn) {
+    public Single() {
         return this._elements; // TODO
     }
 
@@ -290,7 +292,7 @@ export class List<T> {
      * Returns the only element of a sequence, or a default value if the sequence is empty;
      * this method throws an exception if there is more than one element in the sequence.
      */
-    public SingleOrDefault(fn) {
+    public SingleOrDefault() {
         return this._elements; // TODO
     }
 
@@ -356,7 +358,7 @@ export class List<T> {
     /**
      * Produces the set union of two sequences by using the default equality comparer.
      */
-    public Union(fn) {
+    public Union() {
         return this._elements; // TODO
     }
 

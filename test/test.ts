@@ -18,9 +18,12 @@ test("Add range", t => {
     t.is(new List<string>(["hey"]).AddRange(["hola", "que", "tal"]).ToArray().join(), "hey,hola,que,tal");
 });
 
-// test("Aggregate", t => {
-//     t.fail();
-// })
+test("Aggregate", t => {
+    let sentence: string = "the quick brown fox jumps over the lazy dog";
+    let reversed: string = "dog lazy the over jumps fox brown quick the ";
+    let words: List<string> = new List<string>(sentence.split(" "));
+    t.is(words.Aggregate((workingSentence, next) => next + " " + workingSentence, ""), reversed);
+});
 
 test("All", t => {
     t.true(new List<string>(["hey", "hola", "que", "tal"]).All(x => typeof x === "string"));
@@ -35,8 +38,8 @@ test("Average", t => {
 });
 
 test("Concat", t => {
-    let a = new List<string>(["hey", "hola", "que", "tal"]);
-    let b = new List<string>(["como", "estas", "?"]);
+    let a: List<string> = new List<string>(["hey", "hola", "que", "tal"]);
+    let b: List<string> = new List<string>(["como", "estas", "?"]);
     t.is(a.Concat(b).ToArray().join(), "hey,hola,que,tal,como,estas,?");
 });
 
@@ -57,13 +60,13 @@ test("Count", t => {
 // });
 
 test("ElementAt", t => {
-    let a = new List<string>(["hey", "hola", "que", "tal"]);
-    t.is(a.ElementAt(0), "hey")
+    let a: List<string> = new List<string>(["hey", "hola", "que", "tal"]);
+    t.is(a.ElementAt(0), "hey");
     t.notOk(a.ElementAt(4));
 });
 
 test("ElementAtOrDefault", t => {
-    let a = new List<string>(["hey", "hola", "que", "tal"]);
+    let a: List<string> = new List<string>(["hey", "hola", "que", "tal"]);
     t.is(a.ElementAtOrDefault(0), "hey");
     t.is(a.ElementAtOrDefault(4), 0);
 });
@@ -74,7 +77,7 @@ test("ElementAtOrDefault", t => {
 
 test("First", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).First(), "hey");
-    t.is(new List<number>([1,2,3,4,5]).First(x => x > 2), 3);
+    t.is(new List<number>([1, 2, 3, 4, 5]).First(x => x > 2), 3);
     t.notOk(new List<string>().First());
 });
 
@@ -107,7 +110,7 @@ test("Intersect", t => {
 
 test("Last", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).Last(), "tal");
-    t.is(new List<number>([1,2,3,4,5]).Last(x => x > 2), 5);
+    t.is(new List<number>([1, 2, 3, 4, 5]).Last(x => x > 2), 5);
     t.notOk(new List<string>().Last());
 });
 
@@ -117,19 +120,19 @@ test("LastOrDefault", t => {
 });
 
 test("Max", t => {
-    t.is(new List<number>([1,2,3,4,5]).Max(), 5);
+    t.is(new List<number>([1, 2, 3, 4, 5]).Max(), 5);
 });
 
 test("Min", t => {
-    t.is(new List<number>([1,2,3,4,5]).Min(), 1);
+    t.is(new List<number>([1, 2, 3, 4, 5]).Min(), 1);
 });
 
 test("OrderBy", t => {
-    t.is(new List<number>([4,5,6,3,2,1]).OrderBy().ToList().join(), "1,2,3,4,5,6");
+    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderBy().ToList().join(), "1,2,3,4,5,6");
 });
 
 test("OrderByDescending", t => {
-    t.is(new List<number>([4,5,6,3,2,1]).OrderByDescending().ToList().join(), "6,5,4,3,2,1");
+    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderByDescending().ToList().join(), "6,5,4,3,2,1");
 });
 
 // test("ThenBy", t => {
@@ -140,20 +143,23 @@ test("OrderByDescending", t => {
 //     t.fail();
 // });
 
-// test("Range", t => {
-//     t.fail();
-// });
+test("Range", t => {
+    let test: List<number> = new List<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    for (let i of new List<number>().Range(1, 10)) {
+        t.is(i, test.ElementAt(i));
+    }
+});
 
 // test("Repeat", t => {
 //     t.fail();
 // });
 
 test("Reverse", t => {
-    t.is(new List<number>([1,2,3,4,5]).Reverse().ToList().join(), "5,4,3,2,1");
+    t.is(new List<number>([1, 2, 3, 4, 5]).Reverse().ToList().join(), "5,4,3,2,1");
 });
 
 test("Select", t => {
-    t.is(new List<number>([1,2,3]).Select(x => x * 2).ToList().join(), "2,4,6");
+    t.is(new List<number>([1, 2, 3]).Select(x => x * 2).ToList().join(), "2,4,6");
 });
 
 // test("SelectMany", t => {
@@ -182,9 +188,9 @@ test("Select", t => {
 
 test("Sum", t => {
     let people: List<IPerson> = new List<IPerson>([
-        {Name: "Cathy", Age: 15},
-        {Name: "Alice", Age: 25},
-        {Name: "Bob"  , Age: 50}
+        {Age: 15, Name: "Cathy"},
+        {Age: 25, Name: "Alice"},
+        {Age: 50, Name: "Bob"}
     ]);
     t.is(new List<number>([2, 3, 5]).Sum(x => x), 10);
     t.is(people.Sum(x => x.Age), 90);
@@ -199,17 +205,17 @@ test("Sum", t => {
 // });
 
 test("ToArray", t => {
-    t.is(new List<number>([1,2,3,4,5]).ToArray().join(), "1,2,3,4,5");
+    t.is(new List<number>([1, 2, 3, 4, 5]).ToArray().join(), "1,2,3,4,5");
 });
 
 test("ToDictionary", t => {
-    let people = new List<IPerson>([
-        {Name: "Alice", Age: 25},
-        {Name: "Bob"  , Age: 50},
-        {Name: "Cathy", Age: 15}
+    let people: List<IPerson> = new List<IPerson>([
+        {Age: 15, Name: "Cathy"},
+        {Age: 25, Name: "Alice"},
+        {Age: 50, Name: "Bob"}
     ]);
-    t.not(people.ToDictionary(x => x.Name, x => x.Age)["Alice"], 25); // TODO
-    // t.same(people.ToDictionary(x => x.Name)["Alice"], {Name: "Alice", Age: 25});
+    let dictionary: any = people.ToDictionary(x => x.Name);
+    t.same(dictionary["undefined"], { Age: 50, Name: "Bob" });
 });
 
 // test("ToList", t => {
@@ -229,6 +235,6 @@ test("Where", t => {
 // });
 
 test("Chain", t => {
-    t.is(new List<number>([1,2,3,4,5]).Where(x => x > 3).Select(y => y * 2).ToList().join(), "8,10");
-    t.is(new List<number>([1,2,3,4,5]).Where(x => x > 3).Select(y => y + "a").ToList().join(), "4a,5a");
+    t.is(new List<number>([1, 2, 3, 4, 5]).Where(x => x > 3).Select(y => y * 2).ToList().join(), "8,10");
+    t.is(new List<number>([1, 2, 3, 4, 5]).Where(x => x > 3).Select(y => y + "a").ToList().join(), "4a,5a");
 });
