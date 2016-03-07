@@ -168,8 +168,8 @@ export class List<T> {
     /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
      */
-    public Intersect(fn) {
-        return this._elements; // TODO
+    public Intersect(source: List<T>): List<T> {
+        return this._elements.reduce((ac,v) => {if (source.Contains(v) && !ac.Contains(v)) ac.Add(v); return ac; }, new List<T>());
     }
 
     /**
