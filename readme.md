@@ -1,6 +1,6 @@
 # LinQ for TypeScript
 
-![linqts](https://raw.githubusercontent.com/kutyel/linq/master/linqts.png)
+![linqts](https://raw.githubusercontent.com/kutyel/linq/master/resources/linqts.png)
 
 ## Install
 
