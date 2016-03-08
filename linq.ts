@@ -237,20 +237,6 @@ export class List<T> {
     }
 
     /**
-     * Generates a sequence of integral numbers within a specified range.
-     */
-    public *Range(start: number, count: number): IterableIterator<number> {
-        while (count--) { yield start++; }
-    }
-
-    /**
-     * Generates a sequence that contains one repeated value.
-     */
-    public Repeat() {
-        return this._elements; // TODO: Use an ES6 Generator!
-    }
-
-    /**
      * Reverses the order of the elements in the entire List<T>.
      */
     public Reverse(): List<T> {
@@ -372,4 +358,22 @@ export class List<T> {
     public Zip(iterables: Immutable.Iterable<T, T>[]): Immutable.Iterable.Indexed<T> {
         return this._elements.zip(...iterables);
     }
+}
+
+export class Enumerable {
+
+    /**
+     * Generates a sequence of integral numbers within a specified range.
+     */
+    public static *Range(start: number, count: number): IterableIterator<number> {
+        while (count--) { yield start++; }
+    }
+
+    /**
+     * Generates a sequence that contains one repeated value.
+     */
+    public static *Repeat(element: any, count: number): IterableIterator<number> {
+        while (count--) { yield element; }
+    }
+
 }
