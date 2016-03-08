@@ -101,8 +101,8 @@ export class List<T> {
     /**
      * Returns distinct elements from a sequence by using the default equality comparer to compare values.
      */
-    public Distinct() {
-        return this._elements; // TODO
+    public Distinct(): List<T> {
+        return this.Where((value, index, iter) => iter.toList().indexOf(value) === index);
     }
 
     /**
