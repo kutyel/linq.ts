@@ -115,8 +115,8 @@ export class List<T> {
     /**
      * Returns the element at a specified index in a sequence or a default value if the index is out of range.
      */
-    public ElementAtOrDefault(index: number): any {
-        return this.ElementAt(index) || 0;
+    public ElementAtOrDefault(index: number): T {
+        return this.ElementAt(index) || null;
     }
 
     /**
@@ -138,8 +138,8 @@ export class List<T> {
     /**
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
-    public FirstOrDefault(): any {
-        return this._elements.count() ? this.First() : 0;
+    public FirstOrDefault(): T {
+        return this._elements.count() ? this.First() : null;
     }
 
     /**
@@ -191,8 +191,8 @@ export class List<T> {
     /**
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
-    public LastOrDefault(): any {
-        return this._elements.count() ? this.Last() : 0;
+    public LastOrDefault(): T {
+        return this._elements.count() ? this.Last() : null;
     }
 
     /**
