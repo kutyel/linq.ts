@@ -241,9 +241,7 @@ export class List<T> {
      * Generates a sequence of integral numbers within a specified range.
      */
     public *Range(start: number, count: number): IterableIterator<number> {
-        for (let i: number = start; i <= count; i++) {
-            yield i;
-        }
+        while (count--) { yield start++; }
     }
 
     /**

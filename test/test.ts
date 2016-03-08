@@ -86,9 +86,12 @@ test("FirstOrDefault", t => {
     t.is(new List<string>().FirstOrDefault(), 0);
 });
 
-// test("ForEach", t => {
-//     t.fail();
-// });
+test("ForEach", t => {
+    let names: List<string> = new List<string>(["Bruce", "Alfred", "Tim", "Richard"]);
+    let test: string = "";
+    names.ForEach((x, i) => test += `${x} ${i} `);
+    t.is(test, "Bruce 0 Alfred 1 Tim 2 Richard 3 ");
+});
 
 // test("GroupBy", t => {
 //     t.fail();
@@ -144,14 +147,14 @@ test("OrderByDescending", t => {
 // });
 
 test("Range", t => {
-    let test: List<number> = new List<number>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    for (let i of new List<number>().Range(1, 10)) {
-        t.is(i, test.ElementAt(i));
+    let test: List<number> = new List<number>([20, 21, 22, 23, 24]);
+    for (let it of new List<number>().Range(20, 5)) {
+        t.true(test.Contains(it));
     }
 });
 
 // test("Repeat", t => {
-//     t.fail();
+//     t.pass();
 // });
 
 test("Reverse", t => {
