@@ -34,7 +34,13 @@ test("Any", t => {
 });
 
 test("Average", t => {
+    let people: List<IPerson> = new List<IPerson>([
+        {Age: 15, Name: "Cathy"},
+        {Age: 25, Name: "Alice"},
+        {Age: 50, Name: "Bob"}
+    ]);
     t.is(new List<number>([2, 3, 5, 10]).Average(x => x), 5);
+    t.is(people.Average(x => x.Age), 30);
 });
 
 test("Concat", t => {
@@ -68,7 +74,7 @@ test("ElementAt", t => {
 test("ElementAtOrDefault", t => {
     let a: List<string> = new List<string>(["hey", "hola", "que", "tal"]);
     t.is(a.ElementAtOrDefault(0), "hey");
-    t.is(a.ElementAtOrDefault(4), 0);
+    t.is(a.ElementAtOrDefault(4), undefined);
 });
 
 // test("Except", t => {
@@ -83,7 +89,7 @@ test("First", t => {
 
 test("FirstOrDefault", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).FirstOrDefault(), "hey");
-    t.is(new List<string>().FirstOrDefault(), 0);
+    t.is(new List<string>().FirstOrDefault(), undefined);
 });
 
 test("ForEach", t => {
@@ -119,7 +125,7 @@ test("Last", t => {
 
 test("LastOrDefault", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).LastOrDefault(), "tal");
-    t.is(new List<string>().LastOrDefault(), 0);
+    t.is(new List<string>().LastOrDefault(), undefined);
 });
 
 test("Max", t => {

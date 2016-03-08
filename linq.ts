@@ -62,9 +62,8 @@ export class List<T> {
      * Computes the average of a sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
-    public Average(transform?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => number): number {
-        return this._elements.map(transform).reduce((ac: number, v: number) => {ac += v; return ac; }, 0) /
-            this._elements.map(transform).count();
+    public Average(transform?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): number {
+        return this.Sum(transform) / this.Count(transform);
     }
 
     /**
@@ -116,7 +115,7 @@ export class List<T> {
      * Returns the element at a specified index in a sequence or a default value if the index is out of range.
      */
     public ElementAtOrDefault(index: number): T {
-        return this.ElementAt(index) || null;
+        return this.ElementAt(index) || undefined;
     }
 
     /**
@@ -139,7 +138,7 @@ export class List<T> {
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
     public FirstOrDefault(): T {
-        return this._elements.count() ? this.First() : null;
+        return this._elements.count() ? this.First() : undefined;
     }
 
     /**
@@ -192,7 +191,7 @@ export class List<T> {
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
     public LastOrDefault(): T {
-        return this._elements.count() ? this.Last() : null;
+        return this._elements.count() ? this.Last() : undefined;
     }
 
     /**
