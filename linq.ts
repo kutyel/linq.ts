@@ -121,8 +121,8 @@ export class List<T> {
     /**
      * Produces the set difference of two sequences by using the default equality comparer to compare values.
      */
-    public Except() {
-        return this._elements; // TODO
+    public Except(source: List<T>): List<T> {
+        return this.Where(x => !source.Contains(x));
     }
 
     /**
