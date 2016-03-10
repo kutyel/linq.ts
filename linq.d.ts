@@ -73,12 +73,12 @@ export declare class List<T> {
     /**
      * Produces the set difference of two sequences by using the default equality comparer to compare values.
      */
-    Except(): Immutable.List<T>;
+    Except(source: List<T>): List<T>;
     /**
      * Returns the first element of a sequence.
      */
     First(): T;
-    First(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): any;
+    First(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T;
     /**
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
@@ -108,7 +108,7 @@ export declare class List<T> {
      * Returns the last element of a sequence.
      */
     Last(): T;
-    Last(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): any;
+    Last(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T;
     /**
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
@@ -152,7 +152,7 @@ export declare class List<T> {
     /**
      * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
      */
-    SequenceEqual(): Immutable.List<T>;
+    SequenceEqual(list: List<T>): boolean;
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
