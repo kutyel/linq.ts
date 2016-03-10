@@ -260,8 +260,8 @@ export class List<T> {
     /**
      * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
      */
-    public SequenceEqual() {
-        return this._elements; // TODO
+    public SequenceEqual(first: List<T>): boolean {
+        return this._elements.equals(first.ToList());
     }
 
     /**
