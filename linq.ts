@@ -129,8 +129,8 @@ export class List<T> {
      * Returns the first element of a sequence.
      */
     public First(): T;
-    public First(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean);
-    public First(predicate?: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean) {
+    public First(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T;
+    public First(predicate?: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T {
         return predicate ? this.Where(predicate).First() : this._elements.first();
     }
 
@@ -182,8 +182,8 @@ export class List<T> {
      * Returns the last element of a sequence.
      */
     public Last(): T;
-    public Last(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean);
-    public Last(predicate?: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean) {
+    public Last(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T;
+    public Last(predicate?: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T {
         return predicate ? this.Where(predicate).Last() : this._elements.last();
     }
 
@@ -260,8 +260,8 @@ export class List<T> {
     /**
      * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
      */
-    public SequenceEqual(first: List<T>): boolean {
-        return this._elements.equals(first.ToList());
+    public SequenceEqual(list: List<T>): boolean {
+        return this._elements.equals(list.ToList());
     }
 
     /**
