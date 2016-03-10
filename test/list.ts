@@ -106,7 +106,7 @@ test("ForEach", t => {
 //     t.fail();
 // });
 
-// test("GrouptoString() t => {
+// test("GroupJoin", t => {
 //     t.fail();
 // });
 
@@ -116,7 +116,7 @@ test("Intersect", t => {
     t.is(id1.Intersect(id2).Sum(x => x), 56);
 });
 
-// test("toString() t => {
+// test("Join", t => {
 //     t.fail();
 // });
 
@@ -176,7 +176,7 @@ test("SequenceEqual", t => {
     let pet1: Pet = new Pet("Turbo", 2);
     let pet2: Pet = new Pet("Peanut", 8);
 
-    // create two lists of pets.
+    // create three lists of pets.
     let pets1: List<Pet> = new List<Pet>([pet1, pet2]);
     let pets2: List<Pet> = new List<Pet>([pet1, pet2]);
     let pets3: List<Pet> = new List<Pet>([pet1]);
