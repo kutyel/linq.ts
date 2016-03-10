@@ -15,7 +15,7 @@ test("Add", t => {
 });
 
 test("Add range", t => {
-    t.is(new List<string>(["hey"]).AddRange(["hola", "que", "tal"]).ToArray().join(), "hey,hola,que,tal");
+    t.is(new List<string>(["hey"]).AddRange(["hola", "que", "tal"]).ToArray().toString(), "hey,hola,que,tal");
 });
 
 test("Aggregate", t => {
@@ -46,7 +46,7 @@ test("Average", t => {
 test("Concat", t => {
     let a: List<string> = new List<string>(["hey", "hola", "que", "tal"]);
     let b: List<string> = new List<string>(["como", "estas", "?"]);
-    t.is(a.Concat(b).ToArray().join(), "hey,hola,que,tal,como,estas,?");
+    t.is(a.Concat(b).ToArray().toString(), "hey,hola,que,tal,como,estas,?");
 });
 
 test("Contains", t => {
@@ -63,7 +63,7 @@ test("Count", t => {
 
 test("Distinct", t => {
     let ages: List<number> = new List<number>([21, 46, 46, 55, 17, 21, 55, 55]);
-    t.is(ages.Distinct().ToArray().join(), "21,46,55,17");
+    t.is(ages.Distinct().ToArray().toString(), "21,46,55,17");
 });
 
 test("ElementAt", t => {
@@ -78,9 +78,11 @@ test("ElementAtOrDefault", t => {
     t.is(a.ElementAtOrDefault(4), undefined);
 });
 
-// test("Except", t => {
-//     t.fail();
-// });
+test("Except", t => {
+    let numbers1: List<number> = new List<number>([2.0, 2.1, 2.2, 2.3, 2.4, 2.5]);
+    let numbers2: List<number> = new List<number>([2.2, 2.3]);
+    t.is(numbers1.Except(numbers2).ToArray().toString(), "2,2.1,2.4,2.5");
+});
 
 test("First", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).First(), "hey");
@@ -104,7 +106,7 @@ test("ForEach", t => {
 //     t.fail();
 // });
 
-// test("GroupJoin", t => {
+// test("GrouptoString() t => {
 //     t.fail();
 // });
 
@@ -114,7 +116,7 @@ test("Intersect", t => {
     t.is(id1.Intersect(id2).Sum(x => x), 56);
 });
 
-// test("Join", t => {
+// test("toString() t => {
 //     t.fail();
 // });
 
@@ -138,11 +140,11 @@ test("Min", t => {
 });
 
 test("OrderBy", t => {
-    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderBy().ToList().join(), "1,2,3,4,5,6");
+    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderBy().ToArray().toString(), "1,2,3,4,5,6");
 });
 
 test("OrderByDescending", t => {
-    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderByDescending().ToList().join(), "6,5,4,3,2,1");
+    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderByDescending().ToArray().toString(), "6,5,4,3,2,1");
 });
 
 // test("ThenBy", t => {
@@ -154,20 +156,34 @@ test("OrderByDescending", t => {
 // });
 
 test("Reverse", t => {
-    t.is(new List<number>([1, 2, 3, 4, 5]).Reverse().ToList().join(), "5,4,3,2,1");
+    t.is(new List<number>([1, 2, 3, 4, 5]).Reverse().ToArray().toString(), "5,4,3,2,1");
 });
 
 test("Select", t => {
-    t.is(new List<number>([1, 2, 3]).Select(x => x * 2).ToList().join(), "2,4,6");
+    t.is(new List<number>([1, 2, 3]).Select(x => x * 2).ToArray().toString(), "2,4,6");
 });
 
 // test("SelectMany", t => {
 //     t.fail();
 // });
 
-// test("SequenceEqual", t => {
-//     t.fail();
-// });
+test("SequenceEqual", t => {
+
+    class Pet {
+        constructor(public Name: string, public Age: number) {}
+    }
+
+    let pet1: Pet = new Pet("Turbo", 2);
+    let pet2: Pet = new Pet("Peanut", 8);
+
+    // create two lists of pets.
+    let pets1: List<Pet> = new List<Pet>([pet1, pet2]);
+    let pets2: List<Pet> = new List<Pet>([pet1, pet2]);
+    let pets3: List<Pet> = new List<Pet>([pet1]);
+
+    t.true(pets1.SequenceEqual(pets2));
+    t.false(pets1.SequenceEqual(pets3));
+});
 
 // test("Single", t => {
 //     t.fail();
@@ -204,7 +220,7 @@ test("Sum", t => {
 // });
 
 test("ToArray", t => {
-    t.is(new List<number>([1, 2, 3, 4, 5]).ToArray().join(), "1,2,3,4,5");
+    t.is(new List<number>([1, 2, 3, 4, 5]).ToArray().toString(), "1,2,3,4,5");
 });
 
 test("ToDictionary", t => {
@@ -234,6 +250,6 @@ test("Where", t => {
 // });
 
 test("Chain", t => {
-    t.is(new List<number>([1, 2, 3, 4, 5]).Where(x => x > 3).Select(y => y * 2).ToList().join(), "8,10");
-    t.is(new List<number>([1, 2, 3, 4, 5]).Where(x => x > 3).Select(y => y + "a").ToList().join(), "4a,5a");
+    t.is(new List<number>([1, 2, 3, 4, 5]).Where(x => x > 3).Select(y => y * 2).ToArray().toString(), "8,10");
+    t.is(new List<number>([1, 2, 3, 4, 5]).Where(x => x > 3).Select(y => y + "a").ToArray().toString(), "4a,5a");
 });
