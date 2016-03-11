@@ -231,7 +231,7 @@ test("ToDictionary", t => {
         {Age: 50, Name: "Bob"}
     ]);
     let dictionary: any = people.ToDictionary(x => x.Name);
-    t.same(dictionary["undefined"], { Age: 50, Name: "Bob" });
+    t.same(dictionary["undefined"], { Age: 50, Name: "Bob" }); // TODO: this should be fixed
 });
 
 // test("ToList", t => {
