@@ -193,9 +193,10 @@ test("SequenceEqual", t => {
 //     t.fail();
 // });
 
-// test("Skip", t => {
-//     t.fail();
-// });
+test("Skip", t => {
+    let grades: List<number> = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+    t.is(grades.OrderByDescending().Skip(3).ToArray().toString(), "82,70,59,56");
+});
 
 // test("SkipWhile", t => {
 //     t.fail();
