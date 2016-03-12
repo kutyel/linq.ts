@@ -1,8 +1,9 @@
 # LinQ for TypeScript
 
+[![Build](https://travis-ci.org/kutyel/linq.svg?branch=master)](https://travis-ci.org/kutyel/linq)
 [![Donate](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://paypal.me/flaviocorpa)
 
-![linqts](https://raw.githubusercontent.com/kutyel/linq/master/resources/linqts.png)
+[![linqts](https://raw.githubusercontent.com/kutyel/linq/master/resources/linqts.png)](http://www.typescriptlang.org)
 
 ## Install
 
@@ -23,7 +24,7 @@ let arr = new List<number>([1,2,3,4,5])
 
 ## Sample
 
-[![https://gyazo.com/10fb5070746bc5251828cbd9033a69a8](https://i.gyazo.com/10fb5070746bc5251828cbd9033a69a8.gif)](https://gyazo.com/10fb5070746bc5251828cbd9033a69a8)
+![https://gyazo.com/10fb5070746bc5251828cbd9033a69a8](https://i.gyazo.com/10fb5070746bc5251828cbd9033a69a8.gif)
 
 ## Tests
 

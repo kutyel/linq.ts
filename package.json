@@ -31,7 +31,7 @@
     "immutable": "^3.7.6"
   },
   "devDependencies": {
-    "ava": "^0.11.0",
+    "ava": "git+github.com/sindresorhus/ava.git#d967956bf84f9265b65a7c94ca81d1038a840536",
     "tslint": "^3.5.0",
     "typescript": "^1.8.7"
   }
