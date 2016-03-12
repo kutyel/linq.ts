@@ -1,5 +1,7 @@
 # LinQ for TypeScript
 
+[![Donate](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://paypal.me/flaviocorpa)
+
 ![linqts](https://raw.githubusercontent.com/kutyel/linq/master/resources/linqts.png)
 
 ## Install
