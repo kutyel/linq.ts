@@ -26,7 +26,7 @@ let arr = new List<number>([1,2,3,4,5])
 
 ## Sample
 
-![https://gyazo.com/10fb5070746bc5251828cbd9033a69a8](https://i.gyazo.com/10fb5070746bc5251828cbd9033a69a8.gif)
+![linqts.gif](https://raw.githubusercontent.com/kutyel/linq/master/assets/linqts.gif)
 
 ## Tests
 
