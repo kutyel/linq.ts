@@ -234,9 +234,9 @@ test("ToDictionary", t => {
     t.same(dictionary["undefined"], { Age: 50, Name: "Bob" }); // TODO: this should be fixed
 });
 
-// test("ToList", t => {
-//     t.fail();
-// });
+test("ToList", t => {
+    t.is(new List<number>([1, 2, 3]).ToList().toString(), "List [ 1, 2, 3 ]");
+});
 
 // test("Union", t => {
 //     t.fail();
