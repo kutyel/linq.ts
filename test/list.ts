@@ -14,7 +14,7 @@ test("Add", t => {
     t.is(new List<string>().Add("hey").First(), "hey");
 });
 
-test("Add range", t => {
+test("AddRange", t => {
     t.is(new List<string>(["hey"]).AddRange(["hola", "que", "tal"]).ToArray().toString(), "hey,hola,que,tal");
 });
 
