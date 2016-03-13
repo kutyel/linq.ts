@@ -1,14 +1,14 @@
 import test from "ava";
 import {List} from "../linq";
 
+/**
+ * Tests taken from LinQ .NET examples (https://msdn.microsoft.com/en-us/library/s6hkc2c4(v=vs.110).aspx)
+ */
+
 interface IPerson {
     Name: string;
     Age: number;
 }
-
-/**
- * AVA tests
- */
 
 test("Add", t => {
     t.is(new List<string>().Add("hey").First(), "hey");
@@ -213,9 +213,10 @@ test("Sum", t => {
     t.is(people.Sum(x => x.Age), 90);
 });
 
-// test("Take", t => {
-//     t.fail();
-// });
+test("Take", t => {
+    let grades: List<number> = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+    t.is(grades.OrderByDescending().Take(3).ToArray().toString(), "98,92,85");
+});
 
 // test("TakeWhile", t => {
 //     t.fail();
