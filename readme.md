@@ -1,6 +1,6 @@
 # LinQ for TypeScript
 
-[![Build](https://travis-ci.org/kutyel/linq.svg?branch=master)](https://travis-ci.org/kutyel/linq)
+[![Build](https://travis-ci.org/kutyel/linq.ts.svg?branch=master)](https://travis-ci.org/kutyel/linq.ts)
 [![Dependencies](http://img.shields.io/david/kutyel/linq.ts.svg?style=flat-square)](https://david-dm.org/kutyel/linq.ts)
 [![Dev Dependencies](http://img.shields.io/david/dev/kutyel/linq.ts.svg?style=flat-square)](https://david-dm.org/kutyel/linq.ts#info=devDependencies)
 [![Donate](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://paypal.me/flaviocorpa)
