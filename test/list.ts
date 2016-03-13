@@ -218,9 +218,10 @@ test("Take", t => {
     t.is(grades.OrderByDescending().Take(3).ToArray().toString(), "98,92,85");
 });
 
-// test("TakeWhile", t => {
-//     t.fail();
-// });
+test("TakeWhile", t => {
+    let fruits: List<string> = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
+    t.is(fruits.TakeWhile(fruit => fruit !== "orange").ToArray().toString(), "apple,banana,mango");
+});
 
 test("ToArray", t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).ToArray().toString(), "1,2,3,4,5");
