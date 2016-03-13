@@ -355,8 +355,8 @@ export class List<T> {
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
-    public Zip(iterables: Immutable.Iterable<T, T>[]): Immutable.Iterable.Indexed<T> {
-        return this._elements.zip(...iterables);
+    public Zip(list: List<any>): List<any> {
+        return new List<any>(this._elements.toArray()); // TODO
     }
 }
 
