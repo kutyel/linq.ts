@@ -5,7 +5,7 @@
   "main": "linq.ts",
   "scripts": {
     "start": "tsc -w",
-    "test": "tsc && ava --tap | tap-nyan",
+    "test": "tsc && ava",
     "nyan": "ava --tap | tap-nyan"
   },
   "repository": {
