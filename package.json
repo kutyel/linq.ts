@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/kutyel/linq.git"
+    "url": "git+ssh://git@github.com/kutyel/linq.ts.git"
   },
   "keywords": [
     "linq",
@@ -24,9 +24,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kutyel/linq/issues"
+    "url": "https://github.com/kutyel/linq.ts/issues"
   },
-  "homepage": "https://github.com/kutyel/linq#readme",
+  "homepage": "https://github.com/kutyel/linq.ts#readme",
   "dependencies": {
     "immutable": "^3.7.6"
   },
