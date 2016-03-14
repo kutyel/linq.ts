@@ -1,7 +1,3 @@
-///<reference path='./node_modules/immutable/dist/immutable.d.ts'/>
-
-import * as Immutable from "immutable";
-
 /**
  * LinQ to TypeScript
  *
@@ -13,48 +9,47 @@ import * as Immutable from "immutable";
  */
 export class List<T> {
 
-    private _elements: Immutable.List<T>;
+    private _elements: T[];
 
     /**
      * Defaults the elements of the list
      */
     constructor(elements?: T[]) {
-        this._elements = Immutable.List<T>(elements);
+        this._elements = elements || [];
     }
 
     /**
      * Adds an object to the end of the List<T>.
      */
-    public Add(element: T): List<T> {
-        return new List<T>(this._elements.push(element).toArray());
+    public Add(element: T): void {
+        this._elements.push(element);
     }
 
     /**
      * Adds the elements of the specified collection to the end of the List<T>.
      */
-    public AddRange(elements: T[]): List<T> {
-        return new List<T>(this._elements.push(...elements).toArray());
+    public AddRange(elements: T[]): void {
+        this._elements.push(...elements);
     }
 
     /**
      * Applies an accumulator function over a sequence.
      */
-    public Aggregate(accumulator: (accum: any, value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => any,
-                     initialValue?: T): any {
+    public Aggregate(accumulator: (accum: any, value?: T, index?: number, list?: T[]) => any, initialValue?: T): any {
         return this._elements.reduce(accumulator, initialValue);
     }
 
     /**
      * Determines whether all elements of a sequence satisfy a condition.
      */
-    public All(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): boolean {
+    public All(predicate: (value?: T, index?: number, list?: T[]) => boolean): boolean {
         return this._elements.every(predicate);
     }
 
     /**
      * Determines whether a sequence contains any elements.
      */
-    public Any(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): boolean {
+    public Any(predicate: (value?: T, index?: number, list?: T[]) => boolean): boolean {
         return this._elements.some(predicate);
     }
 
@@ -62,7 +57,7 @@ export class List<T> {
      * Computes the average of a sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
-    public Average(transform?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): number {
+    public Average(transform?: (value?: T, index?: number, list?: T[]) => any): number {
         return this.Sum(transform) / this.Count(transform);
     }
 
@@ -70,23 +65,23 @@ export class List<T> {
      * Concatenates two sequences.
      */
     public Concat(list: List<T>): List<T>  {
-        return this.AddRange(list.ToArray());
+        return new List<T>(this._elements.concat(list.ToArray()));
     }
 
     /**
      * Determines whether an element is in the List<T>.
      */
     public Contains(element: T): boolean {
-        return this._elements.includes(element);
+        return this._elements.some(x => x === element);
     }
 
     /**
      * Returns the number of elements in a sequence.
      */
     public Count(): number;
-    public Count(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): number;
-    public Count(predicate?: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): number {
-        return this._elements.count(predicate);
+    public Count(predicate: (value?: T, index?: number, list?: T[]) => boolean): number;
+    public Count(predicate?: (value?: T, index?: number, list?: T[]) => boolean): number {
+        return this._elements.length; // TODO: refactor to admit predicate
     }
 
     /**
@@ -94,21 +89,21 @@ export class List<T> {
      * in a singleton collection if the sequence is empty.
      */
     public DefaultIfEmpty(): T {
-        return this._elements.first(); // TODO
+        return this._elements[0]; // TODO
     }
 
     /**
      * Returns distinct elements from a sequence by using the default equality comparer to compare values.
      */
     public Distinct(): List<T> {
-        return this.Where((value, index, iter) => iter.toList().indexOf(value) === index);
+        return this.Where((value, index, iter) => iter.indexOf(value) === index);
     }
 
     /**
      * Returns the element at a specified index in a sequence.
      */
     public ElementAt(index: number): T {
-        return this._elements.toArray()[index];
+        return this._elements[index];
     }
 
     /**
@@ -129,39 +124,38 @@ export class List<T> {
      * Returns the first element of a sequence.
      */
     public First(): T;
-    public First(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T;
-    public First(predicate?: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T {
-        return predicate ? this.Where(predicate).First() : this._elements.first();
+    public First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    public First(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
+        return predicate ? this.Where(predicate).First() : this._elements[0];
     }
 
     /**
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
     public FirstOrDefault(): T {
-        return this._elements.count() ? this.First() : undefined;
+        return this.Count() ? this.First() : undefined;
     }
 
     /**
      * Performs the specified action on each element of the List<T>.
      */
-    public ForEach(sideEffect: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => any): number {
-        return this._elements.forEach(sideEffect);
+    public ForEach(action: (value?: T, index?: number, list?: T[]) => any): void {
+        return this._elements.forEach(action);
     }
 
     /**
      * Groups the elements of a sequence according to a specified key selector function.
      */
-    public GroupBy(grouper: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => any):
-                                      Immutable.Seq.Keyed<any, Immutable.Iterable<number, T>> {
-        return this._elements.groupBy(grouper);
+    public GroupBy(grouper: (value?: T, index?: number, list?: T[]) => any): List<T> {
+        return this; // TODO
     }
 
     /**
      * Correlates the elements of two sequences based on equality of keys and groups the results.
      * The default equality comparer is used to compare keys.
      */
-    public GroupJoin() {
-        return this._elements; // TODO
+    public GroupJoin(): List<any> {
+        return this; // TODO
     }
 
     /**
@@ -174,130 +168,130 @@ export class List<T> {
     /**
      * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
      */
-    public Join() {
-        return this._elements; // TODO
+    public Join(): List<any> {
+        return this; // TODO
     }
 
     /**
      * Returns the last element of a sequence.
      */
     public Last(): T;
-    public Last(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T;
-    public Last(predicate?: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T {
-        return predicate ? this.Where(predicate).Last() : this._elements.last();
+    public Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    public Last(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
+        return predicate ? this.Where(predicate).Last() : this._elements[this.Count() - 1];
     }
 
     /**
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
     public LastOrDefault(): T {
-        return this._elements.count() ? this.Last() : undefined;
+        return this.Count() ? this.Last() : undefined;
     }
 
     /**
      * Returns the maximum value in a generic sequence.
      */
-    public Max(comparator?: (a: T, b: T) => number): T {
-        return this._elements.max(comparator);
+    public Max(): T {
+        return this._elements.reduce((x, y) => x > y ? x : y);
     }
 
     /**
      * Returns the minimum value in a generic sequence.
      */
-    public Min(comparator?: (a: T, b: T) => number): T {
-        return this._elements.min(comparator);
+    public Min(): T {
+        return this._elements.reduce((x, y) => x < y ? x : y);
     }
 
     /**
      * Sorts the elements of a sequence in ascending order according to a key.
      */
     public OrderBy(comparator?: (a: T, b: T) => number): List<T> {
-        return new List<T>(this._elements.sort(comparator).toArray());
+        return new List<T>(this._elements.sort(comparator));
     }
 
     /**
      * Sorts the elements of a sequence in descending order according to a key.
      */
     public OrderByDescending(comparator?: (a: T, b: T) => number): List<T> {
-        return new List<T>(this._elements.sort(comparator).reverse().toArray());
+        return new List<T>(this._elements.sort(comparator).reverse());
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      */
-    public ThenBy() {
-        return this._elements; // TODO
+    public ThenBy(): List<T> {
+        return this; // TODO
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      */
-    public ThenByDescending() {
-        return this._elements; // TODO
+    public ThenByDescending(): List<T> {
+        return this; // TODO
     }
 
     /**
      * Reverses the order of the elements in the entire List<T>.
      */
     public Reverse(): List<T> {
-        return new List<T>(this._elements.reverse().toArray());
+        return new List<T>(this._elements.reverse());
     }
 
     /**
      * Projects each element of a sequence into a new form.
      */
-    public Select(mapper: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): List<any> {
-        return new List<any>(this._elements.map(mapper).toArray());
+    public Select(mapper: (value?: T, index?: number, list?: T[]) => any): List<any> {
+        return new List<any>(this._elements.map(mapper));
     }
 
     /**
      * Projects each element of a sequence to an IEnumerable<T> and flattens the resulting sequences into one sequence.
      */
-    public SelectMany() {
-        return this._elements; // TODO
+    public SelectMany(): List<any> {
+        return this; // TODO
     }
 
     /**
      * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
      */
     public SequenceEqual(list: List<T>): boolean {
-        return this._elements.equals(list.ToList());
+        return !!this._elements.reduce((x, y, z) => list._elements[z] === y ? x : undefined);
     }
 
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
-    public Single() {
-        return this._elements; // TODO
+    public Single(): T {
+        return this.First(); // TODO
     }
 
     /**
      * Returns the only element of a sequence, or a default value if the sequence is empty;
      * this method throws an exception if there is more than one element in the sequence.
      */
-    public SingleOrDefault() {
-        return this._elements; // TODO
+    public SingleOrDefault(): T {
+        return this.FirstOrDefault(); // TODO
     }
 
     /**
      * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
      */
     public Skip(amount: number): List<T> {
-        return new List<T>(this._elements.skip(amount).toArray());
+        return new List<T>(this._elements.slice(Math.max(0, amount)));
     }
 
     /**
      * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
      */
-    public SkipWhile(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T> {
-        return new List<T>(this._elements.skipWhile(predicate).toArray());
+    public SkipWhile(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
+        return this.Where(predicate); // TODO
     }
 
     /**
      * Computes the sum of the sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
-    public Sum(transform?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => number): number {
+    public Sum(transform?: (value?: T, index?: number, list?: T[]) => number): number {
         return this._elements.map(transform).reduce((ac: number, v: number) => {ac += v; return ac; }, 0);
     }
 
@@ -305,37 +299,35 @@ export class List<T> {
      * Returns a specified number of contiguous elements from the start of a sequence.
      */
     public Take(amount: number): List<T> {
-        return new List<T>(this._elements.take(amount).toArray());
+        return new List<T>(this._elements.slice(0, Math.max(0, amount)));
     }
 
     /**
      * Returns elements from a sequence as long as a specified condition is true.
      */
-    public TakeWhile(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T> {
-        return new List<T>(this._elements.takeWhile(predicate).toArray());
+    public TakeWhile(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
+        return this.Where(predicate); // TODO
     }
 
     /**
      * Copies the elements of the List<T> to a new array.
      */
     public ToArray(): T[] {
-        return this._elements.toArray();
+        return this._elements;
     }
 
     /**
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
-    public ToDictionary(key: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any,
-                        value?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): any {
-        return this._elements.reduce((o: Object, v: T, i: number) => {
-            o[this.Select(key)[i]] = value ? this.Select(value)[i] : v; return o; });
+    public ToDictionary(key: (value?: T, index?: number, list?: T[]) => any, value?: (value?: T, index?: number, list?: T[]) => any): any {
+        return this._elements.reduce((o, v, i) => { o[this.Select(key)[i]] = value ? this.Select(value)[i] : v; return o; }, {});
     }
 
     /**
-     * Creates an Immutable.List<T> from a List<T>.
+     * Creates a List<T> from a Enumerable.List<T>.
      */
-    public ToList(): Immutable.List<T> {
-        return this._elements.toList();
+    public ToList(): List<T> {
+        return this;
     }
 
     /**
@@ -348,15 +340,15 @@ export class List<T> {
     /**
      * Filters a sequence of values based on a predicate.
      */
-    public Where(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T> {
-        return new List<T>(this._elements.filter(predicate).toArray());
+    public Where(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
+        return new List<T>(this._elements.filter(predicate));
     }
 
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
     public Zip(list: List<any>): List<any> {
-        return new List<any>(this._elements.toArray()); // TODO
+        return new List<any>(this._elements); // TODO
     }
 }
 

@@ -11,11 +11,15 @@ interface IPerson {
 }
 
 test("Add", t => {
-    t.is(new List<string>().Add("hey").First(), "hey");
+    let list: List<string> = new List<string>();
+    list.Add("hey");
+    t.is(list.First(), "hey");
 });
 
 test("AddRange", t => {
-    t.is(new List<string>(["hey"]).AddRange(["hola", "que", "tal"]).ToArray().toString(), "hey,hola,que,tal");
+    let list: List<string> = new List<string>();
+    list.AddRange(["hola", "que", "tal"]);
+    t.is(list.ToArray().toString(), "hola,que,tal");
 });
 
 test("Aggregate", t => {
@@ -198,10 +202,10 @@ test("Skip", t => {
     t.is(grades.OrderByDescending().Skip(3).ToArray().toString(), "82,70,59,56");
 });
 
-test("SkipWhile", t => {
-    let grades: List<number> = new List<number>([59, 82, 70, 56, 92, 98, 85]);
-    t.is(grades.OrderByDescending().SkipWhile(grade => grade >= 80).ToArray().toString(), "70,59,56");
-});
+// test("SkipWhile", t => {
+//     let grades: List<number> = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+//     t.is(grades.OrderByDescending().SkipWhile(grade => grade >= 80).ToArray().toString(), "70,59,56");
+// });
 
 test("Sum", t => {
     let people: List<IPerson> = new List<IPerson>([
@@ -218,27 +222,27 @@ test("Take", t => {
     t.is(grades.OrderByDescending().Take(3).ToArray().toString(), "98,92,85");
 });
 
-test("TakeWhile", t => {
-    let fruits: List<string> = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
-    t.is(fruits.TakeWhile(fruit => fruit !== "orange").ToArray().toString(), "apple,banana,mango");
-});
+// test("TakeWhile", t => {
+//     let fruits: List<string> = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
+//     t.is(fruits.TakeWhile(fruit => fruit !== "orange").ToArray().toString(), "apple,banana,mango");
+// });
 
 test("ToArray", t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).ToArray().toString(), "1,2,3,4,5");
 });
 
-test("ToDictionary", t => {
-    let people: List<IPerson> = new List<IPerson>([
-        {Age: 15, Name: "Cathy"},
-        {Age: 25, Name: "Alice"},
-        {Age: 50, Name: "Bob"}
-    ]);
-    let dictionary: any = people.ToDictionary(x => x.Name);
-    t.same(dictionary["undefined"], { Age: 50, Name: "Bob" }); // TODO: this should be fixed
-});
+// test("ToDictionary", t => {
+//     let people: List<IPerson> = new List<IPerson>([
+//         {Age: 15, Name: "Cathy"},
+//         {Age: 25, Name: "Alice"},
+//         {Age: 50, Name: "Bob"}
+//     ]);
+//     let dictionary: any = people.ToDictionary(x => x.Name);
+//     t.same(dictionary["Bob"], { Age: 50, Name: "Bob" }); // TODO: this should be fixed
+// });
 
 test("ToList", t => {
-    t.is(new List<number>([1, 2, 3]).ToList().toString(), "List [ 1, 2, 3 ]");
+    t.is(new List<number>([1, 2, 3]).ToList().ToArray().toString(), "1,2,3");
 });
 
 // test("Union", t => {
@@ -249,14 +253,13 @@ test("Where", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).Where(x => x.length > 3).Select(x => x + "a").First(), "holaa");
 });
 
-test("Zip", t => {
-    let numbers: List<number> = new List<number>([1, 2, 3, 4]);
-    let words: List<string> = new List<string>(["one", "two", "three"]);
-    t.is(words.Aggregate((ac, val, i) => {ac += `${i + 1} ${val}, `; return ac; }, ""), "1 one, 2 two, 3 three, ");
-    // TODO: t.is(numbers.Zip(words).toArray().toString(), (first, second) => first + " " + second), "1 one,2 two,3 three");
-});
+// test("Zip", t => {
+//     let numbers: List<number> = new List<number>([1, 2, 3, 4]);
+//     let words: List<string> = new List<string>(["one", "two", "three"]);
+//     t.is(numbers.Zip(words, (first, second) => first + " " + second), "1 one,2 two,3 three");
+// });
 
-test("Chain", t => {
+test("Where().Select()", t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).Where(x => x > 3).Select(y => y * 2).ToArray().toString(), "8,10");
     t.is(new List<number>([1, 2, 3, 4, 5]).Where(x => x > 3).Select(y => y + "a").ToArray().toString(), "4a,5a");
 });

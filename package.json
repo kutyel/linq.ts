@@ -27,9 +27,7 @@
     "url": "https://github.com/kutyel/linq.ts/issues"
   },
   "homepage": "https://github.com/kutyel/linq.ts#readme",
-  "dependencies": {
-    "immutable": "^3.7.6"
-  },
+  "dependencies": {},
   "devDependencies": {
     "ava": "^0.13.0",
     "tslint": "^3.5.0",
