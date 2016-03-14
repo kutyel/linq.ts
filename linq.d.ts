@@ -1,5 +1,3 @@
-/// <reference path="node_modules/immutable/dist/immutable.d.ts" />
-import * as Immutable from "immutable";
 /**
  * LinQ to TypeScript
  *
@@ -18,28 +16,28 @@ export declare class List<T> {
     /**
      * Adds an object to the end of the List<T>.
      */
-    Add(element: T): List<T>;
+    Add(element: T): void;
     /**
      * Adds the elements of the specified collection to the end of the List<T>.
      */
-    AddRange(elements: T[]): List<T>;
+    AddRange(elements: T[]): void;
     /**
      * Applies an accumulator function over a sequence.
      */
-    Aggregate(accumulator: (accum: any, value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => any, initialValue?: T): any;
+    Aggregate(accumulator: (accum: any, value?: T, index?: number, list?: T[]) => any, initialValue?: T): any;
     /**
      * Determines whether all elements of a sequence satisfy a condition.
      */
-    All(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): boolean;
+    All(predicate: (value?: T, index?: number, list?: T[]) => boolean): boolean;
     /**
      * Determines whether a sequence contains any elements.
      */
-    Any(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): boolean;
+    Any(predicate: (value?: T, index?: number, list?: T[]) => boolean): boolean;
     /**
      * Computes the average of a sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
-    Average(transform?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): number;
+    Average(transform?: (value?: T, index?: number, list?: T[]) => any): number;
     /**
      * Concatenates two sequences.
      */
@@ -52,7 +50,7 @@ export declare class List<T> {
      * Returns the number of elements in a sequence.
      */
     Count(): number;
-    Count(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): number;
+    Count(predicate: (value?: T, index?: number, list?: T[]) => boolean): number;
     /**
      * Returns the elements of the specified sequence or the type parameter's default value
      * in a singleton collection if the sequence is empty.
@@ -78,7 +76,7 @@ export declare class List<T> {
      * Returns the first element of a sequence.
      */
     First(): T;
-    First(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T;
+    First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     /**
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
@@ -86,16 +84,16 @@ export declare class List<T> {
     /**
      * Performs the specified action on each element of the List<T>.
      */
-    ForEach(sideEffect: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => any): number;
+    ForEach(action: (value?: T, index?: number, list?: T[]) => any): void;
     /**
      * Groups the elements of a sequence according to a specified key selector function.
      */
-    GroupBy(grouper: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => any): Immutable.Seq.Keyed<any, Immutable.Iterable<number, T>>;
+    GroupBy(grouper: (value?: T, index?: number, list?: T[]) => any): List<T>;
     /**
      * Correlates the elements of two sequences based on equality of keys and groups the results.
      * The default equality comparer is used to compare keys.
      */
-    GroupJoin(): Immutable.List<T>;
+    GroupJoin(): List<any>;
     /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
      */
@@ -103,12 +101,12 @@ export declare class List<T> {
     /**
      * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
      */
-    Join(): Immutable.List<T>;
+    Join(): List<any>;
     /**
      * Returns the last element of a sequence.
      */
     Last(): T;
-    Last(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): T;
+    Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     /**
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
@@ -116,11 +114,11 @@ export declare class List<T> {
     /**
      * Returns the maximum value in a generic sequence.
      */
-    Max(comparator?: (a: T, b: T) => number): T;
+    Max(): T;
     /**
      * Returns the minimum value in a generic sequence.
      */
-    Min(comparator?: (a: T, b: T) => number): T;
+    Min(): T;
     /**
      * Sorts the elements of a sequence in ascending order according to a key.
      */
@@ -132,11 +130,11 @@ export declare class List<T> {
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      */
-    ThenBy(): Immutable.List<T>;
+    ThenBy(): List<T>;
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      */
-    ThenByDescending(): Immutable.List<T>;
+    ThenByDescending(): List<T>;
     /**
      * Reverses the order of the elements in the entire List<T>.
      */
@@ -144,11 +142,11 @@ export declare class List<T> {
     /**
      * Projects each element of a sequence into a new form.
      */
-    Select(mapper: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): List<any>;
+    Select(mapper: (value?: T, index?: number, list?: T[]) => any): List<any>;
     /**
      * Projects each element of a sequence to an IEnumerable<T> and flattens the resulting sequences into one sequence.
      */
-    SelectMany(): Immutable.List<T>;
+    SelectMany(): List<any>;
     /**
      * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
      */
@@ -156,12 +154,12 @@ export declare class List<T> {
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
-    Single(): Immutable.List<T>;
+    Single(): T;
     /**
      * Returns the only element of a sequence, or a default value if the sequence is empty;
      * this method throws an exception if there is more than one element in the sequence.
      */
-    SingleOrDefault(): Immutable.List<T>;
+    SingleOrDefault(): T;
     /**
      * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
      */
@@ -169,12 +167,12 @@ export declare class List<T> {
     /**
      * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
      */
-    SkipWhile(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T>;
+    SkipWhile(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T>;
     /**
      * Computes the sum of the sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
-    Sum(transform?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => number): number;
+    Sum(transform?: (value?: T, index?: number, list?: T[]) => number): number;
     /**
      * Returns a specified number of contiguous elements from the start of a sequence.
      */
@@ -182,7 +180,7 @@ export declare class List<T> {
     /**
      * Returns elements from a sequence as long as a specified condition is true.
      */
-    TakeWhile(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T>;
+    TakeWhile(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T>;
     /**
      * Copies the elements of the List<T> to a new array.
      */
@@ -190,23 +188,23 @@ export declare class List<T> {
     /**
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
-    ToDictionary(key: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any, value?: (value?: T, index?: number, iter?: Immutable.Iterable<number, any>) => any): any;
+    ToDictionary(key: (value?: T, index?: number, list?: T[]) => any, value?: (value?: T, index?: number, list?: T[]) => any): any;
     /**
-     * Creates an Immutable.List<T> from a List<T>.
+     * Creates a List<T> from a Enumerable.List<T>.
      */
-    ToList(): Immutable.List<T>;
+    ToList(): List<T>;
     /**
      * Produces the set union of two sequences by using the default equality comparer.
      */
-    Union(): Immutable.List<T>;
+    Union(): T[];
     /**
      * Filters a sequence of values based on a predicate.
      */
-    Where(predicate: (value?: T, index?: number, iter?: Immutable.Iterable<number, T>) => boolean): List<T>;
+    Where(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T>;
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
-    Zip(iterables: Immutable.Iterable<T, T>[]): Immutable.Iterable.Indexed<T>;
+    Zip(list: List<any>): List<any>;
 }
 export declare class Enumerable {
     /**
