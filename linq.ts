@@ -261,8 +261,8 @@ export class List<T> {
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
-    public Single(): T {
-        if (this.Count() > 1) {
+    public Single(): T | TypeError {
+        if (this.Count() !== 1) {
             throw new TypeError("The collection does not contain exactly one element.");
         } else {
             return this.First();
@@ -273,7 +273,7 @@ export class List<T> {
      * Returns the only element of a sequence, or a default value if the sequence is empty;
      * this method throws an exception if there is more than one element in the sequence.
      */
-    public SingleOrDefault(): T {
+    public SingleOrDefault(): T | TypeError {
         return this.Count() ? this.Single() : undefined;
     }
 

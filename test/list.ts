@@ -189,13 +189,23 @@ test("SequenceEqual", t => {
     t.false(pets1.SequenceEqual(pets3));
 });
 
-// test("Single", t => {
-//     t.fail();
-// });
+test("Single", t => {
+    let fruits1 = new List<string>();
+    let fruits2 = new List<string>(["orange"]);
+    let fruits3 = new List<string>(["orange", "apple"]);
+    t.is(fruits2.Single(), "orange");
+    t.throws(() => fruits1.Single(), /The collection does not contain exactly one element./);
+    t.throws(() => fruits3.Single(), /The collection does not contain exactly one element./);
+});
 
-// test("SingleOrDefault", t => {
-//     t.fail();
-// });
+test("SingleOrDefault", t => {
+    let fruits1 = new List<string>();
+    let fruits2 = new List<string>(["orange"]);
+    let fruits3 = new List<string>(["orange", "apple"]);
+    t.is(fruits1.SingleOrDefault(), undefined);
+    t.is(fruits2.SingleOrDefault(), "orange");
+    t.throws(() => fruits3.SingleOrDefault(), /The collection does not contain exactly one element./);
+});
 
 test("Skip", t => {
     let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
