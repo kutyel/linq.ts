@@ -231,15 +231,17 @@ test("ToArray", t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).ToArray().toString(), "1,2,3,4,5");
 });
 
-// test("ToDictionary", t => {
-//     let people: List<IPerson> = new List<IPerson>([
-//         {Age: 15, Name: "Cathy"},
-//         {Age: 25, Name: "Alice"},
-//         {Age: 50, Name: "Bob"}
-//     ]);
-//     let dictionary: any = people.ToDictionary(x => x.Name);
-//     t.same(dictionary["Bob"], { Age: 50, Name: "Bob" }); // TODO: this should be fixed
-// });
+test("ToDictionary", t => {
+    let people: List<IPerson> = new List<IPerson>([
+        {Age: 15, Name: "Cathy"},
+        {Age: 25, Name: "Alice"},
+        {Age: 50, Name: "Bob"}
+    ]);
+    let dictionary: any = people.ToDictionary(x => x.Name);
+    t.same(dictionary["Bob"], { Age: 50, Name: "Bob" });
+    let dictionary2: any = people.ToDictionary(x => x.Name, y => y.Age);
+    t.is(dictionary2["Alice"], 25);
+});
 
 test("ToList", t => {
     t.is(new List<number>([1, 2, 3]).ToList().ToArray().toString(), "1,2,3");
