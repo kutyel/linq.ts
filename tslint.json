@@ -49,7 +49,7 @@
       "trace"
     ],
     "no-construct": true,
-    "no-constructor-vars": true,
+    "no-constructor-vars": false,
     "no-debugger": true,
     "no-duplicate-key": true,
     "no-duplicate-variable": true,
@@ -60,7 +60,7 @@
     "no-null-keyword": true,
     "no-require-imports": true,
     "no-shadowed-variable": true,
-    "no-string-literal": true,
+    "no-string-literal": false,
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
     "no-unreachable": true,
@@ -102,7 +102,6 @@
       "call-signature",
       "parameter",
       "property-declaration",
-      "variable-declaration",
       "member-variable-declaration"
     ],
     "typedef-whitespace": [
@@ -128,7 +127,7 @@
       "check-function"
     ],
     "variable-name": [
-      true,
+      false,
       "check-format",
       "allow-leading-underscore",
       "ban-keywords"

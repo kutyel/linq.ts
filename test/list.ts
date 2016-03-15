@@ -1,5 +1,5 @@
 import test from "ava";
-import {List} from "../linq";
+import { List } from "../linq";
 
 /**
  * Tests taken from LinQ .NET examples (https://msdn.microsoft.com/en-us/library/s6hkc2c4(v=vs.110).aspx)
@@ -11,21 +11,21 @@ interface IPerson {
 }
 
 test("Add", t => {
-    let list: List<string> = new List<string>();
+    let list = new List<string>();
     list.Add("hey");
     t.is(list.First(), "hey");
 });
 
 test("AddRange", t => {
-    let list: List<string> = new List<string>();
+    let list = new List<string>();
     list.AddRange(["hola", "que", "tal"]);
     t.is(list.ToArray().toString(), "hola,que,tal");
 });
 
 test("Aggregate", t => {
-    let sentence: string = "the quick brown fox jumps over the lazy dog";
-    let reversed: string = "dog lazy the over jumps fox brown quick the ";
-    let words: List<string> = new List<string>(sentence.split(" "));
+    let sentence = "the quick brown fox jumps over the lazy dog";
+    let reversed = "dog lazy the over jumps fox brown quick the ";
+    let words = new List<string>(sentence.split(" "));
     t.is(words.Aggregate((workingSentence, next) => next + " " + workingSentence, ""), reversed);
 });
 
@@ -38,18 +38,18 @@ test("Any", t => {
 });
 
 test("Average", t => {
-    let people: List<IPerson> = new List<IPerson>([
-        {Age: 15, Name: "Cathy"},
-        {Age: 25, Name: "Alice"},
-        {Age: 50, Name: "Bob"}
+    let people = new List<IPerson>([
+        { Age: 15, Name: "Cathy" },
+        { Age: 25, Name: "Alice" },
+        { Age: 50, Name: "Bob" }
     ]);
     t.is(new List<number>([2, 3, 5, 10]).Average(x => x), 5);
     t.is(people.Average(x => x.Age), 30);
 });
 
 test("Concat", t => {
-    let a: List<string> = new List<string>(["hey", "hola", "que", "tal"]);
-    let b: List<string> = new List<string>(["como", "estas", "?"]);
+    let a = new List<string>(["hey", "hola", "que", "tal"]);
+    let b = new List<string>(["como", "estas", "?"]);
     t.is(a.Concat(b).ToArray().toString(), "hey,hola,que,tal,como,estas,?");
 });
 
@@ -66,25 +66,25 @@ test("Count", t => {
 // });
 
 test("Distinct", t => {
-    let ages: List<number> = new List<number>([21, 46, 46, 55, 17, 21, 55, 55]);
+    let ages = new List<number>([21, 46, 46, 55, 17, 21, 55, 55]);
     t.is(ages.Distinct().ToArray().toString(), "21,46,55,17");
 });
 
 test("ElementAt", t => {
-    let a: List<string> = new List<string>(["hey", "hola", "que", "tal"]);
+    let a = new List<string>(["hey", "hola", "que", "tal"]);
     t.is(a.ElementAt(0), "hey");
     t.notOk(a.ElementAt(4));
 });
 
 test("ElementAtOrDefault", t => {
-    let a: List<string> = new List<string>(["hey", "hola", "que", "tal"]);
+    let a = new List<string>(["hey", "hola", "que", "tal"]);
     t.is(a.ElementAtOrDefault(0), "hey");
     t.is(a.ElementAtOrDefault(4), undefined);
 });
 
 test("Except", t => {
-    let numbers1: List<number> = new List<number>([2.0, 2.1, 2.2, 2.3, 2.4, 2.5]);
-    let numbers2: List<number> = new List<number>([2.2, 2.3]);
+    let numbers1 = new List<number>([2.0, 2.1, 2.2, 2.3, 2.4, 2.5]);
+    let numbers2 = new List<number>([2.2, 2.3]);
     t.is(numbers1.Except(numbers2).ToArray().toString(), "2,2.1,2.4,2.5");
 });
 
@@ -100,8 +100,8 @@ test("FirstOrDefault", t => {
 });
 
 test("ForEach", t => {
-    let names: List<string> = new List<string>(["Bruce", "Alfred", "Tim", "Richard"]);
-    let test: string = "";
+    let names = new List<string>(["Bruce", "Alfred", "Tim", "Richard"]);
+    let test = "";
     names.ForEach((x, i) => test += `${x} ${i} `);
     t.is(test, "Bruce 0 Alfred 1 Tim 2 Richard 3 ");
 });
@@ -115,8 +115,8 @@ test("ForEach", t => {
 // });
 
 test("Intersect", t => {
-    let id1: List<number> = new List<number>([44, 26, 92, 30, 71, 38]);
-    let id2: List<number> = new List<number>([39, 59, 83, 47, 26, 4, 30]);
+    let id1 = new List<number>([44, 26, 92, 30, 71, 38]);
+    let id2 = new List<number>([39, 59, 83, 47, 26, 4, 30]);
     t.is(id1.Intersect(id2).Sum(x => x), 56);
 });
 
@@ -177,13 +177,13 @@ test("SequenceEqual", t => {
         constructor(public Name: string, public Age: number) {}
     }
 
-    let pet1: Pet = new Pet("Turbo", 2);
-    let pet2: Pet = new Pet("Peanut", 8);
+    let pet1 = new Pet("Turbo", 2);
+    let pet2 = new Pet("Peanut", 8);
 
     // create three lists of pets.
-    let pets1: List<Pet> = new List<Pet>([pet1, pet2]);
-    let pets2: List<Pet> = new List<Pet>([pet1, pet2]);
-    let pets3: List<Pet> = new List<Pet>([pet1]);
+    let pets1 = new List<Pet>([pet1, pet2]);
+    let pets2 = new List<Pet>([pet1, pet2]);
+    let pets3 = new List<Pet>([pet1]);
 
     t.true(pets1.SequenceEqual(pets2));
     t.false(pets1.SequenceEqual(pets3));
@@ -198,17 +198,17 @@ test("SequenceEqual", t => {
 // });
 
 test("Skip", t => {
-    let grades: List<number> = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+    let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
     t.is(grades.OrderByDescending().Skip(3).ToArray().toString(), "82,70,59,56");
 });
 
 // test("SkipWhile", t => {
-//     let grades: List<number> = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+//     let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
 //     t.is(grades.OrderByDescending().SkipWhile(grade => grade >= 80).ToArray().toString(), "70,59,56");
 // });
 
 test("Sum", t => {
-    let people: List<IPerson> = new List<IPerson>([
+    let people = new List<IPerson>([
         {Age: 15, Name: "Cathy"},
         {Age: 25, Name: "Alice"},
         {Age: 50, Name: "Bob"}
@@ -218,12 +218,12 @@ test("Sum", t => {
 });
 
 test("Take", t => {
-    let grades: List<number> = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+    let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
     t.is(grades.OrderByDescending().Take(3).ToArray().toString(), "98,92,85");
 });
 
 // test("TakeWhile", t => {
-//     let fruits: List<string> = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
+//     let fruits = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
 //     t.is(fruits.TakeWhile(fruit => fruit !== "orange").ToArray().toString(), "apple,banana,mango");
 // });
 
@@ -232,14 +232,14 @@ test("ToArray", t => {
 });
 
 test("ToDictionary", t => {
-    let people: List<IPerson> = new List<IPerson>([
+    let people = new List<IPerson>([
         {Age: 15, Name: "Cathy"},
         {Age: 25, Name: "Alice"},
         {Age: 50, Name: "Bob"}
     ]);
-    let dictionary: any = people.ToDictionary(x => x.Name);
+    let dictionary = people.ToDictionary(x => x.Name);
     t.same(dictionary["Bob"], { Age: 50, Name: "Bob" });
-    let dictionary2: any = people.ToDictionary(x => x.Name, y => y.Age);
+    let dictionary2 = people.ToDictionary(x => x.Name, y => y.Age);
     t.is(dictionary2["Alice"], 25);
 });
 
@@ -256,8 +256,8 @@ test("Where", t => {
 });
 
 test("Zip", t => {
-    let numbers: List<number> = new List<number>([1, 2, 3, 4]);
-    let words: List<string> = new List<string>(["one", "two", "three"]);
+    let numbers = new List<number>([1, 2, 3, 4]);
+    let words = new List<string>(["one", "two", "three"]);
     t.is(numbers.Zip(words, (first, second) => first + " " + second).ToArray().toString(), "1 one,2 two,3 three");
 });
 
