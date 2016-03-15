@@ -320,7 +320,7 @@ export class List<T> {
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
     public ToDictionary(key: (value?: T, index?: number, list?: T[]) => any, value?: (value?: T, index?: number, list?: T[]) => any): any {
-        return this._elements.reduce((o, v, i) => { o[this.Select(key)[i]] = value ? this.Select(value)[i] : v; return o; }, {});
+        return this._elements.reduce((o, v, i) => { o[this._elements.map(key)[i]] = value ? this._elements(value)[i] : v; return o; }, {});
     }
 
     /**
