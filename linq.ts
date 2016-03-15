@@ -262,7 +262,11 @@ export class List<T> {
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
     public Single(): T {
-        return this.First(); // TODO
+        if (this.Count() > 1) {
+            throw new TypeError("The collection does not contain exactly one element.");
+        } else {
+            return this.First();
+        }
     }
 
     /**
@@ -270,7 +274,7 @@ export class List<T> {
      * this method throws an exception if there is more than one element in the sequence.
      */
     public SingleOrDefault(): T {
-        return this.FirstOrDefault(); // TODO
+        return this.Count() ? this.Single() : undefined;
     }
 
     /**
@@ -320,7 +324,7 @@ export class List<T> {
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
     public ToDictionary(key: (value?: T, index?: number, list?: T[]) => any, value?: (value?: T, index?: number, list?: T[]) => any): any {
-        return this._elements.reduce((o, v, i) => { o[this._elements.map(key)[i]] = value ? this._elements.map(value)[i] : v; return o; }, {});
+        return this._elements.reduce((o, v, i) => { o[this._elements.map(key)[i]] = value ? this._elements.map(value)[i] : v; return o; });
     }
 
     /**
@@ -333,8 +337,8 @@ export class List<T> {
     /**
      * Produces the set union of two sequences by using the default equality comparer.
      */
-    public Union() {
-        return this._elements; // TODO
+    public Union(): List<any> {
+        return this; // TODO
     }
 
     /**
@@ -343,12 +347,13 @@ export class List<T> {
     public Where(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
         return new List<T>(this._elements.filter(predicate));
     }
-    
+
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
     public Zip(list: List<any>, result: (first: T, second: any) => any): List<any> {
-        return list.Count() < this.Count() ? list.Select((x, y) => result(this.ElementAt(y), x)) : this.Select((x, y) => result(x, list.ElementAt(y)));
+        return list.Count() < this.Count() ? list.Select((x, y) => result(this.ElementAt(y), x)) :
+            this.Select((x, y) => result(x, list.ElementAt(y)));
     }
 }
 
