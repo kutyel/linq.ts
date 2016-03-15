@@ -255,11 +255,11 @@ test("Where", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).Where(x => x.length > 3).Select(x => x + "a").First(), "holaa");
 });
 
-// test("Zip", t => {
-//     let numbers: List<number> = new List<number>([1, 2, 3, 4]);
-//     let words: List<string> = new List<string>(["one", "two", "three"]);
-//     t.is(numbers.Zip(words, (first, second) => first + " " + second), "1 one,2 two,3 three");
-// });
+test("Zip", t => {
+    let numbers: List<number> = new List<number>([1, 2, 3, 4]);
+    let words: List<string> = new List<string>(["one", "two", "three"]);
+    t.is(numbers.Zip(words, (first, second) => first + " " + second).toString(), "1 one,2 two,3 three");
+});
 
 test("Where().Select()", t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).Where(x => x > 3).Select(y => y * 2).ToArray().toString(), "8,10");
