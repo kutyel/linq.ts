@@ -1,7 +1,7 @@
 {
   "name": "linqts",
-  "version": "0.2.0",
-  "description": "LinQ + TypeScript + Immutable",
+  "version": "0.3.0",
+  "description": "LinQ + TypeScript",
   "main": "linq.ts",
   "scripts": {
     "start": "tsc -w",
@@ -14,8 +14,7 @@
   },
   "keywords": [
     "linq",
-    "typescript",
-    "immutable"
+    "typescript"
   ],
   "author": {
     "name": "Flavio Corpa",
@@ -31,7 +30,7 @@
   "devDependencies": {
     "ava": "^0.13.0",
     "tslint": "^3.5.0",
-    "tap-nyan": "0.0.2",
+    "tap-nyan": "^0.0.2",
     "typescript": "^1.8.7"
   }
 }
