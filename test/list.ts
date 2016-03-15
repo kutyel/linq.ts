@@ -258,7 +258,7 @@ test("Where", t => {
 test("Zip", t => {
     let numbers: List<number> = new List<number>([1, 2, 3, 4]);
     let words: List<string> = new List<string>(["one", "two", "three"]);
-    t.is(numbers.Zip(words, (first, second) => first + " " + second).toArray().toString(), "1 one,2 two,3 three");
+    t.is(numbers.Zip(words, (first, second) => first + " " + second).ToArray().toString(), "1 one,2 two,3 three");
 });
 
 test("Where().Select()", t => {
