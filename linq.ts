@@ -348,7 +348,7 @@ export class List<T> {
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
     public Zip(list: List<any>, result: (first: T, second: any) => any): List<any> {
-        return list.Count() < this.Count() ? list.Select((x, y) => result(x, this.ElementAt(y))) : this.Select((x, y) => result(x, list.ElementAt(y)));
+        return list.Count() < this.Count() ? list.Select((x, y) => result(this.ElementAt(y), x)) : this.Select((x, y) => result(x, list.ElementAt(y)));
     }
 }
 
