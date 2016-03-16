@@ -186,7 +186,9 @@ export class List<T> {
     /**
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
-    public LastOrDefault(): T {
+    public LastOrDefault(): T;
+    public LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    public LastOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
         return this.Count() ? this.Last() : undefined;
     }
 
