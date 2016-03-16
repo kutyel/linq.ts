@@ -132,7 +132,9 @@ export class List<T> {
     /**
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
-    public FirstOrDefault(): T {
+    public FirstOrDefault(): T;
+    public FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    public FirstOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
         return this.Count() ? this.First() : undefined;
     }
 
