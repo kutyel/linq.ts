@@ -81,7 +81,7 @@ export class List<T> {
     public Count(): number;
     public Count(predicate: (value?: T, index?: number, list?: T[]) => boolean): number;
     public Count(predicate?: (value?: T, index?: number, list?: T[]) => boolean): number {
-        return this._elements.length; // TODO: refactor to admit predicate
+        return predicate ? this.Where(predicate).Count() : this._elements.length;
     }
 
     /**

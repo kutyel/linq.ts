@@ -58,7 +58,9 @@ test("Contains", t => {
 });
 
 test("Count", t => {
-    t.is(new List<string>(["hey", "hola", "que", "tal"]).Count(), 4);
+    let fruits = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
+    t.is(fruits.Count(), 6);
+    t.is(fruits.Count(x => x.length > 5), 3);
 });
 
 // test("DefaultIfEmpty", t => {
