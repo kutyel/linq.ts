@@ -2,7 +2,7 @@ import test from "ava";
 import { List } from "../linq";
 
 /**
- * Tests taken from LinQ .NET examples (https://msdn.microsoft.com/en-us/library/s6hkc2c4(v=vs.110).aspx)
+ * Tests taken from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aspx)
  */
 
 interface IPerson {

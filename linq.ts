@@ -292,7 +292,7 @@ export class List<T> {
      * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
      */
     public SkipWhile(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
-        let i: number = 0; while (predicate(this.ElementAt(i))) { i++; } return this.Skip(i);
+        return this.Skip(this.Aggregate((ac, val) => { if (predicate(this.ElementAt(ac))) { ac++; } return ac; }, 0));
     }
 
     /**
@@ -314,7 +314,7 @@ export class List<T> {
      * Returns elements from a sequence as long as a specified condition is true.
      */
     public TakeWhile(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
-        let i: number = 0; while (predicate(this.ElementAt(i))) { i++; } return this.Take(i);
+        return this.Take(this.Aggregate((ac, val) => { if (predicate(this.ElementAt(ac))) { ac++; } return ac; }, 0));
     }
 
     /**
@@ -332,7 +332,7 @@ export class List<T> {
     }
 
     /**
-     * Creates a List<T> from a Enumerable.List<T>.
+     * Creates a List<T> from an Enumerable.List<T>.
      */
     public ToList(): List<T> {
         return this;
