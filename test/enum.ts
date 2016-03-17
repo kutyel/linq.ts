@@ -2,17 +2,17 @@ import test from "ava";
 import {Enumerable} from "../linq";
 
 test("Range", t => {
-    let test: string = "";
-    for (let it of Enumerable.Range(20, 5)) {
-        test += `${it},`;
-    }
-    t.is(test, "20,21,22,23,24,");
+    let test = Enumerable.Range(20, 5);
+    t.is(test.next().value, 20);
+    t.is(test.next().value, 21);
+    t.is(test.next().value, 22);
+    t.is(test.next().value, 23);
+    t.is(test.next().value, 24);
 });
 
 test("Repeat", t => {
-    let test: string = "";
-    for (let it of Enumerable.Repeat("I like programming.", 3)) {
-        test += it;
-    }
-    t.is(test, "I like programming.I like programming.I like programming.");
+    let test = Enumerable.Repeat("I like programming.", 3);
+    t.is(test.next().value, "I like programming.");
+    t.is(test.next().value, "I like programming.");
+    t.is(test.next().value, "I like programming.");
 });

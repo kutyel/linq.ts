@@ -373,7 +373,7 @@ export class Enumerable {
     /**
      * Generates a sequence that contains one repeated value.
      */
-    public static *Repeat(element: any, count: number): IterableIterator<number> {
+    public static *Repeat(element: any, count: number): IterableIterator<any> {
         while (count--) { yield element; }
     }
 
