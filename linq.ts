@@ -196,14 +196,14 @@ export class List<T> {
      * Returns the maximum value in a generic sequence.
      */
     public Max(): T {
-        return this._elements.reduce((x, y) => x > y ? x : y);
+        return this.Aggregate((x, y) => x > y ? x : y);
     }
 
     /**
      * Returns the minimum value in a generic sequence.
      */
     public Min(): T {
-        return this._elements.reduce((x, y) => x < y ? x : y);
+        return this.Aggregate((x, y) => x < y ? x : y);
     }
 
     /**
@@ -300,7 +300,7 @@ export class List<T> {
      * a transform function on each element of the input sequence.
      */
     public Sum(transform?: (value?: T, index?: number, list?: T[]) => number): number {
-        return this._elements.map(transform).reduce((ac: number, v: number) => {ac += v; return ac; }, 0);
+        return this.Select(transform).Aggregate((ac, v) => { ac += v; return ac; }, 0);
     }
 
     /**
@@ -342,7 +342,7 @@ export class List<T> {
      * Produces the set union of two sequences by using the default equality comparer.
      */
     public Union(list: List<T>): List<T> {
-        return this.Concat(list).Where((value, index, arr) => arr.indexOf(value) === index);
+        return this.Concat(list).Distinct();
     }
 
     /**
