@@ -1,7 +1,7 @@
 /**
  * LinQ to TypeScript
  *
- * Documentation from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/s6hkc2c4(v=vs.110).aspx)
+ * Documentation from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aspx)
  *
  * Created by Flavio Corpa (@kutyel)
  * Copyright © 2016 Flavio Corpa. All rights reserved.
