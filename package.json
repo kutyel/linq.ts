@@ -4,9 +4,10 @@
   "description": "LinQ + TypeScript",
   "main": "linq.ts",
   "scripts": {
-    "start": "tsc -w",
-    "test": "tsc && ava",
-    "nyan": "ava --tap | tap-nyan"
+    "start": "node node_modules/typescript/bin/tsc -w",
+    "pretest": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/ava/cli.js",
+    "nyan": "node node_modules/ava/cli.js --tap | node node_modules/tap-nyan/bin/cmd.js"
   },
   "repository": {
     "type": "git",
