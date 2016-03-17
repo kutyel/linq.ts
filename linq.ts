@@ -341,8 +341,8 @@ export class List<T> {
     /**
      * Produces the set union of two sequences by using the default equality comparer.
      */
-    public Union(): List<any> {
-        return this; // TODO
+    public Union(list: List<T>): List<T> {
+        return this.Concat(list).Where((value, index, arr) => arr.indexOf(value) === index);
     }
 
     /**

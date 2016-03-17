@@ -259,9 +259,11 @@ test("ToList", t => {
     t.is(new List<number>([1, 2, 3]).ToList().ToArray().toString(), "1,2,3");
 });
 
-// test("Union", t => {
-//     t.fail();
-// });
+test("Union", t => {
+    let ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7]);
+    let ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0]);
+    t.is(ints1.Union(ints2).OrderByDescending().ToArray().toString(), "9,8,7,6,5,4,3,1,0");
+});
 
 test("Where", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).Where(x => x.length > 3).Select(x => x + "a").First(), "holaa");
