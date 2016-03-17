@@ -35,7 +35,7 @@ export class List<T> {
     /**
      * Applies an accumulator function over a sequence.
      */
-    public Aggregate(accumulator: (accum: any, value?: T, index?: number, list?: T[]) => any, initialValue?: T): any {
+    public Aggregate(accumulator: (accum: any, value?: T, index?: number, list?: T[]) => any, initialValue?: any): any {
         return this._elements.reduce(accumulator, initialValue);
     }
 
@@ -314,7 +314,11 @@ export class List<T> {
      * Returns elements from a sequence as long as a specified condition is true.
      */
     public TakeWhile(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
-        return this.Where(predicate); // TODO
+        let i: number = 0, result = new List<T>();
+        while (predicate(this.ElementAt(i))) {
+            result.Add(this.ElementAt(i)); i++;
+        }
+        return result;
     }
 
     /**
