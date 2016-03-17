@@ -214,10 +214,10 @@ test("Skip", t => {
     t.is(grades.OrderByDescending().Skip(3).ToArray().toString(), "82,70,59,56");
 });
 
-// test("SkipWhile", t => {
-//     let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
-//     t.is(grades.OrderByDescending().SkipWhile(grade => grade >= 80).ToArray().toString(), "70,59,56");
-// });
+test("SkipWhile", t => {
+    let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+    t.is(grades.OrderByDescending().SkipWhile(grade => grade >= 80).ToArray().toString(), "70,59,56");
+});
 
 test("Sum", t => {
     let people = new List<IPerson>([
