@@ -169,9 +169,20 @@ test("Select", t => {
     t.is(new List<number>([1, 2, 3]).Select(x => x * 2).ToArray().toString(), "2,4,6");
 });
 
-// test("SelectMany", t => {
-//     t.fail();
-// });
+test('SelectMany', t => {
+    
+    class PetOwner {
+        constructor(public Name: string, public Pets: List<string>) {}
+    }
+
+    let petOwners = new List<PetOwner>([
+          new PetOwner("Higa, Sidney", new List<string>(["Scruffy", "Sam"])),
+          new PetOwner("Ashkenazi, Ronen", new List<string>(["Walker", "Sugar"])),
+          new PetOwner("Price, Vernette", new List<string>(["Scratches", "Diesel"]))
+    ]);
+
+    t.is(petOwners.SelectMany(petOwner => petOwner.Pets).ToArray().toString(), "Scruffy,Sam,Walker,Sugar,Scratches,Diesel");    
+});
 
 test("SequenceEqual", t => {
 
