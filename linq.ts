@@ -249,10 +249,10 @@ export class List<T> {
     }
 
     /**
-     * Projects each element of a sequence to an IEnumerable<T> and flattens the resulting sequences into one sequence.
+     * Projects each element of a sequence to a List<any> and flattens the resulting sequences into one sequence.
      */
-    public SelectMany(): List<any> {
-        return this; // TODO
+    public SelectMany(mapper: (value?: T, index?: number, list?: T[]) => any): List<any> {
+        return this.Aggregate((ac, v, i) => { ac.AddRange(this.Select(mapper)[i]); return ac; }, new List<any>());
     }
 
     /**
