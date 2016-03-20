@@ -170,8 +170,8 @@ export class List<T> {
     /**
      * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
      */
-    public Join(): List<any> {
-        return this; // TODO
+    public Join(list: List<any>, key1: (key: T) => any, key2: (key: any) => any, result: (first: T, second: any) => any): List<any> {
+        return this.SelectMany(x => list.Where(y => key2(y) === key1(x)).Select(z => result(x, z)));
     }
 
     /**
@@ -376,5 +376,4 @@ export class Enumerable {
     public static *Repeat(element: any, count: number): IterableIterator<any> {
         while (count--) { yield element; }
     }
-
 }

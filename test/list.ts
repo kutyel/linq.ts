@@ -7,15 +7,16 @@ import { List } from "../linq";
 
 interface IPerson {
     Name: string;
-    Age: number;
+    Age?: number;
 }
 
 interface IPet {
     Name: string;
     Age?: number;
+    Owner?: Person;
 }
 
-class Pet {
+class Person implements IPerson {
     public Name: string;
     public Age: number;
 
@@ -25,8 +26,20 @@ class Pet {
     }
 }
 
+class Pet implements IPet {
+    public Name: string;
+    public Age: number;
+    public Owner: Person;
+
+    constructor(pet: IPet) {
+        this.Name = pet.Name;
+        this.Age = pet.Age;
+        this.Owner = pet.Owner;
+    }
+}
+
 class PetOwner {
-    constructor(public Name: string, public Pets: List<Pet>) {}
+    constructor(public Name: string, public Pets: List<Pet>) { }
 }
 
 test("Add", t => {
@@ -148,9 +161,26 @@ test("Intersect", t => {
     t.is(id1.Intersect(id2).Sum(x => x), 56);
 });
 
-// test("Join", t => {
-//     t.fail();
-// });
+test("Join", t => {
+    let magnus = new Person({ Name: "Hedlund, Magnus" });
+    let terry = new Person({ Name: "Adams, Terry" });
+    let charlotte = new Person({ Name: "Weiss, Charlotte" });
+
+    let barley = new Pet({ Name: "Barley", Owner: terry });
+    let boots = new Pet({ Name: "Boots", Owner: terry });
+    let whiskers = new Pet({ Name: "Whiskers", Owner: charlotte });
+    let daisy = new Pet({ Name: "Daisy", Owner: magnus });
+
+    let people = new List<Person>([magnus, terry, charlotte]);
+    let pets = new List<Pet>([barley, boots, whiskers, daisy]);
+
+    // create a list of Person-Pet pairs where
+    // each element is an anonymous type that contains a
+    // pet's name and the name of the Person that owns the Pet.
+    let query = people.Join(pets, person => person, pet => pet.Owner, (person, pet) => ({ OwnerName: person.Name, Pet: pet.Name }));
+    let result = "Hedlund, Magnus - Daisy,Adams, Terry - Barley,Adams, Terry - Boots,Weiss, Charlotte - Whiskers";
+    t.is(query.Select(obj => `${obj.OwnerName} - ${obj.Pet}`).ToArray().toString(), result);
+});
 
 test("Last", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).Last(), "tal");
@@ -197,9 +227,9 @@ test("Select", t => {
 
 test("SelectMany", t => {
     let petOwners = new List<PetOwner>([
-          new PetOwner("Higa, Sidney", new List<Pet>([new Pet({ Name: "Scruffy" }), new Pet({ Name: "Sam" })])),
-          new PetOwner("Ashkenazi, Ronen", new List<Pet>([new Pet({ Name: "Walker" }), new Pet({ Name: "Sugar" })])),
-          new PetOwner("Price, Vernette", new List<Pet>([new Pet({ Name: "Scratches" }), new Pet({ Name: "Diesel" })]))
+        new PetOwner("Higa, Sidney", new List<Pet>([new Pet({ Name: "Scruffy" }), new Pet({ Name: "Sam" })])),
+        new PetOwner("Ashkenazi, Ronen", new List<Pet>([new Pet({ Name: "Walker" }), new Pet({ Name: "Sugar" })])),
+        new PetOwner("Price, Vernette", new List<Pet>([new Pet({ Name: "Scratches" }), new Pet({ Name: "Diesel" })]))
     ]);
     let result = "Scruffy,Sam,Walker,Sugar,Scratches,Diesel";
     t.is(petOwners.SelectMany(petOwner => petOwner.Pets).Select(pet => pet.Name).ToArray().toString(), result);
@@ -246,9 +276,9 @@ test("SkipWhile", t => {
 
 test("Sum", t => {
     let people = new List<IPerson>([
-        {Age: 15, Name: "Cathy"},
-        {Age: 25, Name: "Alice"},
-        {Age: 50, Name: "Bob"}
+        { Age: 15, Name: "Cathy" },
+        { Age: 25, Name: "Alice" },
+        { Age: 50, Name: "Bob" }
     ]);
     t.is(new List<number>([2, 3, 5]).Sum(x => x), 10);
     t.is(people.Sum(x => x.Age), 90);
@@ -270,9 +300,9 @@ test("ToArray", t => {
 
 test("ToDictionary", t => {
     let people = new List<IPerson>([
-        {Age: 15, Name: "Cathy"},
-        {Age: 25, Name: "Alice"},
-        {Age: 50, Name: "Bob"}
+        { Age: 15, Name: "Cathy" },
+        { Age: 25, Name: "Alice" },
+        { Age: 50, Name: "Bob" }
     ]);
     let dictionary = people.ToDictionary(x => x.Name);
     t.same(dictionary["Bob"], { Age: 50, Name: "Bob" });
