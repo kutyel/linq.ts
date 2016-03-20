@@ -10,6 +10,14 @@ interface IPerson {
     Age: number;
 }
 
+class Pet {
+    constructor(public Name: string, public Age?: number) {}
+}
+
+class PetOwner {
+    constructor(public Name: string, public Pets: List<Pet>) {}
+}
+
 test("Add", t => {
     let list = new List<string>();
     list.Add("hey");
@@ -169,35 +177,23 @@ test("Select", t => {
     t.is(new List<number>([1, 2, 3]).Select(x => x * 2).ToArray().toString(), "2,4,6");
 });
 
-test('SelectMany', t => {
-    
-    class PetOwner {
-        constructor(public Name: string, public Pets: List<string>) {}
-    }
-
+test("SelectMany", t => {
     let petOwners = new List<PetOwner>([
-          new PetOwner("Higa, Sidney", new List<string>(["Scruffy", "Sam"])),
-          new PetOwner("Ashkenazi, Ronen", new List<string>(["Walker", "Sugar"])),
-          new PetOwner("Price, Vernette", new List<string>(["Scratches", "Diesel"]))
+          new PetOwner("Higa, Sidney", new List<Pet>([new Pet("Scruffy"), new Pet("Sam")])),
+          new PetOwner("Ashkenazi, Ronen", new List<Pet>([new Pet("Walker"), new Pet("Sugar")])),
+          new PetOwner("Price, Vernette", new List<Pet>([new Pet("Scratches"), new Pet("Diesel")]))
     ]);
-
-    t.is(petOwners.SelectMany(petOwner => petOwner.Pets).ToArray().toString(), "Scruffy,Sam,Walker,Sugar,Scratches,Diesel");    
+    let result = "Scruffy,Sam,Walker,Sugar,Scratches,Diesel";
+    t.is(petOwners.SelectMany(petOwner => petOwner.Pets).Select(pet => pet.Name).ToArray().toString(), result);
 });
 
 test("SequenceEqual", t => {
-
-    class Pet {
-        constructor(public Name: string, public Age: number) {}
-    }
-
     let pet1 = new Pet("Turbo", 2);
     let pet2 = new Pet("Peanut", 8);
-
     // create three lists of pets.
     let pets1 = new List<Pet>([pet1, pet2]);
     let pets2 = new List<Pet>([pet1, pet2]);
     let pets3 = new List<Pet>([pet1]);
-
     t.true(pets1.SequenceEqual(pets2));
     t.false(pets1.SequenceEqual(pets3));
 });
