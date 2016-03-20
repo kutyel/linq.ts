@@ -88,8 +88,8 @@ export class List<T> {
      * Returns the elements of the specified sequence or the type parameter's default value
      * in a singleton collection if the sequence is empty.
      */
-    public DefaultIfEmpty(): T {
-        return this._elements[0]; // TODO
+    public DefaultIfEmpty(defaultValue?: T): List<T> {
+        return this.Count() ? this : new List<T>([defaultValue]);
     }
 
     /**

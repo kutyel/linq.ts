@@ -10,8 +10,19 @@ interface IPerson {
     Age: number;
 }
 
+interface IPet {
+    Name: string;
+    Age?: number;
+}
+
 class Pet {
-    constructor(public Name: string, public Age?: number) {}
+    public Name: string;
+    public Age: number;
+
+    constructor(pet: IPet) {
+        this.Name = pet.Name;
+        this.Age = pet.Age;
+    }
 }
 
 class PetOwner {
@@ -71,9 +82,16 @@ test("Count", t => {
     t.is(fruits.Count(x => x.length > 5), 3);
 });
 
-// test("DefaultIfEmpty", t => {
-//     t.fail();
-// });
+test("DefaultIfEmpty", t => {
+    let pets = new List<Pet>([
+        new Pet({ Age: 8, Name: "Barley" }),
+        new Pet({ Age: 4, Name: "Boots" }),
+        new Pet({ Age: 1, Name: "Whiskers" })
+    ]);
+    t.is(pets.DefaultIfEmpty().Select(pet => pet.Name).ToArray().toString(), "Barley,Boots,Whiskers");
+    let numbers = new List<number>();
+    t.is(numbers.DefaultIfEmpty(0).ToArray().toString(), "0");
+});
 
 test("Distinct", t => {
     let ages = new List<number>([21, 46, 46, 55, 17, 21, 55, 55]);
@@ -179,17 +197,17 @@ test("Select", t => {
 
 test("SelectMany", t => {
     let petOwners = new List<PetOwner>([
-          new PetOwner("Higa, Sidney", new List<Pet>([new Pet("Scruffy"), new Pet("Sam")])),
-          new PetOwner("Ashkenazi, Ronen", new List<Pet>([new Pet("Walker"), new Pet("Sugar")])),
-          new PetOwner("Price, Vernette", new List<Pet>([new Pet("Scratches"), new Pet("Diesel")]))
+          new PetOwner("Higa, Sidney", new List<Pet>([new Pet({ Name: "Scruffy" }), new Pet({ Name: "Sam" })])),
+          new PetOwner("Ashkenazi, Ronen", new List<Pet>([new Pet({ Name: "Walker" }), new Pet({ Name: "Sugar" })])),
+          new PetOwner("Price, Vernette", new List<Pet>([new Pet({ Name: "Scratches" }), new Pet({ Name: "Diesel" })]))
     ]);
     let result = "Scruffy,Sam,Walker,Sugar,Scratches,Diesel";
     t.is(petOwners.SelectMany(petOwner => petOwner.Pets).Select(pet => pet.Name).ToArray().toString(), result);
 });
 
 test("SequenceEqual", t => {
-    let pet1 = new Pet("Turbo", 2);
-    let pet2 = new Pet("Peanut", 8);
+    let pet1 = new Pet({ Age: 2, Name: "Turbo" });
+    let pet2 = new Pet({ Age: 8, Name: "Peanut" });
     // create three lists of pets.
     let pets1 = new List<Pet>([pet1, pet2]);
     let pets2 = new List<Pet>([pet1, pet2]);
