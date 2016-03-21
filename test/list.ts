@@ -162,9 +162,27 @@ test("GroupBy", t => {
     t.same(pets.GroupBy(pet => pet.Age, pet => pet.Name), result);
 });
 
-// test("GroupJoin", t => {
-//     t.fail();
-// });
+test("GroupJoin", t => {
+    let magnus = new Person({ Name: "Hedlund, Magnus" });
+    let terry = new Person({ Name: "Adams, Terry" });
+    let charlotte = new Person({ Name: "Weiss, Charlotte" });
+
+    let barley = new Pet({ Name: "Barley", Owner: terry });
+    let boots = new Pet({ Name: "Boots", Owner: terry });
+    let whiskers = new Pet({ Name: "Whiskers", Owner: charlotte });
+    let daisy = new Pet({ Name: "Daisy", Owner: magnus });
+
+    let people = new List<Person>([ magnus, terry, charlotte ]);
+    let pets = new List<Pet>([ barley, boots, whiskers, daisy ]);
+
+    // create a list where each element is an anonymous
+    // type that contains a person's name and
+    // a collection of names of the pets they own.
+    let query = people.GroupJoin(pets, person => person, pet => pet.Owner, (person, petCollection) =>
+        ({ OwnerName: person.Name, Pets: petCollection.Select(pet => pet.Name) }));
+    let result = "Hedlund, Magnus: Daisy,Adams, Terry: Barley,Boots,Weiss, Charlotte: Whiskers";
+    // t.is(query.Select(obj => `${obj.OwnerName}: ${obj.Pets.ToArray()}`).ToArray().toString(), result); // TODO
+});
 
 test("Intersect", t => {
     let id1 = new List<number>([44, 26, 92, 30, 71, 38]);
@@ -188,7 +206,8 @@ test("Join", t => {
     // create a list of Person-Pet pairs where
     // each element is an anonymous type that contains a
     // pet's name and the name of the Person that owns the Pet.
-    let query = people.Join(pets, person => person, pet => pet.Owner, (person, pet) => ({ OwnerName: person.Name, Pet: pet.Name }));
+    let query = people.Join(pets, person => person, pet => pet.Owner, (person, pet) =>
+        ({ OwnerName: person.Name, Pet: pet.Name }));
     let result = "Hedlund, Magnus - Daisy,Adams, Terry - Barley,Adams, Terry - Boots,Weiss, Charlotte - Whiskers";
     t.is(query.Select(obj => `${obj.OwnerName} - ${obj.Pet}`).ToArray().toString(), result);
 });

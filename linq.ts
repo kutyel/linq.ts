@@ -156,8 +156,8 @@ export class List<T> {
      * Correlates the elements of two sequences based on equality of keys and groups the results.
      * The default equality comparer is used to compare keys.
      */
-    public GroupJoin(): List<any> {
-        return this; // TODO
+    public GroupJoin<U>(list: List<U>, key1: (k: T) => any, key2: (k: U) => any, result: (first: T, second: List<U>) => any): List<any> {
+        return this.Join(list, key1, key2, (x, y) => result(x, new List<U>([y])));
     }
 
     /**
