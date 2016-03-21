@@ -147,9 +147,20 @@ test("ForEach", t => {
     t.is(test, "Bruce 0 Alfred 1 Tim 2 Richard 3 ");
 });
 
-// test("GroupBy", t => {
-//     t.fail();
-// });
+test("GroupBy", t => {
+    let pets = new List<Pet>([
+        new Pet({ Age: 8, Name: "Barley" }),
+        new Pet({ Age: 4, Name: "Boots" }),
+        new Pet({ Age: 1, Name: "Whiskers" }),
+        new Pet({ Age: 4, Name: "Daisy" })
+    ]);
+    let result = {
+        "1": ["Whiskers"],
+        "4": ["Boots", "Daisy"],
+        "8": ["Barley"],
+    };
+    t.is(pets.GroupBy(pet => pet.Age, pet => pet.Name), result);
+});
 
 // test("GroupJoin", t => {
 //     t.fail();
