@@ -159,7 +159,7 @@ test("GroupBy", t => {
         "4": ["Boots", "Daisy"],
         "8": ["Barley"],
     };
-    t.is(pets.GroupBy(pet => pet.Age, pet => pet.Name), result);
+    t.same(pets.GroupBy(pet => pet.Age, pet => pet.Name), result);
 });
 
 // test("GroupJoin", t => {
