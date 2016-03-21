@@ -148,8 +148,8 @@ export class List<T> {
     /**
      * Groups the elements of a sequence according to a specified key selector function.
      */
-    public GroupBy(grouper: (value?: T, index?: number, list?: T[]) => any): List<T> {
-        return this; // TODO
+    public GroupBy(grouper: (key: T) => any, mapper: (element: T) => any): any {
+        return this.Aggregate((ac, v) => (ac[grouper(v)] ? ac[grouper(v)].push(mapper(v)) : ac[grouper(v)] = [mapper(v)], ac), {});
     }
 
     /**
