@@ -170,7 +170,7 @@ export class List<T> {
     /**
      * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
      */
-    public Join(list: List<any>, key1: (key: T) => any, key2: (key: any) => any, result: (first: T, second: any) => any): List<any> {
+    public Join<U>(list: List<U>, key1: (key: T) => any, key2: (key: U) => any, result: (first: T, second: U) => any): List<any> {
         return this.SelectMany(x => list.Where(y => key2(y) === key1(x)).Select(z => result(x, z)));
     }
 
@@ -252,7 +252,7 @@ export class List<T> {
      * Projects each element of a sequence to a List<any> and flattens the resulting sequences into one sequence.
      */
     public SelectMany(mapper: (value?: T, index?: number, list?: T[]) => any): List<any> {
-        return this.Aggregate((ac, v, i) => { ac.AddRange(this.Select(mapper).ElementAt(i).ToArray()); return ac; }, new List<any>());
+        return this.Aggregate((ac, v, i) => (ac.AddRange(this.Select(mapper).ElementAt(i).ToArray()), ac), new List<any>());
     }
 
     /**
@@ -299,8 +299,10 @@ export class List<T> {
      * Computes the sum of the sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
+    public Sum(): number;
+    public Sum(transform: (value?: T, index?: number, list?: T[]) => number): number;
     public Sum(transform?: (value?: T, index?: number, list?: T[]) => number): number {
-        return this.Select(transform).Aggregate((ac, v) => { ac += v; return ac; }, 0);
+        return transform ? this.Select(transform).Sum() : this.Aggregate((ac, v) => ac += v, 0);
     }
 
     /**
@@ -328,7 +330,7 @@ export class List<T> {
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
     public ToDictionary(key: (value?: T, index?: number, list?: T[]) => any, value?: (value?: T, index?: number, list?: T[]) => any): any {
-        return this._elements.reduce((o, v, i) => { o[this._elements.map(key)[i]] = value ? this._elements.map(value)[i] : v; return o; });
+        return this.Aggregate((o, v, i) => (o[this._elements.map(key)[i]] = value ? this._elements.map(value)[i] : v, o), {});
     }
 
     /**
@@ -355,7 +357,7 @@ export class List<T> {
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
-    public Zip(list: List<any>, result: (first: T, second: any) => any): List<any> {
+    public Zip<U>(list: List<U>, result: (first: T, second: U) => any): List<any> {
         return list.Count() < this.Count() ? list.Select((x, y) => result(this.ElementAt(y), x)) :
             this.Select((x, y) => result(x, list.ElementAt(y)));
     }

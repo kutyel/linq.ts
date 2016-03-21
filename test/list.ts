@@ -291,7 +291,7 @@ test("Sum", t => {
         { Age: 25, Name: "Alice" },
         { Age: 50, Name: "Bob" }
     ]);
-    t.is(new List<number>([2, 3, 5]).Sum(x => x), 10);
+    t.is(new List<number>([2, 3, 5]).Sum(), 10);
     t.is(people.Sum(x => x.Age), 90);
 });
 
