@@ -9,7 +9,7 @@
  */
 export class List<T> {
 
-    private _elements: T[];
+    protected _elements: T[];
 
     /**
      * Defaults the elements of the list
@@ -209,29 +209,29 @@ export class List<T> {
     /**
      * Sorts the elements of a sequence in ascending order according to a key.
      */
-    public OrderBy(comparator?: (a: T, b: T) => number): List<T> {
-        return new List<T>(this._elements.sort(comparator));
+    public OrderBy(comparator: (key: T) => any): List<T> {
+        return new OrderedList<T>(this, comparator, false);
     }
 
     /**
      * Sorts the elements of a sequence in descending order according to a key.
      */
-    public OrderByDescending(comparator?: (a: T, b: T) => number): List<T> {
-        return new List<T>(this._elements.sort(comparator).reverse());
+    public OrderByDescending(comparator: (key: T) => any): List<T> {
+        return new OrderedList<T>(this, comparator, true);
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      */
-    public ThenBy(): List<T> {
-        return this; // TODO
+    public ThenBy(comparator: (key: T) => any): List<T> {
+        return new OrderedList<T>(this, comparator, false, this instanceof OrderedList);
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      */
-    public ThenByDescending(): List<T> {
-        return this; // TODO
+    public ThenByDescending(comparator: (key: T) => any): List<T> {
+        return new OrderedList<T>(this, comparator, true, this instanceof OrderedList);
     }
 
     /**
@@ -360,6 +360,31 @@ export class List<T> {
     public Zip<U>(list: List<U>, result: (first: T, second: U) => any): List<any> {
         return list.Count() < this.Count() ? list.Select((x, y) => result(this.ElementAt(y), x)) :
             this.Select((x, y) => result(x, list.ElementAt(y)));
+    }
+}
+
+class OrderedList<T> extends List<T> {
+    private _orderBy: (key: T) => any;
+
+    private _com(a: any, b: any): number {
+        return a > b ? 1 : a < b ? -1 : 0;
+    }
+
+    constructor(list: List<T>, orderBy: (key: T) => any, private reverse?: boolean, private thenBy?: boolean) {
+        super(list.ToArray());
+        if (thenBy) {
+            if (reverse) {
+                this._elements.sort((x, y) => this._com(this._orderBy(x), this._orderBy(y)) || this._com(orderBy(x), orderBy(y))).reverse();
+            } else {
+                this._elements.sort((x, y) => this._com(this._orderBy(x), this._orderBy(y)) || this._com(orderBy(x), orderBy(y)));
+            }
+        } else {
+            if (reverse) {
+                this._elements.sort((x, y) => this._com(orderBy(x), orderBy(y))).reverse();
+            } else {
+                this._elements.sort((x, y) => this._com(orderBy(x), orderBy(y)));
+            }
+        }
     }
 }
 

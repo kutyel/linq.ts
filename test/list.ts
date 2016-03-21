@@ -232,20 +232,28 @@ test("Min", t => {
 });
 
 test("OrderBy", t => {
-    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderBy().ToArray().toString(), "1,2,3,4,5,6");
+    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderBy(x => x).ToArray().toString(), "1,2,3,4,5,6");
 });
 
 test("OrderByDescending", t => {
-    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderByDescending().ToArray().toString(), "6,5,4,3,2,1");
+    t.is(new List<number>([4, 5, 6, 3, 2, 1]).OrderByDescending(x => x).ToArray().toString(), "6,5,4,3,2,1");
 });
 
-// test("ThenBy", t => {
-//     t.fail();
-// });
+test("ThenBy", t => {
+    let fruits = new List<string>(["grape", "passionfruit", "banana", "mango", "orange", "raspberry", "apple", "blueberry"]);
+    // sort the strings first by their length and then
+    // alphabetically by passing the identity selector function.
+    let result = "apple,grape,mango,banana,orange,blueberry,raspberry,passionfruit";
+    // t.is(fruits.OrderBy(fruit => fruit.length).ThenBy(fruit => fruit).ToArray().toString(), result);
+});
 
-// test("ThenByDescending", t => {
-//     t.fail();
-// });
+test("ThenByDescending", t => {
+    let fruits = new List<string>(["grape", "passionfruit", "banana", "mango", "orange", "raspberry", "apple", "blueberry"]);
+    // sort the strings first by their length and then
+    // alphabetically descending by passing the identity selector function.
+    let result = "passionfruit,raspberry,blueberry,orange,banana,mango,grape,apple";
+    // t.is(fruits.OrderBy(fruit => fruit.length).ThenByDescending(fruit => fruit).ToArray().toString(), result);
+});
 
 test("Reverse", t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).Reverse().ToArray().toString(), "5,4,3,2,1");
@@ -296,12 +304,12 @@ test("SingleOrDefault", t => {
 
 test("Skip", t => {
     let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
-    t.is(grades.OrderByDescending().Skip(3).ToArray().toString(), "82,70,59,56");
+    t.is(grades.OrderByDescending(x => x).Skip(3).ToArray().toString(), "82,70,59,56");
 });
 
 test("SkipWhile", t => {
     let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
-    t.is(grades.OrderByDescending().SkipWhile(grade => grade >= 80).ToArray().toString(), "70,59,56");
+    t.is(grades.OrderByDescending(x => x).SkipWhile(grade => grade >= 80).ToArray().toString(), "70,59,56");
 });
 
 test("Sum", t => {
@@ -316,7 +324,7 @@ test("Sum", t => {
 
 test("Take", t => {
     let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
-    t.is(grades.OrderByDescending().Take(3).ToArray().toString(), "98,92,85");
+    t.is(grades.OrderByDescending(x => x).Take(3).ToArray().toString(), "98,92,85");
 });
 
 test("TakeWhile", t => {
@@ -347,7 +355,7 @@ test("ToList", t => {
 test("Union", t => {
     let ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7]);
     let ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0]);
-    t.is(ints1.Union(ints2).OrderByDescending().ToArray().toString(), "9,8,7,6,5,4,3,1,0");
+    t.is(ints1.Union(ints2).OrderByDescending(x => x).ToArray().toString(), "9,8,7,6,5,4,3,1,0");
 });
 
 test("Where", t => {
