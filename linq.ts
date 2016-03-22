@@ -381,12 +381,18 @@ class OrderedList<T> extends List<T> {
         }
     }
 
-    // Super ThenBy overload
+    /**
+     * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+     * @override
+     */
     public ThenBy(comparator: (key: T) => any): List<T> {
         return new List<T>(this._elements.sort((x, y) => this._com(this._thenBy(x), this._thenBy(y)) || this._com(comparator(x), comparator(y))));
     }
 
-    // Super ThenByDescending overload
+    /**
+     * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
+     * @override
+     */
     public ThenByDescending(comparator: (key: T) => any): List<T> {
         return new List<T>(this.ThenBy(comparator).ToArray()).Reverse();
     }
