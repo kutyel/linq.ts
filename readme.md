@@ -4,6 +4,7 @@
 [![Dependencies](https://img.shields.io/david/kutyel/linq.ts.svg?style=flat-square)](https://david-dm.org/kutyel/linq.ts)
 [![Dev Dependencies](https://img.shields.io/david/dev/kutyel/linq.ts.svg?style=flat-square)](https://david-dm.org/kutyel/linq.ts#info=devDependencies)
 [![Downloads](https://img.shields.io/npm/dm/linqts.svg?style=flat-square)](https://npmjs.com/packages/linqts)
+[![Version](https://img.shields.io/npm/v/linqts.svg?style=flat-square)](https://npmjs.com/packages/linqts)
 [![Donate](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://paypal.me/flaviocorpa)
 
 [![linqts](https://raw.githubusercontent.com/kutyel/linq/master/assets/linqts.png)](http://www.typescriptlang.org)
@@ -22,7 +23,14 @@ import {List} from './linq.ts';
 let arr = new List<number>([1,2,3,4,5])
     .Where(x => x > 3)
     .Select(y => y * 2)
-    .ToArray(); // => [8, 10]
+    .ToArray(); // > [8, 10]
+
+let query =
+    people.Join(pets,
+                person => person,
+                pet => pet.Owner,
+                (person, pet) =>
+                    ({ OwnerName: person.Name, Pet: pet.Name }));
 ```
 
 ## Sample
