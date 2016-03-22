@@ -329,8 +329,8 @@ export class List<T> {
     /**
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
-    public ToDictionary(key: (value?: T, index?: number, list?: T[]) => any, value?: (value?: T, index?: number, list?: T[]) => any): any {
-        return this.Aggregate((o, v, i) => (o[this._elements.map(key)[i]] = value ? this._elements.map(value)[i] : v, o), {});
+    public ToDictionary<TKey, TValue>(key: (key: any) => TKey, value?: (value: any) => TValue): any {
+        return this.Aggregate((o, v, i) => (o[this.Select(key).ElementAt(i)] = value ? this.Select(value).ElementAt(i) : v, o), {});
     }
 
     /**
@@ -388,7 +388,7 @@ class OrderedList<T> extends List<T> {
      * @override
      */
     public ThenByDescending(comp: (key: T) => any): List<T> {
-        return new List<T>(this.ThenBy(comp).ToArray()).Reverse();
+        return this.ThenBy(comp).Reverse();
     }
 
     /**
