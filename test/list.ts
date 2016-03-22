@@ -244,7 +244,7 @@ test("ThenBy", t => {
     // sort the strings first by their length and then
     // alphabetically by passing the identity selector function.
     let result = "apple,grape,mango,banana,orange,blueberry,raspberry,passionfruit";
-    // t.is(fruits.OrderBy(fruit => fruit.length).ThenBy(fruit => fruit).ToArray().toString(), result);
+    t.is(fruits.OrderBy(fruit => fruit.length).ThenBy(fruit => fruit).ToArray().toString(), result);
 });
 
 test("ThenByDescending", t => {
@@ -252,7 +252,7 @@ test("ThenByDescending", t => {
     // sort the strings first by their length and then
     // alphabetically descending by passing the identity selector function.
     let result = "passionfruit,raspberry,blueberry,orange,banana,mango,grape,apple";
-    // t.is(fruits.OrderBy(fruit => fruit.length).ThenByDescending(fruit => fruit).ToArray().toString(), result);
+    t.is(fruits.OrderBy(fruit => fruit.length).ThenByDescending(fruit => fruit).ToArray().toString(), result);
 });
 
 test("Reverse", t => {
