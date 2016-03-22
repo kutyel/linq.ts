@@ -162,7 +162,7 @@ test("GroupBy", t => {
     t.same(pets.GroupBy(pet => pet.Age, pet => pet.Name), result);
 });
 
-test("GroupJoin", t => {
+test.skip("GroupJoin", t => {
     let magnus = new Person({ Name: "Hedlund, Magnus" });
     let terry = new Person({ Name: "Adams, Terry" });
     let charlotte = new Person({ Name: "Weiss, Charlotte" });
@@ -181,7 +181,7 @@ test("GroupJoin", t => {
     let query = people.GroupJoin(pets, person => person, pet => pet.Owner, (person, petCollection) =>
         ({ OwnerName: person.Name, Pets: petCollection.Select(pet => pet.Name) }));
     let result = "Hedlund, Magnus: Daisy,Adams, Terry: Barley,Boots,Weiss, Charlotte: Whiskers";
-    // t.is(query.Select(obj => `${obj.OwnerName}: ${obj.Pets.ToArray()}`).ToArray().toString(), result); // TODO
+    t.is(query.Select(obj => `${obj.OwnerName}: ${obj.Pets.ToArray()}`).ToArray().toString(), result);
 });
 
 test("Intersect", t => {
