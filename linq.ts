@@ -224,14 +224,14 @@ export class List<T> {
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      */
     public ThenBy(comparator: (key: T) => any): List<T> {
-        return new OrderedList<T>(this, comparator, false, this instanceof OrderedList);
+        return this.OrderBy(comparator);
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      */
     public ThenByDescending(comparator: (key: T) => any): List<T> {
-        return new OrderedList<T>(this, comparator, true, this instanceof OrderedList);
+        return this.OrderByDescending(comparator);
     }
 
     /**
@@ -364,27 +364,31 @@ export class List<T> {
 }
 
 class OrderedList<T> extends List<T> {
-    private _orderBy: (key: T) => any;
+    private _thenBy: (key: T) => any;
 
     private _com(a: any, b: any): number {
         return a > b ? 1 : a < b ? -1 : 0;
     }
 
-    constructor(list: List<T>, orderBy: (key: T) => any, private reverse?: boolean, private thenBy?: boolean) {
+    constructor(list: List<T>, orderBy: (key: T) => any, private reverse?: boolean) {
         super(list.ToArray());
-        if (thenBy) {
-            if (reverse) {
-                this._elements.sort((x, y) => this._com(this._orderBy(x), this._orderBy(y)) || this._com(orderBy(x), orderBy(y))).reverse();
-            } else {
-                this._elements.sort((x, y) => this._com(this._orderBy(x), this._orderBy(y)) || this._com(orderBy(x), orderBy(y)));
-            }
-        } else {
-            if (reverse) {
-                this._elements.sort((x, y) => this._com(orderBy(x), orderBy(y))).reverse();
-            } else {
-                this._elements.sort((x, y) => this._com(orderBy(x), orderBy(y)));
-            }
+        this._thenBy = orderBy;
+        
+        this._elements.sort((x, y) => this._com(orderBy(x), orderBy(y)));
+        
+        if (reverse) {
+            this._elements.reverse();
         }
+    }
+
+    // Super ThenBy overload
+    public ThenBy(comparator: (key: T) => any): List<T> {
+        return new List<T>(this._elements.sort((x, y) => this._com(this._thenBy(x), this._thenBy(y)) || this._com(comparator(x), comparator(y))));
+    }
+
+    // Super ThenByDescending overload
+    public ThenByDescending(comparator: (key: T) => any): List<T> {
+        return new List<T>(this.ThenBy(comparator).ToArray()).Reverse();
     }
 }
 
