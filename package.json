@@ -7,7 +7,8 @@
     "start": "node node_modules/typescript/bin/tsc -w",
     "pretest": "node node_modules/typescript/bin/tsc",
     "test": "node node_modules/ava/cli.js",
-    "nyan": "node node_modules/ava/cli.js --tap | node node_modules/tap-nyan/bin/cmd.js"
+    "nyan": "node node_modules/ava/cli.js --tap | node node_modules/tap-nyan/bin/cmd.js",
+    "docs": "typedoc --out ../docs/ linq.ts -m commonjs -t ES6"
   },
   "repository": {
     "type": "git",
@@ -31,8 +32,9 @@
   "dependencies": {},
   "devDependencies": {
     "ava": "^0.13.0",
-    "tslint": "^3.5.0",
     "tap-nyan": "^0.0.2",
+    "tslint": "^3.5.0",
+    "typedoc": "^0.3.12",
     "typescript": "^1.8.7"
   }
 }
