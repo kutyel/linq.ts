@@ -35,7 +35,7 @@ export class List<T> {
     /**
      * Applies an accumulator function over a sequence.
      */
-    public Aggregate(accumulator: (accum: any, value?: T, index?: number, list?: T[]) => any, initialValue?: any): any {
+    public Aggregate<U>(accumulator: (accum: U, value?: T, index?: number, list?: T[]) => any, initialValue?: U): any {
         return this._elements.reduce(accumulator, initialValue);
     }
 
@@ -157,7 +157,7 @@ export class List<T> {
      * The default equality comparer is used to compare keys.
      */
     public GroupJoin<U>(list: List<U>, key1: (k: T) => any, key2: (k: U) => any, result: (first: T, second: List<U>) => any): List<any> {
-        return this.Join(list, key1, key2, (x, y) => result(x, new List<U>([y])));
+        return this.Join(list, key1, key2, (x, y) => result(x, list.Where(z => x === key2(z)))).Distinct();
     }
 
     /**
@@ -302,7 +302,7 @@ export class List<T> {
     public Sum(): number;
     public Sum(transform: (value?: T, index?: number, list?: T[]) => number): number;
     public Sum(transform?: (value?: T, index?: number, list?: T[]) => number): number {
-        return transform ? this.Select(transform).Sum() : this.Aggregate((ac, v) => ac += v, 0);
+        return transform ? this.Select(transform).Sum() : this.Aggregate((ac, v) => ac += (+v), 0);
     }
 
     /**
