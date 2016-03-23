@@ -18,7 +18,7 @@ npm install linqts
 ## Usage
 
 ```ts
-import {List} from './linq.ts';
+import {List} from 'linqts';
 
 let arr = new List<number>([1,2,3,4,5])
     .Where(x => x > 3)

@@ -1,14 +1,14 @@
 /**
  * LinQ to TypeScript
  *
- * Documentation from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/s6hkc2c4(v=vs.110).aspx)
+ * Documentation from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aspx)
  *
  * Created by Flavio Corpa (@kutyel)
  * Copyright © 2016 Flavio Corpa. All rights reserved.
  *
  */
 export declare class List<T> {
-    private _elements;
+    protected _elements: T[];
     /**
      * Defaults the elements of the list
      */
@@ -24,7 +24,7 @@ export declare class List<T> {
     /**
      * Applies an accumulator function over a sequence.
      */
-    Aggregate(accumulator: (accum: any, value?: T, index?: number, list?: T[]) => any, initialValue?: T): any;
+    Aggregate<U>(accumulator: (accum: U, value?: T, index?: number, list?: T[]) => any, initialValue?: U): any;
     /**
      * Determines whether all elements of a sequence satisfy a condition.
      */
@@ -55,7 +55,7 @@ export declare class List<T> {
      * Returns the elements of the specified sequence or the type parameter's default value
      * in a singleton collection if the sequence is empty.
      */
-    DefaultIfEmpty(): T;
+    DefaultIfEmpty(defaultValue?: T): List<T>;
     /**
      * Returns distinct elements from a sequence by using the default equality comparer to compare values.
      */
@@ -81,6 +81,7 @@ export declare class List<T> {
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
     FirstOrDefault(): T;
+    FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     /**
      * Performs the specified action on each element of the List<T>.
      */
@@ -88,12 +89,12 @@ export declare class List<T> {
     /**
      * Groups the elements of a sequence according to a specified key selector function.
      */
-    GroupBy(grouper: (value?: T, index?: number, list?: T[]) => any): List<T>;
+    GroupBy(grouper: (key: T) => any, mapper: (element: T) => any): any;
     /**
      * Correlates the elements of two sequences based on equality of keys and groups the results.
      * The default equality comparer is used to compare keys.
      */
-    GroupJoin(): List<any>;
+    GroupJoin<U>(list: List<U>, key1: (k: T) => any, key2: (k: U) => any, result: (first: T, second: List<U>) => any): List<any>;
     /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
      */
@@ -101,7 +102,7 @@ export declare class List<T> {
     /**
      * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
      */
-    Join(): List<any>;
+    Join<U>(list: List<U>, key1: (key: T) => any, key2: (key: U) => any, result: (first: T, second: U) => any): List<any>;
     /**
      * Returns the last element of a sequence.
      */
@@ -111,6 +112,7 @@ export declare class List<T> {
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
     LastOrDefault(): T;
+    LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     /**
      * Returns the maximum value in a generic sequence.
      */
@@ -122,19 +124,19 @@ export declare class List<T> {
     /**
      * Sorts the elements of a sequence in ascending order according to a key.
      */
-    OrderBy(comparator?: (a: T, b: T) => number): List<T>;
+    OrderBy(comparator: (key: T) => any): List<T>;
     /**
      * Sorts the elements of a sequence in descending order according to a key.
      */
-    OrderByDescending(comparator?: (a: T, b: T) => number): List<T>;
+    OrderByDescending(comparator: (key: T) => any): List<T>;
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      */
-    ThenBy(): List<T>;
+    ThenBy(comparator: (key: T) => any): List<T>;
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      */
-    ThenByDescending(): List<T>;
+    ThenByDescending(comparator: (key: T) => any): List<T>;
     /**
      * Reverses the order of the elements in the entire List<T>.
      */
@@ -144,9 +146,9 @@ export declare class List<T> {
      */
     Select(mapper: (value?: T, index?: number, list?: T[]) => any): List<any>;
     /**
-     * Projects each element of a sequence to an IEnumerable<T> and flattens the resulting sequences into one sequence.
+     * Projects each element of a sequence to a List<any> and flattens the resulting sequences into one sequence.
      */
-    SelectMany(): List<any>;
+    SelectMany(mapper: (value?: T, index?: number, list?: T[]) => any): List<any>;
     /**
      * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
      */
@@ -154,12 +156,12 @@ export declare class List<T> {
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
-    Single(): T;
+    Single(): T | TypeError;
     /**
      * Returns the only element of a sequence, or a default value if the sequence is empty;
      * this method throws an exception if there is more than one element in the sequence.
      */
-    SingleOrDefault(): T;
+    SingleOrDefault(): T | TypeError;
     /**
      * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
      */
@@ -172,7 +174,8 @@ export declare class List<T> {
      * Computes the sum of the sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
-    Sum(transform?: (value?: T, index?: number, list?: T[]) => number): number;
+    Sum(): number;
+    Sum(transform: (value?: T, index?: number, list?: T[]) => number): number;
     /**
      * Returns a specified number of contiguous elements from the start of a sequence.
      */
@@ -188,15 +191,15 @@ export declare class List<T> {
     /**
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
-    ToDictionary(key: (value?: T, index?: number, list?: T[]) => any, value?: (value?: T, index?: number, list?: T[]) => any): any;
+    ToDictionary<TKey, TValue>(key: (key: any) => TKey, value?: (value: any) => TValue): any;
     /**
-     * Creates a List<T> from a Enumerable.List<T>.
+     * Creates a List<T> from an Enumerable.List<T>.
      */
     ToList(): List<T>;
     /**
      * Produces the set union of two sequences by using the default equality comparer.
      */
-    Union(): T[];
+    Union(list: List<T>): List<T>;
     /**
      * Filters a sequence of values based on a predicate.
      */
@@ -204,7 +207,7 @@ export declare class List<T> {
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
-    Zip(list: List<any>): List<any>;
+    Zip<U>(list: List<U>, result: (first: T, second: U) => any): List<any>;
 }
 export declare class Enumerable {
     /**
@@ -214,5 +217,5 @@ export declare class Enumerable {
     /**
      * Generates a sequence that contains one repeated value.
      */
-    static Repeat(element: any, count: number): IterableIterator<number>;
+    static Repeat(element: any, count: number): IterableIterator<any>;
 }
