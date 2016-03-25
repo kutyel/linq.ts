@@ -14,6 +14,7 @@ interface IPet {
     Name: string;
     Age?: number;
     Owner?: Person;
+    Vaccinated?: boolean;
 }
 
 class Person implements IPerson {
@@ -30,11 +31,13 @@ class Pet implements IPet {
     public Name: string;
     public Age: number;
     public Owner: Person;
+    public Vaccinated: boolean;
 
     constructor(pet: IPet) {
         this.Name = pet.Name;
         this.Age = pet.Age;
         this.Owner = pet.Owner;
+        this.Vaccinated = pet.Vaccinated;
     }
 }
 
@@ -50,8 +53,8 @@ test("Add", t => {
 
 test("AddRange", t => {
     let list = new List<string>();
-    list.AddRange(["hola", "que", "tal"]);
-    t.is(list.ToArray().toString(), "hola,que,tal");
+    list.AddRange(["hey", "what's", "up"]);
+    t.is(list.ToArray().toString(), "hey,what's,up");
 });
 
 test("Aggregate", t => {
@@ -62,11 +65,26 @@ test("Aggregate", t => {
 });
 
 test("All", t => {
-    t.true(new List<string>(["hey", "hola", "que", "tal"]).All(x => typeof x === "string"));
+    let pets = new List<Pet>([
+        new Pet({ Age: 10, Name: "Barley" }),
+        new Pet({ Age: 4, Name: "Boots" }),
+        new Pet({ Age: 6, Name: "Whiskers" })
+    ]);
+
+    // determine whether all pet names
+    // in the array start with 'B'.
+    t.false(pets.All(pet => pet.Name.indexOf("B") === 0));
 });
 
 test("Any", t => {
-    t.true(new List<string>(["hey", "hola", "que", "tal"]).Any(x => x === "hola"));
+    let pets = new List<Pet>([
+        new Pet({ Age: 8, Name: "Barley", Vaccinated: true }),
+        new Pet({ Age: 4, Name: "Boots", Vaccinated: false }),
+        new Pet({ Age: 1, Name: "Whiskers", Vaccinated: false })
+    ]);
+
+    // determine whether any pets over age 1 are also unvaccinated.
+    t.true(pets.Any(p => p.Age > 1 && p.Vaccinated === false));
 });
 
 test("Average", t => {
@@ -245,6 +263,7 @@ test("ThenBy", t => {
     // alphabetically by passing the identity selector function.
     let result = "apple,grape,mango,banana,orange,blueberry,raspberry,passionfruit";
     t.is(fruits.OrderBy(fruit => fruit.length).ThenBy(fruit => fruit).ToArray().toString(), result);
+    t.is(new List<number>([4, 5, 6, 3, 2, 1]).ThenBy(x => x).ToArray().toString(), "1,2,3,4,5,6");
 });
 
 test("ThenByDescending", t => {
@@ -253,6 +272,7 @@ test("ThenByDescending", t => {
     // alphabetically descending by passing the identity selector function.
     let result = "passionfruit,raspberry,blueberry,orange,banana,mango,grape,apple";
     t.is(fruits.OrderBy(fruit => fruit.length).ThenByDescending(fruit => fruit).ToArray().toString(), result);
+    t.is(new List<number>([4, 5, 6, 3, 2, 1]).ThenByDescending(x => x).ToArray().toString(), "6,5,4,3,2,1");
 });
 
 test("Reverse", t => {
