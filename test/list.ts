@@ -162,7 +162,7 @@ test("GroupBy", t => {
     t.same(pets.GroupBy(pet => pet.Age, pet => pet.Name), result);
 });
 
-test.skip("GroupJoin", t => {
+test("GroupJoin", t => {
     let magnus = new Person({ Name: "Hedlund, Magnus" });
     let terry = new Person({ Name: "Adams, Terry" });
     let charlotte = new Person({ Name: "Weiss, Charlotte" });

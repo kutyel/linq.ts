@@ -157,7 +157,7 @@ export class List<T> {
      * The default equality comparer is used to compare keys.
      */
     public GroupJoin<U>(list: List<U>, key1: (k: T) => any, key2: (k: U) => any, result: (first: T, second: List<U>) => any): List<any> {
-        return this.Join(list, key1, key2, (x, y) => result(x, list.Where(z => x === key2(z)))).Distinct();
+        return this.Select((x, y) => result(x, list.Where(z => key1(x) === key2(z))));
     }
 
     /**
