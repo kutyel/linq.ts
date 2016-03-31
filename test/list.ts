@@ -73,7 +73,7 @@ test("All", t => {
 
     // determine whether all pet names
     // in the array start with 'B'.
-    t.false(pets.All(pet => pet.Name.indexOf("B") === 0));
+    t.false(pets.All(pet => pet.Name.startsWith("B")));
 });
 
 test("Any", t => {
@@ -259,6 +259,7 @@ test("OrderByDescending", t => {
 
 test("ThenBy", t => {
     let fruits = new List<string>(["grape", "passionfruit", "banana", "mango", "orange", "raspberry", "apple", "blueberry"]);
+
     // sort the strings first by their length and then
     // alphabetically by passing the identity selector function.
     let result = "apple,grape,mango,banana,orange,blueberry,raspberry,passionfruit";
@@ -268,9 +269,10 @@ test("ThenBy", t => {
 
 test("ThenByDescending", t => {
     let fruits = new List<string>(["grape", "passionfruit", "banana", "mango", "orange", "raspberry", "apple", "blueberry"]);
+
     // sort the strings first by their length and then
     // alphabetically descending by passing the identity selector function.
-    let result = "passionfruit,raspberry,blueberry,orange,banana,mango,grape,apple";
+    let result = "mango,grape,apple,orange,banana,raspberry,blueberry,passionfruit";
     t.is(fruits.OrderBy(fruit => fruit.length).ThenByDescending(fruit => fruit).ToArray().toString(), result);
     t.is(new List<number>([4, 5, 6, 3, 2, 1]).ThenByDescending(x => x).ToArray().toString(), "6,5,4,3,2,1");
 });
@@ -296,10 +298,12 @@ test("SelectMany", t => {
 test("SequenceEqual", t => {
     let pet1 = new Pet({ Age: 2, Name: "Turbo" });
     let pet2 = new Pet({ Age: 8, Name: "Peanut" });
+
     // create three lists of pets.
     let pets1 = new List<Pet>([pet1, pet2]);
     let pets2 = new List<Pet>([pet1, pet2]);
     let pets3 = new List<Pet>([pet1]);
+
     t.true(pets1.SequenceEqual(pets2));
     t.false(pets1.SequenceEqual(pets3));
 });

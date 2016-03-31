@@ -368,7 +368,7 @@ class OrderedList<T> extends List<T> {
     constructor(list: List<T>, private _orderBy: (key: T) => any, private _reverse?: boolean) {
         super(list.ToArray());
 
-        this._elements.sort((x, y) => this._com(_orderBy(x), _orderBy(y)));
+        this._elements.sort((x, y) => this._asc(_orderBy(x), _orderBy(y)));
 
         if (_reverse) {
             this._elements.reverse();
@@ -380,7 +380,7 @@ class OrderedList<T> extends List<T> {
      * @override
      */
     public ThenBy(comp: (key: T) => any): List<T> {
-        return new List<T>(this._elements.sort((x, y) => this._com(this._orderBy(x), this._orderBy(y)) || this._com(comp(x), comp(y))));
+        return new List<T>(this._elements.sort((x, y) => this._asc(this._orderBy(x), this._orderBy(y)) || this._asc(comp(x), comp(y))));
     }
 
     /**
@@ -388,14 +388,21 @@ class OrderedList<T> extends List<T> {
      * @override
      */
     public ThenByDescending(comp: (key: T) => any): List<T> {
-        return this.ThenBy(comp).Reverse();
+        return new List<T>(this._elements.sort((x, y) => this._asc(this._orderBy(x), this._orderBy(y)) || this._desc(comp(x), comp(y))));
     }
 
     /**
-     * Default comparer function.
+     * Default ascendent comparer function.
      */
-    private _com(a: any, b: any): number {
+    private _asc(a: any, b: any): number {
         return a > b ? 1 : a < b ? -1 : 0;
+    }
+
+    /**
+     * Default descendent comparer function.
+     */
+    private _desc(a: any, b: any): number {
+        return a < b ? 1 : a > b ? -1 : 0;
     }
 }
 
