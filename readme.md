@@ -37,6 +37,8 @@ let query =
 
 ![linqts.gif](https://raw.githubusercontent.com/kutyel/linq/master/assets/linqts.gif)
 
+## [Documentation](http://kutyel.github.io/linq.ts/docs/classes/list/index.html)
+
 ## Tests
 
 ```
