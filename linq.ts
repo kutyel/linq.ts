@@ -57,6 +57,8 @@ export class List<T> {
      * Computes the average of a sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
+    public Average(): number;
+    public Average(transform: (value?: T, index?: number, list?: T[]) => any): number;
     public Average(transform?: (value?: T, index?: number, list?: T[]) => any): number {
         return this.Sum(transform) / this.Count(transform);
     }

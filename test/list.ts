@@ -88,12 +88,13 @@ test("Any", t => {
 });
 
 test("Average", t => {
+    let grades = new List<number>([78, 92, 100, 37, 81]);
     let people = new List<IPerson>([
         { Age: 15, Name: "Cathy" },
         { Age: 25, Name: "Alice" },
         { Age: 50, Name: "Bob" }
     ]);
-    t.is(new List<number>([2, 3, 5, 10]).Average(x => x), 5);
+    t.is(grades.Average(), 77.6);
     t.is(people.Average(x => x.Age), 30);
 });
 
