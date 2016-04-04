@@ -114,7 +114,8 @@ test("Concat", t => {
 });
 
 test("Contains", t => {
-    t.true(new List<string>(["hey", "hola", "que", "tal"]).Contains("hola"));
+    const fruits = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
+    t.true(fruits.Contains("mango"));
 });
 
 test("Count", t => {
