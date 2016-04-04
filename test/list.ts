@@ -46,26 +46,26 @@ class PetOwner {
 }
 
 test("Add", t => {
-    let list = new List<string>();
+    const list = new List<string>();
     list.Add("hey");
     t.is(list.First(), "hey");
 });
 
 test("AddRange", t => {
-    let list = new List<string>();
+    const list = new List<string>();
     list.AddRange(["hey", "what's", "up"]);
     t.is(list.ToArray().toString(), "hey,what's,up");
 });
 
 test("Aggregate", t => {
-    let sentence = "the quick brown fox jumps over the lazy dog";
-    let reversed = "dog lazy the over jumps fox brown quick the ";
-    let words = new List<string>(sentence.split(" "));
+    const sentence = "the quick brown fox jumps over the lazy dog";
+    const reversed = "dog lazy the over jumps fox brown quick the ";
+    const words = new List<string>(sentence.split(" "));
     t.is(words.Aggregate((workingSentence, next) => next + " " + workingSentence, ""), reversed);
 });
 
 test("All", t => {
-    let pets = new List<Pet>([
+    const pets = new List<Pet>([
         new Pet({ Age: 10, Name: "Barley" }),
         new Pet({ Age: 4, Name: "Boots" }),
         new Pet({ Age: 6, Name: "Whiskers" })
@@ -77,7 +77,7 @@ test("All", t => {
 });
 
 test("Any", t => {
-    let pets = new List<Pet>([
+    const pets = new List<Pet>([
         new Pet({ Age: 8, Name: "Barley", Vaccinated: true }),
         new Pet({ Age: 4, Name: "Boots", Vaccinated: false }),
         new Pet({ Age: 1, Name: "Whiskers", Vaccinated: false })
@@ -88,8 +88,8 @@ test("Any", t => {
 });
 
 test("Average", t => {
-    let grades = new List<number>([78, 92, 100, 37, 81]);
-    let people = new List<IPerson>([
+    const grades = new List<number>([78, 92, 100, 37, 81]);
+    const people = new List<IPerson>([
         { Age: 15, Name: "Cathy" },
         { Age: 25, Name: "Alice" },
         { Age: 50, Name: "Bob" }
@@ -99,8 +99,8 @@ test("Average", t => {
 });
 
 test("Concat", t => {
-    let a = new List<string>(["hey", "hola", "que", "tal"]);
-    let b = new List<string>(["como", "estas", "?"]);
+    const a = new List<string>(["hey", "hola", "que", "tal"]);
+    const b = new List<string>(["como", "estas", "?"]);
     t.is(a.Concat(b).ToArray().toString(), "hey,hola,que,tal,como,estas,?");
 });
 
@@ -109,42 +109,42 @@ test("Contains", t => {
 });
 
 test("Count", t => {
-    let fruits = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
+    const fruits = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
     t.is(fruits.Count(), 6);
     t.is(fruits.Count(x => x.length > 5), 3);
 });
 
 test("DefaultIfEmpty", t => {
-    let pets = new List<Pet>([
+    const pets = new List<Pet>([
         new Pet({ Age: 8, Name: "Barley" }),
         new Pet({ Age: 4, Name: "Boots" }),
         new Pet({ Age: 1, Name: "Whiskers" })
     ]);
     t.is(pets.DefaultIfEmpty().Select(pet => pet.Name).ToArray().toString(), "Barley,Boots,Whiskers");
-    let numbers = new List<number>();
+    const numbers = new List<number>();
     t.is(numbers.DefaultIfEmpty(0).ToArray().toString(), "0");
 });
 
 test("Distinct", t => {
-    let ages = new List<number>([21, 46, 46, 55, 17, 21, 55, 55]);
+    const ages = new List<number>([21, 46, 46, 55, 17, 21, 55, 55]);
     t.is(ages.Distinct().ToArray().toString(), "21,46,55,17");
 });
 
 test("ElementAt", t => {
-    let a = new List<string>(["hey", "hola", "que", "tal"]);
+    const a = new List<string>(["hey", "hola", "que", "tal"]);
     t.is(a.ElementAt(0), "hey");
     t.notOk(a.ElementAt(4));
 });
 
 test("ElementAtOrDefault", t => {
-    let a = new List<string>(["hey", "hola", "que", "tal"]);
+    const a = new List<string>(["hey", "hola", "que", "tal"]);
     t.is(a.ElementAtOrDefault(0), "hey");
     t.is(a.ElementAtOrDefault(4), undefined);
 });
 
 test("Except", t => {
-    let numbers1 = new List<number>([2.0, 2.1, 2.2, 2.3, 2.4, 2.5]);
-    let numbers2 = new List<number>([2.2, 2.3]);
+    const numbers1 = new List<number>([2.0, 2.1, 2.2, 2.3, 2.4, 2.5]);
+    const numbers2 = new List<number>([2.2, 2.3]);
     t.is(numbers1.Except(numbers2).ToArray().toString(), "2,2.1,2.4,2.5");
 });
 
@@ -160,20 +160,20 @@ test("FirstOrDefault", t => {
 });
 
 test("ForEach", t => {
-    let names = new List<string>(["Bruce", "Alfred", "Tim", "Richard"]);
+    const names = new List<string>(["Bruce", "Alfred", "Tim", "Richard"]);
     let test = "";
     names.ForEach((x, i) => test += `${x} ${i} `);
     t.is(test, "Bruce 0 Alfred 1 Tim 2 Richard 3 ");
 });
 
 test("GroupBy", t => {
-    let pets = new List<Pet>([
+    const pets = new List<Pet>([
         new Pet({ Age: 8, Name: "Barley" }),
         new Pet({ Age: 4, Name: "Boots" }),
         new Pet({ Age: 1, Name: "Whiskers" }),
         new Pet({ Age: 4, Name: "Daisy" })
     ]);
-    let result = {
+    const result = {
         "1": ["Whiskers"],
         "4": ["Boots", "Daisy"],
         "8": ["Barley"],
@@ -182,52 +182,52 @@ test("GroupBy", t => {
 });
 
 test("GroupJoin", t => {
-    let magnus = new Person({ Name: "Hedlund, Magnus" });
-    let terry = new Person({ Name: "Adams, Terry" });
-    let charlotte = new Person({ Name: "Weiss, Charlotte" });
+    const magnus = new Person({ Name: "Hedlund, Magnus" });
+    const terry = new Person({ Name: "Adams, Terry" });
+    const charlotte = new Person({ Name: "Weiss, Charlotte" });
 
-    let barley = new Pet({ Name: "Barley", Owner: terry });
-    let boots = new Pet({ Name: "Boots", Owner: terry });
-    let whiskers = new Pet({ Name: "Whiskers", Owner: charlotte });
-    let daisy = new Pet({ Name: "Daisy", Owner: magnus });
+    const barley = new Pet({ Name: "Barley", Owner: terry });
+    const boots = new Pet({ Name: "Boots", Owner: terry });
+    const whiskers = new Pet({ Name: "Whiskers", Owner: charlotte });
+    const daisy = new Pet({ Name: "Daisy", Owner: magnus });
 
-    let people = new List<Person>([ magnus, terry, charlotte ]);
-    let pets = new List<Pet>([ barley, boots, whiskers, daisy ]);
+    const people = new List<Person>([ magnus, terry, charlotte ]);
+    const pets = new List<Pet>([ barley, boots, whiskers, daisy ]);
 
     // create a list where each element is an anonymous
     // type that contains a person's name and
     // a collection of names of the pets they own.
-    let query = people.GroupJoin(pets, person => person, pet => pet.Owner, (person, petCollection) =>
+    const query = people.GroupJoin(pets, person => person, pet => pet.Owner, (person, petCollection) =>
         ({ OwnerName: person.Name, Pets: petCollection.Select(pet => pet.Name) }));
-    let result = "Hedlund, Magnus: Daisy,Adams, Terry: Barley,Boots,Weiss, Charlotte: Whiskers";
+    const result = "Hedlund, Magnus: Daisy,Adams, Terry: Barley,Boots,Weiss, Charlotte: Whiskers";
     t.is(query.Select(obj => `${obj.OwnerName}: ${obj.Pets.ToArray()}`).ToArray().toString(), result);
 });
 
 test("Intersect", t => {
-    let id1 = new List<number>([44, 26, 92, 30, 71, 38]);
-    let id2 = new List<number>([39, 59, 83, 47, 26, 4, 30]);
+    const id1 = new List<number>([44, 26, 92, 30, 71, 38]);
+    const id2 = new List<number>([39, 59, 83, 47, 26, 4, 30]);
     t.is(id1.Intersect(id2).Sum(x => x), 56);
 });
 
 test("Join", t => {
-    let magnus = new Person({ Name: "Hedlund, Magnus" });
-    let terry = new Person({ Name: "Adams, Terry" });
-    let charlotte = new Person({ Name: "Weiss, Charlotte" });
+    const magnus = new Person({ Name: "Hedlund, Magnus" });
+    const terry = new Person({ Name: "Adams, Terry" });
+    const charlotte = new Person({ Name: "Weiss, Charlotte" });
 
-    let barley = new Pet({ Name: "Barley", Owner: terry });
-    let boots = new Pet({ Name: "Boots", Owner: terry });
-    let whiskers = new Pet({ Name: "Whiskers", Owner: charlotte });
-    let daisy = new Pet({ Name: "Daisy", Owner: magnus });
+    const barley = new Pet({ Name: "Barley", Owner: terry });
+    const boots = new Pet({ Name: "Boots", Owner: terry });
+    const whiskers = new Pet({ Name: "Whiskers", Owner: charlotte });
+    const daisy = new Pet({ Name: "Daisy", Owner: magnus });
 
-    let people = new List<Person>([magnus, terry, charlotte]);
-    let pets = new List<Pet>([barley, boots, whiskers, daisy]);
+    const people = new List<Person>([magnus, terry, charlotte]);
+    const pets = new List<Pet>([barley, boots, whiskers, daisy]);
 
     // create a list of Person-Pet pairs where
     // each element is an anonymous type that contains a
     // pet's name and the name of the Person that owns the Pet.
-    let query = people.Join(pets, person => person, pet => pet.Owner, (person, pet) =>
+    const query = people.Join(pets, person => person, pet => pet.Owner, (person, pet) =>
         ({ OwnerName: person.Name, Pet: pet.Name }));
-    let result = "Hedlund, Magnus - Daisy,Adams, Terry - Barley,Adams, Terry - Boots,Weiss, Charlotte - Whiskers";
+    const result = "Hedlund, Magnus - Daisy,Adams, Terry - Barley,Adams, Terry - Boots,Weiss, Charlotte - Whiskers";
     t.is(query.Select(obj => `${obj.OwnerName} - ${obj.Pet}`).ToArray().toString(), result);
 });
 
@@ -259,21 +259,21 @@ test("OrderByDescending", t => {
 });
 
 test("ThenBy", t => {
-    let fruits = new List<string>(["grape", "passionfruit", "banana", "mango", "orange", "raspberry", "apple", "blueberry"]);
+    const fruits = new List<string>(["grape", "passionfruit", "banana", "mango", "orange", "raspberry", "apple", "blueberry"]);
 
     // sort the strings first by their length and then
     // alphabetically by passing the identity selector function.
-    let result = "apple,grape,mango,banana,orange,blueberry,raspberry,passionfruit";
+    const result = "apple,grape,mango,banana,orange,blueberry,raspberry,passionfruit";
     t.is(fruits.OrderBy(fruit => fruit.length).ThenBy(fruit => fruit).ToArray().toString(), result);
     t.is(new List<number>([4, 5, 6, 3, 2, 1]).ThenBy(x => x).ToArray().toString(), "1,2,3,4,5,6");
 });
 
 test("ThenByDescending", t => {
-    let fruits = new List<string>(["grape", "passionfruit", "banana", "mango", "orange", "raspberry", "apple", "blueberry"]);
+    const fruits = new List<string>(["grape", "passionfruit", "banana", "mango", "orange", "raspberry", "apple", "blueberry"]);
 
     // sort the strings first by their length and then
     // alphabetically descending by passing the identity selector function.
-    let result = "mango,grape,apple,orange,banana,raspberry,blueberry,passionfruit";
+    const result = "mango,grape,apple,orange,banana,raspberry,blueberry,passionfruit";
     t.is(fruits.OrderBy(fruit => fruit.length).ThenByDescending(fruit => fruit).ToArray().toString(), result);
     t.is(new List<number>([4, 5, 6, 3, 2, 1]).ThenByDescending(x => x).ToArray().toString(), "6,5,4,3,2,1");
 });
@@ -287,58 +287,58 @@ test("Select", t => {
 });
 
 test("SelectMany", t => {
-    let petOwners = new List<PetOwner>([
+    const petOwners = new List<PetOwner>([
         new PetOwner("Higa, Sidney", new List<Pet>([new Pet({ Name: "Scruffy" }), new Pet({ Name: "Sam" })])),
         new PetOwner("Ashkenazi, Ronen", new List<Pet>([new Pet({ Name: "Walker" }), new Pet({ Name: "Sugar" })])),
         new PetOwner("Price, Vernette", new List<Pet>([new Pet({ Name: "Scratches" }), new Pet({ Name: "Diesel" })]))
     ]);
-    let result = "Scruffy,Sam,Walker,Sugar,Scratches,Diesel";
+    const result = "Scruffy,Sam,Walker,Sugar,Scratches,Diesel";
     t.is(petOwners.SelectMany(petOwner => petOwner.Pets).Select(pet => pet.Name).ToArray().toString(), result);
 });
 
 test("SequenceEqual", t => {
-    let pet1 = new Pet({ Age: 2, Name: "Turbo" });
-    let pet2 = new Pet({ Age: 8, Name: "Peanut" });
+    const pet1 = new Pet({ Age: 2, Name: "Turbo" });
+    const pet2 = new Pet({ Age: 8, Name: "Peanut" });
 
     // create three lists of pets.
-    let pets1 = new List<Pet>([pet1, pet2]);
-    let pets2 = new List<Pet>([pet1, pet2]);
-    let pets3 = new List<Pet>([pet1]);
+    const pets1 = new List<Pet>([pet1, pet2]);
+    const pets2 = new List<Pet>([pet1, pet2]);
+    const pets3 = new List<Pet>([pet1]);
 
     t.true(pets1.SequenceEqual(pets2));
     t.false(pets1.SequenceEqual(pets3));
 });
 
 test("Single", t => {
-    let fruits1 = new List<string>();
-    let fruits2 = new List<string>(["orange"]);
-    let fruits3 = new List<string>(["orange", "apple"]);
+    const fruits1 = new List<string>();
+    const fruits2 = new List<string>(["orange"]);
+    const fruits3 = new List<string>(["orange", "apple"]);
     t.is(fruits2.Single(), "orange");
     t.throws(() => fruits1.Single(), /The collection does not contain exactly one element./);
     t.throws(() => fruits3.Single(), /The collection does not contain exactly one element./);
 });
 
 test("SingleOrDefault", t => {
-    let fruits1 = new List<string>();
-    let fruits2 = new List<string>(["orange"]);
-    let fruits3 = new List<string>(["orange", "apple"]);
+    const fruits1 = new List<string>();
+    const fruits2 = new List<string>(["orange"]);
+    const fruits3 = new List<string>(["orange", "apple"]);
     t.is(fruits1.SingleOrDefault(), undefined);
     t.is(fruits2.SingleOrDefault(), "orange");
     t.throws(() => fruits3.SingleOrDefault(), /The collection does not contain exactly one element./);
 });
 
 test("Skip", t => {
-    let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+    const grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
     t.is(grades.OrderByDescending(x => x).Skip(3).ToArray().toString(), "82,70,59,56");
 });
 
 test("SkipWhile", t => {
-    let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+    const grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
     t.is(grades.OrderByDescending(x => x).SkipWhile(grade => grade >= 80).ToArray().toString(), "70,59,56");
 });
 
 test("Sum", t => {
-    let people = new List<IPerson>([
+    const people = new List<IPerson>([
         { Age: 15, Name: "Cathy" },
         { Age: 25, Name: "Alice" },
         { Age: 50, Name: "Bob" }
@@ -348,12 +348,12 @@ test("Sum", t => {
 });
 
 test("Take", t => {
-    let grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
+    const grades = new List<number>([59, 82, 70, 56, 92, 98, 85]);
     t.is(grades.OrderByDescending(x => x).Take(3).ToArray().toString(), "98,92,85");
 });
 
 test("TakeWhile", t => {
-    let fruits = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
+    const fruits = new List<string>(["apple", "banana", "mango", "orange", "passionfruit", "grape"]);
     t.is(fruits.TakeWhile(fruit => fruit !== "orange").ToArray().toString(), "apple,banana,mango");
 });
 
@@ -362,14 +362,14 @@ test("ToArray", t => {
 });
 
 test("ToDictionary", t => {
-    let people = new List<IPerson>([
+    const people = new List<IPerson>([
         { Age: 15, Name: "Cathy" },
         { Age: 25, Name: "Alice" },
         { Age: 50, Name: "Bob" }
     ]);
-    let dictionary = people.ToDictionary(x => x.Name);
+    const dictionary = people.ToDictionary(x => x.Name);
     t.same(dictionary["Bob"], { Age: 50, Name: "Bob" });
-    let dictionary2 = people.ToDictionary(x => x.Name, y => y.Age);
+    const dictionary2 = people.ToDictionary(x => x.Name, y => y.Age);
     t.is(dictionary2["Alice"], 25);
 });
 
@@ -378,8 +378,8 @@ test("ToList", t => {
 });
 
 test("Union", t => {
-    let ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7]);
-    let ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0]);
+    const ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7]);
+    const ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0]);
     t.is(ints1.Union(ints2).OrderByDescending(x => x).ToArray().toString(), "9,8,7,6,5,4,3,1,0");
 });
 
@@ -388,8 +388,8 @@ test("Where", t => {
 });
 
 test("Zip", t => {
-    let numbers = new List<number>([1, 2, 3, 4]);
-    let words = new List<string>(["one", "two", "three"]);
+    const numbers = new List<number>([1, 2, 3, 4]);
+    const words = new List<string>(["one", "two", "three"]);
     t.is(numbers.Zip(words, (first, second) => first + " " + second).ToArray().toString(), "1 one,2 two,3 three");
 });
 
