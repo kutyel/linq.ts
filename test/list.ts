@@ -99,9 +99,18 @@ test("Average", t => {
 });
 
 test("Concat", t => {
-    const a = new List<string>(["hey", "hola", "que", "tal"]);
-    const b = new List<string>(["como", "estas", "?"]);
-    t.is(a.Concat(b).ToArray().toString(), "hey,hola,que,tal,como,estas,?");
+    const cats = new List<Pet>([
+        new Pet({ Age: 8, Name: "Barley" }),
+        new Pet({ Age: 4, Name: "Boots" }),
+        new Pet({ Age: 1, Name: "Whiskers" })
+    ]);
+    const dogs = new List<Pet>([
+        new Pet({ Age: 3, Name: "Bounder" }),
+        new Pet({ Age: 14, Name: "Snoopy" }),
+        new Pet({ Age: 9, Name: "Fido" })
+    ]);
+    const result = "Barley,Boots,Whiskers,Bounder,Snoopy,Fido";
+    t.is(cats.Select(cat => cat.Name).Concat(dogs.Select(dog => dog.Name)).ToArray().toString(), result);
 });
 
 test("Contains", t => {
