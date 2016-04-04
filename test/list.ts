@@ -390,7 +390,7 @@ test("ToList", t => {
 test("Union", t => {
     const ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7]);
     const ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0]);
-    t.is(ints1.Union(ints2).OrderByDescending(x => x).ToArray().toString(), "9,8,7,6,5,4,3,1,0");
+    t.is(ints1.Union(ints2).ToArray().toString(), "5,3,9,7,8,6,4,1,0");
 });
 
 test("Where", t => {
