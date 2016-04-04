@@ -394,7 +394,8 @@ test("Union", t => {
 });
 
 test("Where", t => {
-    t.is(new List<string>(["hey", "hola", "que", "tal"]).Where(x => x.length > 3).Select(x => x + "a").First(), "holaa");
+    const fruits = new List<string>(["apple", "passionfruit", "banana", "mango", "orange", "blueberry", "grape", "strawberry"]);
+    t.is(fruits.Where(fruit => fruit.length < 6).ToArray().toString(), "apple,mango,grape");
 });
 
 test("Zip", t => {
