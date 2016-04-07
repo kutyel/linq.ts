@@ -37,7 +37,8 @@ export declare class List<T> {
      * Computes the average of a sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
-    Average(transform?: (value?: T, index?: number, list?: T[]) => any): number;
+    Average(): number;
+    Average(transform: (value?: T, index?: number, list?: T[]) => any): number;
     /**
      * Concatenates two sequences.
      */
@@ -213,9 +214,9 @@ export declare class Enumerable {
     /**
      * Generates a sequence of integral numbers within a specified range.
      */
-    static Range(start: number, count: number): IterableIterator<number>;
+    static Range(start: number, count: number): List<number>;
     /**
      * Generates a sequence that contains one repeated value.
      */
-    static Repeat(element: any, count: number): IterableIterator<any>;
+    static Repeat<T>(element: T, count: number): List<T>;
 }
