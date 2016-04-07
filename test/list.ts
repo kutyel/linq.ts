@@ -143,7 +143,7 @@ test("Distinct", t => {
 test("ElementAt", t => {
     const a = new List<string>(["hey", "hola", "que", "tal"]);
     t.is(a.ElementAt(0), "hey");
-    t.notOk(a.ElementAt(4));
+    t.falsy(a.ElementAt(4));
 });
 
 test("ElementAtOrDefault", t => {
@@ -161,7 +161,7 @@ test("Except", t => {
 test("First", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).First(), "hey");
     t.is(new List<number>([1, 2, 3, 4, 5]).First(x => x > 2), 3);
-    t.notOk(new List<string>().First());
+    t.falsy(new List<string>().First());
 });
 
 test("FirstOrDefault", t => {
@@ -188,7 +188,7 @@ test("GroupBy", t => {
         "4": ["Boots", "Daisy"],
         "8": ["Barley"],
     };
-    t.same(pets.GroupBy(pet => pet.Age, pet => pet.Name), result);
+    t.deepEqual(pets.GroupBy(pet => pet.Age, pet => pet.Name), result);
 });
 
 test("GroupJoin", t => {
@@ -244,7 +244,7 @@ test("Join", t => {
 test("Last", t => {
     t.is(new List<string>(["hey", "hola", "que", "tal"]).Last(), "tal");
     t.is(new List<number>([1, 2, 3, 4, 5]).Last(x => x > 2), 5);
-    t.notOk(new List<string>().Last());
+    t.falsy(new List<string>().Last());
 });
 
 test("LastOrDefault", t => {
@@ -378,7 +378,7 @@ test("ToDictionary", t => {
         { Age: 50, Name: "Bob" }
     ]);
     const dictionary = people.ToDictionary(x => x.Name);
-    t.same(dictionary["Bob"], { Age: 50, Name: "Bob" });
+    t.deepEqual(dictionary["Bob"], { Age: 50, Name: "Bob" });
     const dictionary2 = people.ToDictionary(x => x.Name, y => y.Age);
     t.is(dictionary2["Alice"], 25);
 });
