@@ -66,7 +66,7 @@ export class List<T> {
     /**
      * Concatenates two sequences.
      */
-    public Concat(list: List<T>): List<T>  {
+    public Concat(list: List<T>): List<T> {
         return new List<T>(this._elements.concat(list.ToArray()));
     }
 
@@ -151,7 +151,8 @@ export class List<T> {
      * Groups the elements of a sequence according to a specified key selector function.
      */
     public GroupBy(grouper: (key: T) => any, mapper: (element: T) => any): any {
-        return this.Aggregate((ac, v) => (ac[grouper(v)] ? ac[grouper(v)].push(mapper(v)) : ac[grouper(v)] = [mapper(v)], ac), {});
+        return this.Aggregate
+            ((ac, v) => ((<any>ac)[grouper(v)] ? (<any>ac)[grouper(v)].push(mapper(v)) : (<any>ac)[grouper(v)] = [mapper(v)], ac), {});
     }
 
     /**
@@ -332,7 +333,7 @@ export class List<T> {
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
     public ToDictionary<TKey, TValue>(key: (key: any) => TKey, value?: (value: any) => TValue): any {
-        return this.Aggregate((o, v, i) => (o[this.Select(key).ElementAt(i)] = value ? this.Select(value).ElementAt(i) : v, o), {});
+        return this.Aggregate((o, v, i) => ((<any>o)[this.Select(key).ElementAt(i)] = value ? this.Select(value).ElementAt(i) : v, o), {});
     }
 
     /**
