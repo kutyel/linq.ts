@@ -1,11 +1,10 @@
 # LinQ for TypeScript
 
-[![Build](https://img.shields.io/travis/kutyel/linq.ts/master.svg?style=flat-square)](https://travis-ci.org/kutyel/linq.ts)
-[![Dependencies](https://img.shields.io/david/kutyel/linq.ts.svg?style=flat-square)](https://david-dm.org/kutyel/linq.ts)
-[![Dev Dependencies](https://img.shields.io/david/dev/kutyel/linq.ts.svg?style=flat-square)](https://david-dm.org/kutyel/linq.ts#info=devDependencies)
-[![Downloads](https://img.shields.io/npm/dm/linqts.svg?style=flat-square)](https://npmjs.com/packages/linqts)
-[![Version](https://img.shields.io/npm/v/linqts.svg?style=flat-square)](https://npmjs.com/packages/linqts)
-[![Donate](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://paypal.me/flaviocorpa)
+[![Build](https://img.shields.io/travis/kutyel/linq.ts/master.svg)](https://travis-ci.org/kutyel/linq.ts)
+[![Dependency Status](https://gemnasium.com/badges/github.com/kutyel/linq.ts.svg)](https://gemnasium.com/github.com/kutyel/linq.ts)
+[![Downloads](https://img.shields.io/npm/dm/linqts.svg)](https://npmjs.com/packages/linqts)
+[![Version](https://img.shields.io/npm/v/linqts.svg)](https://npmjs.com/packages/linqts)
+[![Donate](https://img.shields.io/badge/donate-paypal-blue.svg)](https://paypal.me/flaviocorpa)
 
 [![linqts](https://raw.githubusercontent.com/kutyel/linq/master/assets/linqts.png)](http://www.typescriptlang.org)
 
