@@ -20,7 +20,7 @@
       true,
       "spaces"
     ],
-    "interface-name": true,
+    "interface-name": [],
     "jsdoc-format": true,
     "label-position": true,
     "label-undefined": true,
@@ -80,7 +80,7 @@
     ],
     "quotemark": [
       true,
-      "double",
+      "single",
       "avoid-escape"
     ],
     "radix": true,

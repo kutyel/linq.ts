@@ -270,7 +270,7 @@ export class List<T> {
      */
     public Single(): T | TypeError {
         if (this.Count() !== 1) {
-            throw new TypeError("The collection does not contain exactly one element.");
+            throw new TypeError('The collection does not contain exactly one element.');
         } else {
             return this.First();
         }
