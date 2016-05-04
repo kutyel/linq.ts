@@ -1,9 +1,11 @@
 import test from 'ava';
 import { List } from '../linq';
 
-/**
- * Tests taken from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aspx)
- */
+interface IPackage {
+    Company: string;
+    Weight: number;
+    TrackingNumber: number;
+}
 
 interface IPerson {
     Name: string;
@@ -15,6 +17,18 @@ interface IPet {
     Age?: number;
     Owner?: Person;
     Vaccinated?: boolean;
+}
+
+class Package {
+    public Company: string;
+    public Weight: number;
+    public TrackingNumber: number;
+
+    constructor(p: IPackage) {
+        this.Company = p.Company;
+        this.Weight = p.Weight;
+        this.TrackingNumber = p.TrackingNumber;
+    }
 }
 
 class Person implements IPerson {
@@ -201,8 +215,8 @@ test('GroupJoin', t => {
     const whiskers = new Pet({ Name: 'Whiskers', Owner: charlotte });
     const daisy = new Pet({ Name: 'Daisy', Owner: magnus });
 
-    const people = new List<Person>([ magnus, terry, charlotte ]);
-    const pets = new List<Pet>([ barley, boots, whiskers, daisy ]);
+    const people = new List<Person>([magnus, terry, charlotte]);
+    const pets = new List<Pet>([barley, boots, whiskers, daisy]);
 
     // create a list where each element is an anonymous
     // type that contains a person's name and
@@ -385,6 +399,53 @@ test('ToDictionary', t => {
 
 test('ToList', t => {
     t.is(new List<number>([1, 2, 3]).ToList().ToArray().toString(), '1,2,3');
+});
+
+test('ToLookup', t => {
+    // create a list of Packages
+    const packages = new List<Package>([
+        new Package({
+            Company: 'Coho Vineyard',
+            TrackingNumber: 89453312, Weight: 25.2
+        }),
+        new Package({
+            Company: 'Lucerne Publishing',
+            TrackingNumber: 89112755, Weight: 18.7
+        }),
+        new Package({
+            Company: 'Wingtip Toys',
+            TrackingNumber: 299456122, Weight: 6.0
+        }),
+        new Package({
+            Company: 'Contoso Pharmaceuticals',
+            TrackingNumber: 670053128, Weight: 9.3
+        }),
+        new Package({
+            Company: 'Wide World Importers',
+            TrackingNumber: 4665518773, Weight: 33.8
+        })
+    ]);
+
+    // create a Lookup to organize the packages.
+    // use the first character of Company as the key value.
+    // select Company appended to TrackingNumber
+    // as the element values of the Lookup.
+    const lookup = packages.ToLookup(p => p.Company.substring(0, 1),
+                                     p => p.Company + ' ' + p.TrackingNumber);
+    const result = {
+        'C': [
+            'Coho Vineyard 89453312',
+            'Contoso Pharmaceuticals 670053128'
+        ],
+        'L': [
+            'Lucerne Publishing 89112755'
+        ],
+        'W': [
+            'Wingtip Toys 299456122',
+            'Wide World Importers 4665518773'
+        ],
+    };
+    t.deepEqual(lookup, result);
 });
 
 test('Union', t => {
