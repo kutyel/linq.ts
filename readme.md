@@ -14,10 +14,10 @@
 npm install linqts
 ```
 
-## Usage
+## Sample
 
-```ts
-import {List} from 'linqts';
+```javascript
+import { List } from 'linqts';
 
 let arr = new List<number>([1,2,3,4,5])
     .Where(x => x > 3)
@@ -32,7 +32,7 @@ let query =
                     ({ OwnerName: person.Name, Pet: pet.Name }));
 ```
 
-## Sample
+## Demo
 
 ![linqts.gif](https://raw.githubusercontent.com/kutyel/linq/master/assets/linqts.gif)
 
