@@ -30,7 +30,7 @@
   "homepage": "https://github.com/kutyel/linq.ts#readme",
   "dependencies": {},
   "devDependencies": {
-    "ava": "^0.14.0",
+    "ava": "^0.15.1",
     "tslint": "^3.10.2",
     "typedoc": "^0.3.12",
     "typescript": "^1.8.10"
