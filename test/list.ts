@@ -315,6 +315,31 @@ test('ThenByDescending', t => {
     t.is(new List<number>([4, 5, 6, 3, 2, 1]).ThenByDescending(x => x).ToArray().toString(), '6,5,4,3,2,1');
 });
 
+test('RemoveAt', t => {
+    const dinosaurs = new List<string>([
+        'Compsognathus',
+        'Amargasaurus',
+        'Oviraptor',
+        'Velociraptor',
+        'Deinonychus',
+        'Dilophosaurus',
+        'Gallimimus',
+        'Triceratops'
+    ]);
+    const lessDinosaurs = new List<string>([
+        'Compsognathus',
+        'Amargasaurus',
+        'Oviraptor',
+        'Deinonychus',
+        'Dilophosaurus',
+        'Gallimimus',
+        'Triceratops'
+    ]);
+    t.true(dinosaurs.RemoveAt(3));
+    t.false(dinosaurs.RemoveAt(8));
+    t.deepEqual(dinosaurs, lessDinosaurs);
+});
+
 test('Reverse', t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).Reverse().ToArray().toString(), '5,4,3,2,1');
 });

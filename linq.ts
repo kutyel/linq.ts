@@ -245,6 +245,13 @@ export class List<T> {
     }
 
     /**
+     * Removes the element at the specified index of the List<T>.
+     */
+    public RemoveAt(index: number): boolean {
+        return !!this._elements.splice(index, 1).length;
+    }
+
+    /**
      * Reverses the order of the elements in the entire List<T>.
      */
     public Reverse(): List<T> {
