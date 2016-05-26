@@ -164,6 +164,13 @@ export class List<T> {
     }
 
     /**
+     * Returns the index of the first occurence of an element in the List.
+     */
+    public IndexOf(element: T): number {
+        return this._elements.indexOf(element);
+    }
+
+    /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
      */
     public Intersect(source: List<T>): List<T> {

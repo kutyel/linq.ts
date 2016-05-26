@@ -227,6 +227,19 @@ test('GroupJoin', t => {
     t.is(query.Select(obj => `${obj.OwnerName}: ${obj.Pets.ToArray()}`).ToArray().toString(), result);
 });
 
+test('IndexOf', t => {
+    const fruits = new List<string>(['apple', 'banana', 'mango', 'orange', 'passionfruit', 'grape']);
+
+    const barley = new Pet({ Age: 8, Name: 'Barley', Vaccinated: true });
+    const boots = new Pet({ Age: 4, Name: 'Boots', Vaccinated: false });
+    const whiskers = new Pet({ Age: 1, Name: 'Whiskers', Vaccinated: false });
+    const pets = new List<Pet>([barley, boots, whiskers]);
+
+    t.is(fruits.IndexOf('orange'), 3);
+    t.is(fruits.IndexOf('strawberry'), -1);
+    t.is(pets.IndexOf(boots), 1);
+});
+
 test('Intersect', t => {
     const id1 = new List<number>([44, 26, 92, 30, 71, 38]);
     const id2 = new List<number>([39, 59, 83, 47, 26, 4, 30]);
