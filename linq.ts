@@ -245,10 +245,17 @@ export class List<T> {
     }
 
     /**
+     * Removes the first occurrence of a specific object from the List<T>.
+     */
+    public Remove(element: T): boolean {
+        return this.IndexOf(element) !== -1 ? (this.RemoveAt(this.IndexOf(element)), true) : false;
+    }
+
+    /**
      * Removes the element at the specified index of the List<T>.
      */
-    public RemoveAt(index: number): boolean {
-        return !!this._elements.splice(index, 1).length;
+    public RemoveAt(index: number): void {
+        this._elements.splice(index, 1);
     }
 
     /**

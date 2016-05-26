@@ -315,6 +315,21 @@ test('ThenByDescending', t => {
     t.is(new List<number>([4, 5, 6, 3, 2, 1]).ThenByDescending(x => x).ToArray().toString(), '6,5,4,3,2,1');
 });
 
+test('Remove', t => {
+    const fruits = new List<string>(['apple', 'banana', 'mango', 'orange', 'passionfruit', 'grape']);
+
+    const barley = new Pet({ Age: 8, Name: 'Barley', Vaccinated: true });
+    const boots = new Pet({ Age: 4, Name: 'Boots', Vaccinated: false });
+    const whiskers = new Pet({ Age: 1, Name: 'Whiskers', Vaccinated: false });
+    const pets = new List<Pet>([barley, boots, whiskers]);
+    const lessPets = new List<Pet>([barley, whiskers]);
+
+    t.true(fruits.Remove('orange'));
+    t.false(fruits.Remove('strawberry'));
+    t.true(pets.Remove(boots));
+    t.deepEqual(pets, lessPets);
+});
+
 test('RemoveAt', t => {
     const dinosaurs = new List<string>([
         'Compsognathus',
@@ -335,8 +350,7 @@ test('RemoveAt', t => {
         'Gallimimus',
         'Triceratops'
     ]);
-    t.true(dinosaurs.RemoveAt(3));
-    t.false(dinosaurs.RemoveAt(8));
+    dinosaurs.RemoveAt(3);
     t.deepEqual(dinosaurs, lessDinosaurs);
 });
 
