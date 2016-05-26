@@ -252,6 +252,13 @@ export class List<T> {
     }
 
     /**
+     * Removes all the elements that match the conditions defined by the specified predicate.
+     */
+    public RemoveAll(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
+        return this.Where(this._negate(predicate));
+    }
+
+    /**
      * Removes the element at the specified index of the List<T>.
      */
     public RemoveAt(index: number): void {
@@ -391,6 +398,15 @@ export class List<T> {
     public Zip<U>(list: List<U>, result: (first: T, second: U) => any): List<any> {
         return list.Count() < this.Count() ? list.Select((x, y) => result(this.ElementAt(y), x)) :
             this.Select((x, y) => result(x, list.ElementAt(y)));
+    }
+
+    /**
+     * Creates a function that negates the result of the predicate
+     */
+    private _negate(predicate: (value?: T, index?: number, list?: T[]) => boolean): () => any {
+        return function (): any {
+            return !predicate.apply(this, arguments);
+        };
     }
 }
 

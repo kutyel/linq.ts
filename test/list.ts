@@ -330,6 +330,28 @@ test('Remove', t => {
     t.deepEqual(pets, lessPets);
 });
 
+test('RemoveAll', t => {
+    const dinosaurs = new List<string>([
+        'Compsognathus',
+        'Amargasaurus',
+        'Oviraptor',
+        'Velociraptor',
+        'Deinonychus',
+        'Dilophosaurus',
+        'Gallimimus',
+        'Triceratops'
+    ]);
+    const lessDinosaurs = new List<string>([
+        'Compsognathus',
+        'Oviraptor',
+        'Velociraptor',
+        'Deinonychus',
+        'Gallimimus',
+        'Triceratops'
+    ]);
+    t.deepEqual(dinosaurs.RemoveAll(x => x.endsWith('saurus')), lessDinosaurs);
+});
+
 test('RemoveAt', t => {
     const dinosaurs = new List<string>([
         'Compsognathus',
