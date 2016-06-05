@@ -28,11 +28,12 @@
     "url": "https://github.com/kutyel/linq.ts/issues"
   },
   "homepage": "https://github.com/kutyel/linq.ts#readme",
-  "dependencies": {},
+  "dependencies": {
+    "typescript": "^1.8.10"
+  },
   "devDependencies": {
     "ava": "^0.15.1",
     "tslint": "^3.10.2",
-    "typedoc": "^0.4.1",
-    "typescript": "^1.8.10"
+    "typedoc": "^0.4.1"
   }
 }
