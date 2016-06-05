@@ -36,6 +36,60 @@ let query =
 
 ![linqts.gif](https://raw.githubusercontent.com/kutyel/linq/master/assets/linqts.gif)
 
+## Browser
+
+You can use LinQ for TypeScript in your **browser** as well, here an example using [**webpack**](https://webpack.github.io/).
+
+```
+npm install --save-dev webpack ts-loader
+```
+
+Create a `webpack.config.js` file.
+
+```javascript
+module.exports = {
+  entry: './app.ts', // name of your entry file here
+  output: {
+    filename: 'bundle.js'
+  },
+  resolve: {
+    extensions: ['', '.webpack.js', '.web.js', '.ts', '.js']
+  },
+  module: {
+    loaders: [
+      { test: /\.ts$/, loader: 'ts-loader' }
+    ]
+  }
+}
+
+```
+
+And of course a `tsconfig.json` file.
+
+```json
+{
+    "compilerOptions": {
+        "target": "es3", // choose the target you want
+        "module": "commonjs"
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
+```
+
+After that we can go to the console and run...
+
+```
+webpack
+```
+
+...and everything needed will be bundled into a `bundle.js` file, that we can easily add to our html like this:
+
+```html
+<script src="bundle.js"></script>
+```
+
 ## Documentation
 If you do not know LinQ or just want to remember what is all about, have a look at the [docs](http://kutyel.github.io/linq.ts/docs/classes/list/index.html).
 
