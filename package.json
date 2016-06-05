@@ -32,7 +32,7 @@
   "devDependencies": {
     "ava": "^0.15.1",
     "tslint": "^3.10.2",
-    "typedoc": "^0.3.12",
+    "typedoc": "^0.4.1",
     "typescript": "^1.8.10"
   }
 }
