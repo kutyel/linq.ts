@@ -24,12 +24,11 @@ let arr = new List<number>([1,2,3,4,5])
     .Select(y => y * 2)
     .ToArray(); // > [8, 10]
 
-let query =
-    people.Join(pets,
-                person => person,
-                pet => pet.Owner,
-                (person, pet) =>
-                    ({ OwnerName: person.Name, Pet: pet.Name }));
+let query = people.Join(pets,
+    person => person,
+    pet => pet.Owner,
+    (person, pet) =>
+        ({ OwnerName: person.Name, Pet: pet.Name }));
 ```
 
 ## Demo
@@ -48,7 +47,7 @@ Create a `webpack.config.js` file.
 
 ```javascript
 module.exports = {
-  entry: './app.ts', // name of your entry file here
+  entry: './app.ts',
   output: {
     filename: 'bundle.js'
   },
@@ -69,7 +68,7 @@ And of course a `tsconfig.json` file.
 ```json
 {
     "compilerOptions": {
-        "target": "es3", // choose the target you want
+        "target": "es3",
         "module": "commonjs"
     },
     "exclude": [
