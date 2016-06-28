@@ -7,9 +7,9 @@
     "definition": "dist/linq.d.ts"
   },
   "scripts": {
-    "start": "node node_modules/typescript/bin/tsc -w",
-    "pretest": "node node_modules/typescript/bin/tsc",
-    "test": "node node_modules/ava/cli.js",
+    "start": "tsc -w",
+    "pretest": "tsc",
+    "test": "nyc ava",
     "docs": "typedoc --out ../docs/ linq.ts -m commonjs -t ES6"
   },
   "repository": {
@@ -36,6 +36,8 @@
   },
   "devDependencies": {
     "ava": "^0.15.1",
+    "coveralls": "^2.11.9",
+    "nyc": "^6.6.1",
     "tslint": "^3.10.2",
     "typedoc": "^0.4.1"
   }
