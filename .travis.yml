@@ -9,4 +9,4 @@ before_install:
   - 'npm install -g npm@latest'
   - 'npm install -g coveralls@2'
 after_success:
-    - './node_modules/.bin/nyc report --reporter=html | coveralls'
+  - './node_modules/.bin/nyc report --reporter=text-lcov && cat ./coverage/lcov.info | coveralls'
