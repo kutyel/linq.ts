@@ -297,12 +297,36 @@ test('OrderByDescending', t => {
 
 test('ThenBy', t => {
     const fruits = new List<string>(['grape', 'passionfruit', 'banana', 'mango', 'orange', 'raspberry', 'apple', 'blueberry']);
+    let originalOrder = fruits.ToArray().toString();
 
     // sort the strings first by their length and then
     // alphabetically by passing the identity selector function.
+    let sortedByStringLength = fruits.OrderBy(fruit => fruit.length);
     const result = 'apple,grape,mango,banana,orange,blueberry,raspberry,passionfruit';
-    t.is(fruits.OrderBy(fruit => fruit.length).ThenBy(fruit => fruit).ToArray().toString(), result);
+    t.is(sortedByStringLength.ThenBy(fruit => fruit).ToArray().toString(), result);
+    // check that the first sorting is independent from the second 
+    const resultForLength = 'grape,mango,apple,banana,orange,raspberry,blueberry,passionfruit';
+    t.is(sortedByStringLength.ToArray().toString(), resultForLength);
+    t.is(fruits.ToArray().toString(), originalOrder);
+
+    // test omission of OrderBy
     t.is(new List<number>([4, 5, 6, 3, 2, 1]).ThenBy(x => x).ToArray().toString(), '1,2,3,4,5,6');
+});
+
+test('ThenByMultiple', t => {
+    // see https://github.com/kutyel/linq.ts/issues/23
+    let x = {a: 2, b: 1, c: 1};
+    let y = {a: 1, b: 2, c: 2};
+    let z = {a: 1, b: 1, c: 3};
+    let unsorted = new List([x, y, z]);
+    let sorted = unsorted.OrderBy(u => u.a)
+        .ThenBy(u => u.b)
+        .ThenBy(u => u.c)
+        .ToArray();
+
+    t.is(sorted[0], z);
+    t.is(sorted[1], y);
+    t.is(sorted[2], x);
 });
 
 test('ThenByDescending', t => {

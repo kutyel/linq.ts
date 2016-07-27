@@ -97,6 +97,10 @@ export declare class List<T> {
      */
     GroupJoin<U>(list: List<U>, key1: (k: T) => any, key2: (k: U) => any, result: (first: T, second: List<U>) => any): List<any>;
     /**
+     * Returns the index of the first occurence of an element in the List.
+     */
+    IndexOf(element: T): number;
+    /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
      */
     Intersect(source: List<T>): List<T>;
@@ -125,11 +129,11 @@ export declare class List<T> {
     /**
      * Sorts the elements of a sequence in ascending order according to a key.
      */
-    OrderBy(comparator: (key: T) => any): List<T>;
+    OrderBy(keySelector: (key: T) => any): List<T>;
     /**
      * Sorts the elements of a sequence in descending order according to a key.
      */
-    OrderByDescending(comparator: (key: T) => any): List<T>;
+    OrderByDescending(keySelector: (key: T) => any): List<T>;
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      */
@@ -138,6 +142,18 @@ export declare class List<T> {
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      */
     ThenByDescending(comparator: (key: T) => any): List<T>;
+    /**
+     * Removes the first occurrence of a specific object from the List<T>.
+     */
+    Remove(element: T): boolean;
+    /**
+     * Removes all the elements that match the conditions defined by the specified predicate.
+     */
+    RemoveAll(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T>;
+    /**
+     * Removes the element at the specified index of the List<T>.
+     */
+    RemoveAt(index: number): void;
     /**
      * Reverses the order of the elements in the entire List<T>.
      */
@@ -198,6 +214,10 @@ export declare class List<T> {
      */
     ToList(): List<T>;
     /**
+     * Creates a Lookup<TKey, TElement> from an IEnumerable<T> according to specified key selector and element selector functions.
+     */
+    ToLookup(keySelector: (key: T) => any, elementSelector: (element: T) => any): any;
+    /**
      * Produces the set union of two sequences by using the default equality comparer.
      */
     Union(list: List<T>): List<T>;
@@ -209,6 +229,10 @@ export declare class List<T> {
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
     Zip<U>(list: List<U>, result: (first: T, second: U) => any): List<any>;
+    /**
+     * Creates a function that negates the result of the predicate
+     */
+    private _negate(predicate);
 }
 export declare class Enumerable {
     /**
