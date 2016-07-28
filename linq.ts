@@ -326,9 +326,7 @@ export class List<T> {
      * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
      */
     public SkipWhile(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
-        let agg = this.Aggregate((ac, val) => predicate(this.ElementAt(ac)) ? ++ac : ac, 0);
-        console.log(agg);
-        return this.Skip(agg);
+        return this.Skip(this.Aggregate((ac, val) => predicate(this.ElementAt(ac)) ? ++ac : ac, 0));
     }
 
     /**
