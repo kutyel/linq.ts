@@ -19,6 +19,11 @@ interface IPet {
     Vaccinated?: boolean;
 }
 
+interface IProduct {
+    Name: string;
+    Code: number;
+}
+
 class Package {
     public Company: string;
     public Weight: number;
@@ -57,6 +62,16 @@ class Pet implements IPet {
 
 class PetOwner {
     constructor(public Name: string, public Pets: List<Pet>) { }
+}
+
+class Product implements IProduct {
+    public Name: string;
+    public Code: number;
+
+    constructor(product: IProduct) {
+        this.Name = product.Name;
+        this.Code = product.Code;
+    }
 }
 
 test('Add', t => {
@@ -544,6 +559,21 @@ test('Union', t => {
     const ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7]);
     const ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0]);
     t.is(ints1.Union(ints2).ToArray().toString(), '5,3,9,7,8,6,4,1,0');
+    
+    const result = [
+        { Name: 'apple', Code: 9 },
+        { Name: 'orange', Code: 4 },
+        { Name: 'lemon', Code: 12 }
+    ];
+    const store1 = new List<Product>([
+        new Product({ Name: 'apple', Code: 9 }),
+        new Product({ Name: 'orange', Code: 4 })
+    ]);
+    const store2 = new List<Product>([
+        new Product({ Name: 'apple', Code: 9 }),
+        new Product({ Name: 'lemon', Code: 12 })
+    ]);
+    t.deepEqual(store1.Union(store2).toArray(), result);
 });
 
 test('Where', t => {
