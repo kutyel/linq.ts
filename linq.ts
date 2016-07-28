@@ -14,7 +14,7 @@ export class List<T> {
     /**
      * Defaults the elements of the list
      */
-    constructor(elements?: T[] = []) {
+    constructor(elements: T[] = []) {
         this._elements = elements;
     }
 
