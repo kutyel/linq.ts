@@ -14,10 +14,7 @@ export class List<T> {
     /**
      * Defaults the elements of the list
      */
-    constructor(elements?: T[]) {
-        elements = elements || [];
-        // we clone the array to prevent side effects
-        elements = elements.slice(0);
+    constructor(elements?: T[] = []) {
         this._elements = elements;
     }
 
