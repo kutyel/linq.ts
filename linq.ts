@@ -15,7 +15,10 @@ export class List<T> {
      * Defaults the elements of the list
      */
     constructor(elements?: T[]) {
-        this._elements = elements || [];
+        elements = elements || [];
+        // we clone the array to prevent side effects
+        elements = elements.slice(0);
+        this._elements = elements;
     }
 
     /**
@@ -219,29 +222,29 @@ export class List<T> {
     /**
      * Sorts the elements of a sequence in ascending order according to a key.
      */
-    public OrderBy(comparator: (key: T) => any): List<T> {
-        return new OrderedList<T>(this, comparator, false);
+    public OrderBy(keySelector: (key: T) => any): List<T> {
+        return new OrderedList<T>(this._elements, ComparerHelper.ComparerForKey(keySelector, false));
     }
 
     /**
      * Sorts the elements of a sequence in descending order according to a key.
      */
-    public OrderByDescending(comparator: (key: T) => any): List<T> {
-        return new OrderedList<T>(this, comparator, true);
+    public OrderByDescending(keySelector: (key: T) => any): List<T> {
+        return new OrderedList<T>(this._elements, ComparerHelper.ComparerForKey(keySelector, true));
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      */
-    public ThenBy(comparator: (key: T) => any): List<T> {
-        return this.OrderBy(comparator);
+    public ThenBy(keySelector: (key: T) => any): List<T> {
+        return this.OrderBy(keySelector);
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      */
-    public ThenByDescending(comparator: (key: T) => any): List<T> {
-        return this.OrderByDescending(comparator);
+    public ThenByDescending(keySelector: (key: T) => any): List<T> {
+        return this.OrderByDescending(keySelector);
     }
 
     /**
@@ -323,7 +326,9 @@ export class List<T> {
      * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
      */
     public SkipWhile(predicate: (value?: T, index?: number, list?: T[]) => boolean): List<T> {
-        return this.Skip(this.Aggregate((ac, val) => predicate(this.ElementAt(ac)) ? ++ac : ac, 0));
+        let agg = this.Aggregate((ac, val) => predicate(this.ElementAt(ac)) ? ++ac : ac, 0);
+        console.log(agg);
+        return this.Skip(agg);
     }
 
     /**
@@ -410,46 +415,80 @@ export class List<T> {
     }
 }
 
-class OrderedList<T> extends List<T> {
+class ComparerHelper {
+    public static ComparerForKey<T>(_keySelector: (key: T) => any, descending?: boolean): (a: T, b: T) => number {
+        return (a: T, b: T) => {
+            return ComparerHelper.Compare(a, b, _keySelector, descending);
+        };
+    }
 
-    constructor(list: List<T>, private _orderBy: (key: T) => any, private _reverse?: boolean) {
-        super(list.ToArray());
-
-        this._elements.sort((x, y) => this._asc(_orderBy(x), _orderBy(y)));
-
-        if (_reverse) {
-            this._elements.reverse();
+    public static Compare<T>(a: T, b: T, _keySelector: (key: T) => any, descending?: boolean): number {
+        let sortKeyA = _keySelector(a);
+        let sortKeyB = _keySelector(b);
+        if (sortKeyA > sortKeyB) {
+            if (!descending) {
+                return 1;
+            } else {
+                return -1;
+            }
+        } else if (sortKeyA < sortKeyB) {
+            if (!descending) {
+                return -1;
+            } else {
+                return 1;
+            }
+        } else {
+            return 0;
         }
+    }
+
+    public static ComposeComparers<T>(
+        previousComparer: (a: T, b: T) => number,
+        currentComparer: (a: T, b: T) => number
+    ): (a: T, b: T) => number {
+        return (a: T, b: T) => {
+            let resultOfPreviousComparer = previousComparer(a, b);
+            if (!resultOfPreviousComparer) {
+                return currentComparer(a, b);
+            } else {
+                return resultOfPreviousComparer;
+            }
+        };
+    }
+}
+
+/**
+ * Represents a sorted sequence. The methods of this class are implemented by using deferred execution. 
+ * The immediate return value is an object that stores all the information that is required to perform the action. 
+ * The query represented by this method is not executed until the object is enumerated either by 
+ * calling its ToDictionary, ToLookup, ToList or ToArray methods
+ */
+class OrderedList<T> extends List<T> {
+    constructor(elements: T[], private _comparer: (a: T, b: T) => number) {
+        super(elements);
+        this._elements.sort(this._comparer);
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      * @override
      */
-    public ThenBy(comp: (key: T) => any): List<T> {
-        return new List<T>(this._elements.sort((x, y) => this._asc(this._orderBy(x), this._orderBy(y)) || this._asc(comp(x), comp(y))));
+    public ThenBy(keySelector: (key: T) => any): List<T> {
+        return new OrderedList(
+            this._elements,
+            ComparerHelper.ComposeComparers(this._comparer, ComparerHelper.ComparerForKey(keySelector, false))
+        );
     }
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.
      * @override
      */
-    public ThenByDescending(comp: (key: T) => any): List<T> {
-        return new List<T>(this._elements.sort((x, y) => this._asc(this._orderBy(x), this._orderBy(y)) || this._desc(comp(x), comp(y))));
-    }
-
-    /**
-     * Default ascendent comparer function.
-     */
-    private _asc(a: any, b: any): number {
-        return a > b ? 1 : a < b ? -1 : 0;
-    }
-
-    /**
-     * Default descendent comparer function.
-     */
-    private _desc(a: any, b: any): number {
-        return a < b ? 1 : a > b ? -1 : 0;
+    public ThenByDescending(keySelector: (key: T) => any): List<T> {
+        return new OrderedList(
+            this._elements,
+            ComparerHelper.ComposeComparers(this._comparer, ComparerHelper.ComparerForKey(keySelector, true))
+        );
     }
 }
 
