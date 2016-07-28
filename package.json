@@ -10,7 +10,8 @@
     "start": "tsc -w",
     "pretest": "tsc",
     "test": "nyc ava",
-    "docs": "typedoc --out ../docs/ linq.ts -m commonjs -t ES6"
+    "docs": "typedoc --out ../docs/ linq.ts -m commonjs -t ES6",
+    "build": "tsc linq.ts -t es3 -m commonjs -d --outDir dist"
   },
   "repository": {
     "type": "git",
