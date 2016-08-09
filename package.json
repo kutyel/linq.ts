@@ -36,10 +36,10 @@
     "typescript": "^1.8.10"
   },
   "devDependencies": {
-    "ava": "^0.15.2",
-    "coveralls": "^2.11.11",
-    "nyc": "^7.0.0",
-    "tslint": "^3.13.0",
+    "ava": "^0.16.0",
+    "coveralls": "^2.11.12",
+    "nyc": "^7.1.0",
+    "tslint": "^3.14.0",
     "typedoc": "^0.4.4"
   }
 }
