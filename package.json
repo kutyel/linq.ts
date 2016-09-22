@@ -37,9 +37,9 @@
   },
   "devDependencies": {
     "ava": "^0.16.0",
-    "coveralls": "^2.11.12",
-    "nyc": "^7.1.0",
-    "tslint": "^3.14.0",
-    "typedoc": "^0.4.4"
+    "coveralls": "^2.11.14",
+    "nyc": "^8.3.0",
+    "tslint": "^3.15.1",
+    "typedoc": "^0.4.5"
   }
 }
