@@ -27,7 +27,7 @@
     "url": "https://github.com/kutyel"
   },
   "license": "MIT",
-  "typings": "dist/linq.d.ts",
+  "typings": "linq.ts",
   "bugs": {
     "url": "https://github.com/kutyel/linq.ts/issues"
   },
