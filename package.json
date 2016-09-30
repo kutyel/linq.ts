@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/kutyel/linq.ts#readme",
   "dependencies": {
-    "typescript": "^1.8.10"
+    "typescript": "^2.0.3"
   },
   "devDependencies": {
     "ava": "^0.16.0",
