@@ -587,9 +587,9 @@ test('Zip', t => {
     t.is(numbers.Zip(words, (first, second) => `${first} ${second}`).ToArray().toString(), '1 one,2 two,3 three');
     
     // larger second array
-    const words = new List<string>(['one', 'two', 'three']);
-    const numbers = new List<number>([1, 2, 3, 4]);
-    t.is(words.Zip(numbers, (first, second) => `${first} ${second}`).ToArray().toString(), 'one 1,two 2,three 3');
+    const numbers2 = new List<number>([1, 2, 3, 4]);
+    const words2 = new List<string>(['one', 'two', 'three']);
+    t.is(words2.Zip(numbers2, (first, second) => `${first} ${second}`).ToArray().toString(), 'one 1,two 2,three 3');
 });
 
 test('Where().Select()', t => {
