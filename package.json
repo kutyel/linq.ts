@@ -10,6 +10,7 @@
     "start": "tsc -w",
     "pretest": "tsc",
     "test": "nyc ava",
+    "coverage": "nyc report --reporter=html",
     "docs": "typedoc --out ../docs/ linq.ts -m commonjs -t ES6",
     "build": "tsc linq.ts -t es3 -m commonjs -d --outDir dist"
   },
@@ -38,8 +39,8 @@
   "devDependencies": {
     "ava": "^0.16.0",
     "coveralls": "^2.11.14",
-    "nyc": "^8.3.0",
+    "nyc": "^8.3.1",
     "tslint": "^3.15.1",
-    "typedoc": "^0.4.5"
+    "typedoc": "^0.5.0"
   }
 }
