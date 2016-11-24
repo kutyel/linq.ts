@@ -7,7 +7,7 @@
  * Copyright © 2016 Flavio Corpa. All rights reserved.
  *
  */
-export class List<T> {
+export declare class List<T> {
     protected _elements: T[];
     /**
      * Defaults the elements of the list
@@ -100,6 +100,10 @@ export class List<T> {
      * Returns the index of the first occurence of an element in the List.
      */
     IndexOf(element: T): number;
+    /**
+     * Inserts an element into the List<T> at the specified index.
+     */
+    Insert(index: number, element: T): void | TypeError;
     /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
      */
@@ -234,7 +238,7 @@ export class List<T> {
      */
     private _negate(predicate);
 }
-export class Enumerable {
+export declare class Enumerable {
     /**
      * Generates a sequence of integral numbers within a specified range.
      */
