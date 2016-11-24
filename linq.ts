@@ -182,17 +182,6 @@ export class List<T> {
     }
 
     /**
-     * Inserts an element into the List<T> at the specified index.
-     */
-    public Insert(index: number, element: T): void | TypeError {
-        if (index < 0 || index > this._elements.length) {
-            throw new TypeError('Index is out of range.');
-        }
-
-        this._elements.splice(index, 0, element);
-    }
-
-    /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
      */
     public Intersect(source: List<T>): List<T> {
