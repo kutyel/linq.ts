@@ -311,6 +311,24 @@ test('IndexOf', t => {
     t.is(pets.IndexOf(boots), 1);
 });
 
+test('Insert', t => {
+    const pets = new List<Pet>([
+        new Pet({ Age: 10, Name: 'Barley' }),
+        new Pet({ Age: 4, Name: 'Boots' }),
+        new Pet({ Age: 6, Name: 'Whiskers' })
+    ]);
+
+    let newPet = new Pet({ Age: 12, Name: 'Max'});
+
+    pets.Insert(0, newPet);
+    pets.Insert(pets.Count(), newPet);
+
+    t.is(pets.First(), newPet);
+    t.is(pets.Last(), newPet);
+    t.throws(() => pets.Insert(-1, newPet), /Index is out of range./);
+    t.throws(() => pets.Insert(pets.Count() + 1, newPet), /Index is out of range./);
+});
+
 test('Intersect', t => {
     const id1 = new List<number>([44, 26, 92, 30, 71, 38]);
     const id2 = new List<number>([39, 59, 83, 47, 26, 4, 30]);
