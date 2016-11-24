@@ -80,6 +80,62 @@ test('Add', t => {
     t.is(list.First(), 'hey');
 });
 
+test('Insert', t => {
+    const pets = new List<Pet>([
+        new Pet({ Age: 10, Name: 'Barley' }),
+        new Pet({ Age: 4, Name: 'Boots' }),
+        new Pet({ Age: 6, Name: 'Whiskers' })
+    ]);
+
+    let newPet = new Pet({ Age: 12, Name: 'Max'});
+
+    pets.Insert(0, newPet);
+
+    t.is(pets.First(), newPet);
+    t.is(pets.Count(), 4);
+});
+
+test('Insert - index is negative - out of range', t => {
+    const pets = new List<Pet>([
+        new Pet({ Age: 10, Name: 'Barley' }),
+        new Pet({ Age: 4, Name: 'Boots' }),
+        new Pet({ Age: 6, Name: 'Whiskers' })
+    ]);
+
+    let newPet = new Pet({ Age: 12, Name: 'Max'});
+
+    t.throws(() => pets.Insert(-1, newPet), /Index is out of range./);
+    t.is(pets.Count(), 3);
+});
+
+test('Insert - index is equal to elements count - add element to the end of list', t => {
+    const pets = new List<Pet>([
+        new Pet({ Age: 10, Name: 'Barley' }),
+        new Pet({ Age: 4, Name: 'Boots' }),
+        new Pet({ Age: 6, Name: 'Whiskers' })
+    ]);
+
+    let newPet = new Pet({ Age: 12, Name: 'Max'});
+
+    pets.Insert(pets.Count(), newPet);
+
+    t.is(pets.Last(), newPet);
+    t.is(pets.Count(), 4);
+});
+
+test('Insert - index is greater than elements count - out of range', t => {
+    const pets = new List<Pet>([
+        new Pet({ Age: 10, Name: 'Barley' }),
+        new Pet({ Age: 4, Name: 'Boots' }),
+        new Pet({ Age: 6, Name: 'Whiskers' })
+    ]);
+
+    let newPet = new Pet({ Age: 12, Name: 'Max'});
+
+    t.throws(() => pets.Insert(pets.Count() + 1, newPet), /Index is out of range./);
+    t.is(pets.Count(), 3);
+});
+
 test('AddRange', t => {
     const list = new List<string>();
     list.AddRange(['hey', 'what\'s', 'up']);

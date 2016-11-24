@@ -1,3 +1,4 @@
+"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -17,9 +18,7 @@ var List = (function () {
      * Defaults the elements of the list
      */
     function List(elements) {
-        elements = elements || [];
-        // we clone the array to prevent side effects
-        elements = elements.slice(0);
+        if (elements === void 0) { elements = []; }
         this._elements = elements;
     }
     /**
@@ -132,6 +131,15 @@ var List = (function () {
      */
     List.prototype.IndexOf = function (element) {
         return this._elements.indexOf(element);
+    };
+    /**
+     * Inserts an element into the List<T> at the specified index.
+     */
+    List.prototype.Insert = function (index, element) {
+        if (index < 0 || index > this._elements.length) {
+            throw new TypeError('Index is out of range.');
+        }
+        this._elements.splice(index, 0, element);
     };
     /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
@@ -259,9 +267,7 @@ var List = (function () {
      */
     List.prototype.SkipWhile = function (predicate) {
         var _this = this;
-        var agg = this.Aggregate(function (ac, val) { return predicate(_this.ElementAt(ac)) ? ++ac : ac; }, 0);
-        console.log(agg);
-        return this.Skip(agg);
+        return this.Skip(this.Aggregate(function (ac, val) { return predicate(_this.ElementAt(ac)) ? ++ac : ac; }, 0));
     };
     List.prototype.Sum = function (transform) {
         return transform ? this.Select(transform).Sum() : this.Aggregate(function (ac, v) { return ac += (+v); }, 0);
@@ -333,7 +339,7 @@ var List = (function () {
         };
     };
     return List;
-})();
+}());
 exports.List = List;
 var ComparerHelper = (function () {
     function ComparerHelper() {
@@ -378,7 +384,7 @@ var ComparerHelper = (function () {
         };
     };
     return ComparerHelper;
-})();
+}());
 /**
  * Represents a sorted sequence. The methods of this class are implemented by using deferred execution.
  * The immediate return value is an object that stores all the information that is required to perform the action.
@@ -407,7 +413,7 @@ var OrderedList = (function (_super) {
         return new OrderedList(this._elements, ComparerHelper.ComposeComparers(this._comparer, ComparerHelper.ComparerForKey(keySelector, true)));
     };
     return OrderedList;
-})(List);
+}(List));
 var Enumerable = (function () {
     function Enumerable() {
     }
@@ -432,5 +438,5 @@ var Enumerable = (function () {
         return result;
     };
     return Enumerable;
-})();
+}());
 exports.Enumerable = Enumerable;
