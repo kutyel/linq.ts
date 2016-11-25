@@ -1,6 +1,6 @@
 {
   "name": "linqts",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "LinQ + TypeScript",
   "main": "dist/linq.js",
   "typescript": {
