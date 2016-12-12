@@ -1,6 +1,6 @@
 {
   "name": "linqts",
-  "version": "1.6.1",
+  "version": "0.0.0-semantic-release",
   "description": "LinQ + TypeScript",
   "main": "dist/linq.js",
   "typescript": {
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/kutyel/linq.ts.git"
+    "url": "https://github.com/kutyel/linq.ts.git"
   },
   "keywords": [
     "linq",
