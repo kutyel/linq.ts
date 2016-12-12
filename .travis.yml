@@ -1,11 +1,23 @@
 language: node_js
+branches:
+  only:
+    - master
+cache:
+  diretories:
+    - node_modules
+notifications:
+  email: false
 node_js:
-  - '6.3'
-  - '6.2'
-  - '6.1'
-  - '6'
-before_install:
-  - 'npm install -g npm@latest'
-  - 'npm install -g coveralls@2'
+  - 6.3
+  - 6.2
+  - 6.1
+  - 6
+before_script:
+  - npm prune
+script:
+  - npm run cover
+  - npm run check-coverage
+  - npm run build
 after_success:
-  - 'nyc report --reporter=text-lcov | coveralls'
+  - npm run report-coverage
+  - npm run semantic-release
