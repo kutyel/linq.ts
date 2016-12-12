@@ -105,7 +105,11 @@ export class List<T> {
      * Returns the element at a specified index in a sequence.
      */
     public ElementAt(index: number): T {
-        return this._elements[index];
+        if (index < this.Count()) {
+            return this._elements[index];
+        } else {
+            throw new Error('ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source.');
+        }
     }
 
     /**
@@ -125,18 +129,22 @@ export class List<T> {
     /**
      * Returns the first element of a sequence.
      */
-    public First(): T;
-    public First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
-    public First(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
-        return predicate ? this.Where(predicate).First() : this._elements[0];
+    public First(): T | Error;
+    public First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
+    public First(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T | Error {
+        if (this.Count()) {
+            return predicate ? this.Where(predicate).First() : this._elements[0];
+        } else {
+            throw new Error('InvalidOperationException: The source sequence is empty.');
+        }
     }
 
     /**
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
-    public FirstOrDefault(): T;
-    public FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
-    public FirstOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
+    public FirstOrDefault(): T | Error;
+    public FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
+    public FirstOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T | Error {
         return this.Count() ? this.First(predicate) : undefined;
     }
 
@@ -173,9 +181,9 @@ export class List<T> {
     /**
      * Inserts an element into the List<T> at the specified index.
      */
-    public Insert(index: number, element: T): void | TypeError {
+    public Insert(index: number, element: T): void | Error {
         if (index < 0 || index > this._elements.length) {
-            throw new TypeError('Index is out of range.');
+            throw new Error('Index is out of range.');
         }
 
         this._elements.splice(index, 0, element);
@@ -198,18 +206,22 @@ export class List<T> {
     /**
      * Returns the last element of a sequence.
      */
-    public Last(): T;
-    public Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
-    public Last(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
-        return predicate ? this.Where(predicate).Last() : this._elements[this.Count() - 1];
+    public Last(): T | Error;
+    public Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
+    public Last(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T | Error {
+        if (this.Count()) {
+            return predicate ? this.Where(predicate).Last() : this._elements[this.Count() - 1];
+        } else {
+            throw Error('InvalidOperationException: The source sequence is empty.');
+        }
     }
 
     /**
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
-    public LastOrDefault(): T;
-    public LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
-    public LastOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
+    public LastOrDefault(): T | Error;
+    public LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
+    public LastOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T | Error {
         return this.Count() ? this.Last(predicate) : undefined;
     }
 
@@ -307,9 +319,9 @@ export class List<T> {
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
-    public Single(): T | TypeError {
+    public Single(): T | Error {
         if (this.Count() !== 1) {
-            throw new TypeError('The collection does not contain exactly one element.');
+            throw new Error('The collection does not contain exactly one element.');
         } else {
             return this.First();
         }
@@ -319,7 +331,7 @@ export class List<T> {
      * Returns the only element of a sequence, or a default value if the sequence is empty;
      * this method throws an exception if there is more than one element in the sequence.
      */
-    public SingleOrDefault(): T | TypeError {
+    public SingleOrDefault(): T | Error {
         return this.Count() ? this.Single() : undefined;
     }
 

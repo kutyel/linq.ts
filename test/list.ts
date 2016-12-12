@@ -172,13 +172,13 @@ test('Distinct', t => {
 test('ElementAt', t => {
     const a = new List<string>(['hey', 'hola', 'que', 'tal']);
     t.is(a.ElementAt(0), 'hey');
-    t.falsy(a.ElementAt(4));
+    t.throws(() => a.ElementAt(4), /ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source./);
 });
 
 test('ElementAtOrDefault', t => {
     const a = new List<string>(['hey', 'hola', 'que', 'tal']);
     t.is(a.ElementAtOrDefault(0), 'hey');
-    t.is(a.ElementAtOrDefault(4), undefined);
+    t.throws(() => a.ElementAtOrDefault(4), /ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source./);
 });
 
 test('Except', t => {
@@ -190,7 +190,7 @@ test('Except', t => {
 test('First', t => {
     t.is(new List<string>(['hey', 'hola', 'que', 'tal']).First(), 'hey');
     t.is(new List<number>([1, 2, 3, 4, 5]).First(x => x > 2), 3);
-    t.falsy(new List<string>().First());
+    t.throws(() => new List<string>().First(), /InvalidOperationException: The source sequence is empty./);
 });
 
 test('FirstOrDefault', t => {
@@ -262,7 +262,7 @@ test('Insert', t => {
         new Pet({ Age: 6, Name: 'Whiskers' })
     ]);
 
-    let newPet = new Pet({ Age: 12, Name: 'Max'});
+    let newPet = new Pet({ Age: 12, Name: 'Max' });
 
     pets.Insert(0, newPet);
     pets.Insert(pets.Count(), newPet);
@@ -304,7 +304,7 @@ test('Join', t => {
 test('Last', t => {
     t.is(new List<string>(['hey', 'hola', 'que', 'tal']).Last(), 'tal');
     t.is(new List<number>([1, 2, 3, 4, 5]).Last(x => x > 2), 5);
-    t.falsy(new List<string>().Last());
+    t.throws(() => new List<string>().Last(), /InvalidOperationException: The source sequence is empty./);
 });
 
 test('LastOrDefault', t => {
@@ -330,7 +330,7 @@ test('OrderByDescending', t => {
 
 test('ThenBy', t => {
     const fruits = new List<string>(['grape', 'passionfruit', 'banana', 'mango', 'orange', 'raspberry', 'apple', 'blueberry']);
-    
+
     // sort the strings first by their length and then
     // alphabetically by passing the identity selector function.
     const result = 'apple,grape,mango,banana,orange,blueberry,raspberry,passionfruit';
@@ -342,15 +342,15 @@ test('ThenBy', t => {
 
 // see https://github.com/kutyel/linq.ts/issues/23
 test('ThenByMultiple', t => {
-    let x = {a: 2, b: 1, c: 1};
-    let y = {a: 1, b: 2, c: 2};
-    let z = {a: 1, b: 1, c: 3};
+    let x = { a: 2, b: 1, c: 1 };
+    let y = { a: 1, b: 2, c: 2 };
+    let z = { a: 1, b: 1, c: 3 };
     let unsorted = new List([x, y, z]);
     let sorted = unsorted.OrderBy(u => u.a)
         .ThenBy(u => u.b)
         .ThenBy(u => u.c)
         .ToArray();
-        
+
     t.is(sorted[0], z);
     t.is(sorted[1], y);
     t.is(sorted[2], x);
@@ -556,7 +556,7 @@ test('ToLookup', t => {
     // select Company appended to TrackingNumber
     // as the element values of the Lookup.
     const lookup = packages.ToLookup(p => p.Company.substring(0, 1),
-                                     p => p.Company + ' ' + p.TrackingNumber);
+        p => p.Company + ' ' + p.TrackingNumber);
     const result = {
         'C': [
             'Coho Vineyard 89453312',
@@ -577,7 +577,7 @@ test('Union', t => {
     const ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7]);
     const ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0]);
     t.is(ints1.Union(ints2).ToArray().toString(), '5,3,9,7,8,6,4,1,0');
-    
+
     const result = [
         { Name: 'apple', Code: 9 },
         { Name: 'orange', Code: 4 },
@@ -603,7 +603,7 @@ test('Zip', t => {
     const numbers = new List<number>([1, 2, 3, 4]);
     const words = new List<string>(['one', 'two', 'three']);
     t.is(numbers.Zip(words, (first, second) => `${first} ${second}`).ToArray().toString(), '1 one,2 two,3 three');
-    
+
     // larger second array
     const numbers2 = new List<number>([1, 2, 3, 4]);
     const words2 = new List<string>(['one', 'two', 'three']);
