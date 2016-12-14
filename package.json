@@ -11,6 +11,7 @@
     "commit": "git-cz",
     "pretest": "tsc",
     "test": "nyc ava",
+    "nyan": "ava --tap | tap-nyan",
     "cover": "nyc --reporter=lcov npm t",
     "validate": "npm run cover && npm run check-coverage",
     "build": "tsc linq.ts -t es3 -m commonjs -d --outDir dist",
