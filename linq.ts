@@ -108,7 +108,8 @@ export class List<T> {
         if (index < this.Count()) {
             return this._elements[index];
         } else {
-            throw new Error('ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source.');
+            const MSG = 'ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source.';
+            throw new Error(MSG);
         }
     }
 
