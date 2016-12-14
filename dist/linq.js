@@ -87,7 +87,12 @@ var List = (function () {
      * Returns the element at a specified index in a sequence.
      */
     List.prototype.ElementAt = function (index) {
-        return this._elements[index];
+        if (index < this.Count()) {
+            return this._elements[index];
+        }
+        else {
+            throw new Error('ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source.');
+        }
     };
     /**
      * Returns the element at a specified index in a sequence or a default value if the index is out of range.
@@ -102,7 +107,12 @@ var List = (function () {
         return this.Where(function (x) { return !source.Contains(x); });
     };
     List.prototype.First = function (predicate) {
-        return predicate ? this.Where(predicate).First() : this._elements[0];
+        if (this.Count()) {
+            return predicate ? this.Where(predicate).First() : this._elements[0];
+        }
+        else {
+            throw new Error('InvalidOperationException: The source sequence is empty.');
+        }
     };
     List.prototype.FirstOrDefault = function (predicate) {
         return this.Count() ? this.First(predicate) : undefined;
@@ -137,7 +147,7 @@ var List = (function () {
      */
     List.prototype.Insert = function (index, element) {
         if (index < 0 || index > this._elements.length) {
-            throw new TypeError('Index is out of range.');
+            throw new Error('Index is out of range.');
         }
         this._elements.splice(index, 0, element);
     };
@@ -154,7 +164,12 @@ var List = (function () {
         return this.SelectMany(function (x) { return list.Where(function (y) { return key2(y) === key1(x); }).Select(function (z) { return result(x, z); }); });
     };
     List.prototype.Last = function (predicate) {
-        return predicate ? this.Where(predicate).Last() : this._elements[this.Count() - 1];
+        if (this.Count()) {
+            return predicate ? this.Where(predicate).Last() : this._elements[this.Count() - 1];
+        }
+        else {
+            throw Error('InvalidOperationException: The source sequence is empty.');
+        }
     };
     List.prototype.LastOrDefault = function (predicate) {
         return this.Count() ? this.Last(predicate) : undefined;
@@ -243,7 +258,7 @@ var List = (function () {
      */
     List.prototype.Single = function () {
         if (this.Count() !== 1) {
-            throw new TypeError('The collection does not contain exactly one element.');
+            throw new Error('The collection does not contain exactly one element.');
         }
         else {
             return this.First();
@@ -394,9 +409,10 @@ var ComparerHelper = (function () {
 var OrderedList = (function (_super) {
     __extends(OrderedList, _super);
     function OrderedList(elements, _comparer) {
-        _super.call(this, elements);
-        this._comparer = _comparer;
-        this._elements.sort(this._comparer);
+        var _this = _super.call(this, elements) || this;
+        _this._comparer = _comparer;
+        _this._elements.sort(_this._comparer);
+        return _this;
     }
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.

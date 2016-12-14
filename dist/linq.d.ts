@@ -76,13 +76,13 @@ export declare class List<T> {
     /**
      * Returns the first element of a sequence.
      */
-    First(): T;
-    First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    First(): T | Error;
+    First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
     /**
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
-    FirstOrDefault(): T;
-    FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    FirstOrDefault(): T | Error;
+    FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
     /**
      * Performs the specified action on each element of the List<T>.
      */
@@ -103,7 +103,7 @@ export declare class List<T> {
     /**
      * Inserts an element into the List<T> at the specified index.
      */
-    Insert(index: number, element: T): void | TypeError;
+    Insert(index: number, element: T): void | Error;
     /**
      * Produces the set intersection of two sequences by using the default equality comparer to compare values.
      */
@@ -115,13 +115,13 @@ export declare class List<T> {
     /**
      * Returns the last element of a sequence.
      */
-    Last(): T;
-    Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    Last(): T | Error;
+    Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
     /**
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
-    LastOrDefault(): T;
-    LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    LastOrDefault(): T | Error;
+    LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
     /**
      * Returns the maximum value in a generic sequence.
      */
@@ -177,12 +177,12 @@ export declare class List<T> {
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
-    Single(): T | TypeError;
+    Single(): T | Error;
     /**
      * Returns the only element of a sequence, or a default value if the sequence is empty;
      * this method throws an exception if there is more than one element in the sequence.
      */
-    SingleOrDefault(): T | TypeError;
+    SingleOrDefault(): T | Error;
     /**
      * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
      */
