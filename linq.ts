@@ -130,9 +130,9 @@ export class List<T> {
     /**
      * Returns the first element of a sequence.
      */
-    public First(): T | Error;
-    public First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
-    public First(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T | Error {
+    public First(): T;
+    public First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    public First(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
         if (this.Count()) {
             return predicate ? this.Where(predicate).First() : this._elements[0];
         } else {
@@ -143,9 +143,9 @@ export class List<T> {
     /**
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
-    public FirstOrDefault(): T | Error;
-    public FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
-    public FirstOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T | Error {
+    public FirstOrDefault(): T;
+    public FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    public FirstOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
         return this.Count() ? this.First(predicate) : undefined;
     }
 
@@ -207,9 +207,9 @@ export class List<T> {
     /**
      * Returns the last element of a sequence.
      */
-    public Last(): T | Error;
-    public Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
-    public Last(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T | Error {
+    public Last(): T;
+    public Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    public Last(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
         if (this.Count()) {
             return predicate ? this.Where(predicate).Last() : this._elements[this.Count() - 1];
         } else {
@@ -220,9 +220,9 @@ export class List<T> {
     /**
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
-    public LastOrDefault(): T | Error;
-    public LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
-    public LastOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T | Error {
+    public LastOrDefault(): T;
+    public LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
+    public LastOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
         return this.Count() ? this.Last(predicate) : undefined;
     }
 
@@ -299,15 +299,15 @@ export class List<T> {
     /**
      * Projects each element of a sequence into a new form.
      */
-    public Select(mapper: (value?: T, index?: number, list?: T[]) => any): List<any> {
+    public Select<TOut>(mapper: (value?: T, index?: number, list?: T[]) => TOut): List<TOut> {
         return new List<any>(this._elements.map(mapper));
     }
 
     /**
      * Projects each element of a sequence to a List<any> and flattens the resulting sequences into one sequence.
      */
-    public SelectMany(mapper: (value?: T, index?: number, list?: T[]) => any): List<any> {
-        return this.Aggregate((ac, v, i) => (ac.AddRange(this.Select(mapper).ElementAt(i).ToArray()), ac), new List<any>());
+    public SelectMany<TOut extends List<any>>(mapper: (value?: T, index?: number, list?: T[]) => TOut): TOut {
+        return this.Aggregate((ac, v, i) => (ac.AddRange(this.Select(mapper).ElementAt(i).ToArray()), ac), new List<TOut>());
     }
 
     /**
@@ -320,7 +320,7 @@ export class List<T> {
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
-    public Single(): T | Error {
+    public Single(): T {
         if (this.Count() !== 1) {
             throw new Error('The collection does not contain exactly one element.');
         } else {
@@ -332,7 +332,7 @@ export class List<T> {
      * Returns the only element of a sequence, or a default value if the sequence is empty;
      * this method throws an exception if there is more than one element in the sequence.
      */
-    public SingleOrDefault(): T | Error {
+    public SingleOrDefault(): T {
         return this.Count() ? this.Single() : undefined;
     }
 
