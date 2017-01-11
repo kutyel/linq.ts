@@ -306,8 +306,8 @@ export class List<T> {
     /**
      * Projects each element of a sequence to a List<any> and flattens the resulting sequences into one sequence.
      */
-    public SelectMany<TOut>(mapper: (value?: T, index?: number, list?: T[]) => TOut): TOut {
-        return this.Aggregate((ac, v, i) => (ac.AddRange((this.Select(mapper).ElementAt(i) as any).ToArray()), ac), new List<TOut>());
+    public SelectMany<TOut extends List<any>>(mapper: (value?: T, index?: number, list?: T[]) => TOut): TOut {
+        return this.Aggregate((ac, v, i) => (ac.AddRange(this.Select(mapper).ElementAt(i).ToArray()), ac), new List<TOut>());
     }
 
     /**
