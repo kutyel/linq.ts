@@ -384,8 +384,8 @@ export class List<T> {
     /**
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
-    public ToDictionary<TKey, TValue>(key: (key: any) => TKey, value?: (value: any) => TValue): any {
-        return this.Aggregate((o, v, i) => ((<any>o)[this.Select(key).ElementAt(i)] = value ? this.Select(value).ElementAt(i) : v, o), {});
+    public ToDictionary<TKey, TValue>(key: (key: T) => TKey, value?: (value: T) => TValue): Object {
+        return this.Aggregate((o, v, i) => ((<any>o)[this.Select(key).ElementAt(i).toString()] = value ? this.Select(value).ElementAt(i) : v, o), {});
     }
 
     /**
@@ -419,7 +419,7 @@ export class List<T> {
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
-    public Zip<U>(list: List<U>, result: (first: T, second: U) => any): List<any> {
+    public Zip<U, TOut>(list: List<U>, result: (first: T, second: U) => TOut): List<TOut> {
         return list.Count() < this.Count() ? list.Select((x, y) => result(this.ElementAt(y), x)) :
             this.Select((x, y) => result(x, list.ElementAt(y)));
     }
