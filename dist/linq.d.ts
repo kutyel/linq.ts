@@ -76,13 +76,13 @@ export declare class List<T> {
     /**
      * Returns the first element of a sequence.
      */
-    First(): T | Error;
-    First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
+    First(): T;
+    First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     /**
      * Returns the first element of a sequence, or a default value if the sequence contains no elements.
      */
-    FirstOrDefault(): T | Error;
-    FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
+    FirstOrDefault(): T;
+    FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     /**
      * Performs the specified action on each element of the List<T>.
      */
@@ -115,13 +115,13 @@ export declare class List<T> {
     /**
      * Returns the last element of a sequence.
      */
-    Last(): T | Error;
-    Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
+    Last(): T;
+    Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     /**
      * Returns the last element of a sequence, or a default value if the sequence contains no elements.
      */
-    LastOrDefault(): T | Error;
-    LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T | Error;
+    LastOrDefault(): T;
+    LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     /**
      * Returns the maximum value in a generic sequence.
      */
@@ -165,11 +165,11 @@ export declare class List<T> {
     /**
      * Projects each element of a sequence into a new form.
      */
-    Select(mapper: (value?: T, index?: number, list?: T[]) => any): List<any>;
+    Select<TOut>(mapper: (value?: T, index?: number, list?: T[]) => TOut): List<TOut>;
     /**
      * Projects each element of a sequence to a List<any> and flattens the resulting sequences into one sequence.
      */
-    SelectMany(mapper: (value?: T, index?: number, list?: T[]) => any): List<any>;
+    SelectMany<TOut extends List<any>>(mapper: (value?: T, index?: number, list?: T[]) => TOut): TOut;
     /**
      * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
      */
@@ -177,12 +177,12 @@ export declare class List<T> {
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      */
-    Single(): T | Error;
+    Single(): T;
     /**
      * Returns the only element of a sequence, or a default value if the sequence is empty;
      * this method throws an exception if there is more than one element in the sequence.
      */
-    SingleOrDefault(): T | Error;
+    SingleOrDefault(): T;
     /**
      * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
      */
@@ -212,7 +212,7 @@ export declare class List<T> {
     /**
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
-    ToDictionary<TKey, TValue>(key: (key: any) => TKey, value?: (value: any) => TValue): any;
+    ToDictionary<TKey, TValue>(key: (key: T) => TKey, value?: (value: T) => TValue): Object;
     /**
      * Creates a List<T> from an Enumerable.List<T>.
      */
@@ -232,7 +232,7 @@ export declare class List<T> {
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      */
-    Zip<U>(list: List<U>, result: (first: T, second: U) => any): List<any>;
+    Zip<U, TOut>(list: List<U>, result: (first: T, second: U) => TOut): List<TOut>;
     /**
      * Creates a function that negates the result of the predicate
      */
