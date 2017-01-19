@@ -8,11 +8,13 @@ export default {
         library: 'linq'
     },
     resolve: {
-        extensions: ['', '.webpack.js', '.web.js', '.ts', '.js']
+        extensions: ['.ts', '.js']
     },
     module: {
-        loaders: [
-            { test: /\.ts$/, loader: 'ts-loader' }
-        ]
+        rules: [{
+            test: /\.ts$/,
+            loader: 'ts-loader',
+            exclude: /node_modules/
+        }]
     }
 };
