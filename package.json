@@ -51,7 +51,7 @@
     "typescript": "^2.1.4"
   },
   "devDependencies": {
-    "ava": "^0.17.0",
+    "ava": "^0.18.0",
     "commitizen": "^2.8.6",
     "coveralls": "^2.11.14",
     "cz-conventional-changelog": "^1.2.0",
