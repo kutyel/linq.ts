@@ -146,7 +146,7 @@ export class List<T> {
     public FirstOrDefault(): T;
     public FirstOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     public FirstOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
-        return this.Count() ? this.First(predicate) : undefined;
+        return this.Count(predicate) ? this.First(predicate) : undefined;
     }
 
     /**
@@ -223,7 +223,7 @@ export class List<T> {
     public LastOrDefault(): T;
     public LastOrDefault(predicate: (value?: T, index?: number, list?: T[]) => boolean): T;
     public LastOrDefault(predicate?: (value?: T, index?: number, list?: T[]) => boolean): T {
-        return this.Count() ? this.Last(predicate) : undefined;
+        return this.Count(predicate) ? this.Last(predicate) : undefined;
     }
 
     /**
