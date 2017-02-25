@@ -54,7 +54,7 @@
     "ava": "^0.18.0",
     "commitizen": "^2.8.6",
     "coveralls": "^2.11.14",
-    "cz-conventional-changelog": "^1.2.0",
+    "cz-conventional-changelog": "^2.0.0",
     "ghooks": "^2.0.0",
     "npm-run-all": "^4.0.0",
     "nyc": "^10.0.0",
