@@ -169,7 +169,7 @@ test('Distinct', t => {
     t.is(ages.Distinct().ToArray().toString(), '21,46,55,17');
 });
 
-test('GroupBy', t => {
+test('DistinctBy', t => {
     const pets = new List<Pet>([
         new Pet({ Age: 1, Name: 'Whiskers' }),
         new Pet({ Age: 4, Name: 'Boots' }),
