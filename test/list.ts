@@ -116,6 +116,55 @@ test('Any', t => {
     t.true(pets.Any(p => p.Age > 1 && p.Vaccinated === false));
 });
 
+test('AtLeast', t => {
+    const grades = new List<number>([78, 92, 100, 37, 81]);
+    const people = new List<IPerson>([
+        { Age: 15, Name: 'Cathy' },
+        { Age: 25, Name: 'Alice' },
+        { Age: 50, Name: 'Bob' }
+    ]);
+
+    t.true(grades.AtLeast(4));
+    t.true(grades.AtLeast(5));
+    t.false(grades.AtLeast(6));
+
+    t.true(people.AtLeast(3));
+    t.false(people.AtLeast(5));
+});
+
+test('AtMost', t => {
+    const grades = new List<number>([78, 92, 100, 37, 81]);
+    const people = new List<IPerson>([
+        { Age: 15, Name: 'Cathy' },
+        { Age: 25, Name: 'Alice' },
+        { Age: 50, Name: 'Bob' }
+    ]);
+
+    t.false(grades.AtMost(4));
+    t.true(grades.AtMost(5));
+    t.true(grades.AtMost(6));
+
+    t.false(people.AtMost(2));
+    t.true(people.AtMost(3));
+    t.true(people.AtMost(5));
+});
+
+test('AtMost', t => {
+    const grades = new List<number>([78, 92, 100, 37, 81]);
+    const people = new List<IPerson>([
+        { Age: 15, Name: 'Cathy' },
+        { Age: 25, Name: 'Alice' },
+        { Age: 50, Name: 'Bob' }
+    ]);
+
+    t.false(grades.Exactly(4));
+    t.true(grades.Exactly(5));
+    
+    t.false(people.Exactly(2));
+    t.true(people.Exactly(3));    
+});
+
+
 test('Average', t => {
     const grades = new List<number>([78, 92, 100, 37, 81]);
     const people = new List<IPerson>([
@@ -176,7 +225,7 @@ test('DistinctBy', t => {
         new Pet({ Age: 8, Name: 'Barley' }),
         new Pet({ Age: 4, Name: 'Daisy' })
     ]);
-    
+
     const result = new List<Pet>([
         new Pet({ Age: 1, Name: 'Whiskers' }),
         new Pet({ Age: 4, Name: 'Boots' }),
@@ -333,8 +382,36 @@ test('Max', t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).Max(), 5);
 });
 
+test('MaxBy', t => {
+    const pets = new List<Pet>([
+        new Pet({ Age: 4, Name: 'Boots' }),
+        new Pet({ Age: 1, Name: 'Whiskers' }),
+        new Pet({ Age: 8, Name: 'Barley' }),
+        new Pet({ Age: 4, Name: 'Daisy' })
+    ]);
+    let result = new Pet({ Age: 8, Name: 'Barley' });
+    t.deepEqual(pets.MaxBy(pet => pet.Age), result);
+
+    result = new Pet({ Age: 1, Name: 'Whiskers' });
+    t.deepEqual(pets.MaxBy(pet => pet.Name), result);
+});
+
 test('Min', t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).Min(), 1);
+});
+
+test('MinBy', t => {
+    const pets = new List<Pet>([
+        new Pet({ Age: 4, Name: 'Boots' }),
+        new Pet({ Age: 1, Name: 'Whiskers' }),
+        new Pet({ Age: 8, Name: 'Barley' }),
+        new Pet({ Age: 4, Name: 'Daisy' })
+    ]);
+    let result = new Pet({ Age: 1, Name: 'Whiskers' });
+    t.deepEqual(pets.MinBy(pet => pet.Age), result);
+
+    result = new Pet({ Age: 8, Name: 'Barley' });
+    t.deepEqual(pets.MinBy(pet => pet.Name), result);
 });
 
 test('OrderBy', t => {
