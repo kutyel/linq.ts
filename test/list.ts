@@ -169,6 +169,23 @@ test('Distinct', t => {
     t.is(ages.Distinct().ToArray().toString(), '21,46,55,17');
 });
 
+test('DistinctBy', t => {
+    const pets = new List<Pet>([
+        new Pet({ Age: 1, Name: 'Whiskers' }),
+        new Pet({ Age: 4, Name: 'Boots' }),
+        new Pet({ Age: 8, Name: 'Barley' }),
+        new Pet({ Age: 4, Name: 'Daisy' })
+    ]);
+    
+    const result = new List<Pet>([
+        new Pet({ Age: 1, Name: 'Whiskers' }),
+        new Pet({ Age: 4, Name: 'Boots' }),
+        new Pet({ Age: 8, Name: 'Barley' })
+    ]);
+
+    t.deepEqual(pets.DistinctBy(pet => pet.Age), result);
+});
+
 test('ElementAt', t => {
     const a = new List<string>(['hey', 'hola', 'que', 'tal']);
     t.is(a.ElementAt(0), 'hey');

@@ -102,6 +102,20 @@ export class List<T> {
     }
 
     /**
+     * Returns distinct elements from a sequence according to specified key selector.
+     */
+    public DistinctBy(keySelector: (key: T) => any): List<T> {
+        const groups = this.GroupBy(keySelector, obj => obj);
+        const results = new List<T>();
+        for (let index in groups) {
+            if (groups.hasOwnProperty(index)) {
+                results.Add(groups[index][0]);
+            }
+        }
+        return results;
+    }
+
+    /**
      * Returns the element at a specified index in a sequence.
      */
     public ElementAt(index: number): T {
