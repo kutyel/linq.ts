@@ -19,6 +19,7 @@
     "build": "npm-run-all --parallel build:*",
     "build:main": "tsc linq.ts -t es3 -m commonjs -d --outDir dist",
     "build:umd": "webpack --output-filename linq.umd.js",
+    "build:umd.min": "webpack --output-filename linq.umd.min.js -p",
     "docs": "typedoc --out ../docs/ linq.ts -m commonjs -t ES6",
     "report-coverage": "nyc report --reporter=text-lcov | coveralls",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
