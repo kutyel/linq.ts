@@ -49,8 +49,10 @@ export class List<T> {
     /**
      * Determines whether a sequence contains any elements.
      */
-    public Any(predicate: (value?: T, index?: number, list?: T[]) => boolean): boolean {
-        return this._elements.some(predicate);
+    public Any(): boolean;
+    public Any(predicate: (value?: T, index?: number, list?: T[]) => boolean): boolean;
+    public Any(predicate?: (value?: T, index?: number, list?: T[]) => boolean): boolean {
+        return predicate ? this._elements.some(predicate) : this._elements.length > 0;
     }
 
     /**
@@ -491,9 +493,9 @@ class ComparerHelper {
 }
 
 /**
- * Represents a sorted sequence. The methods of this class are implemented by using deferred execution. 
- * The immediate return value is an object that stores all the information that is required to perform the action. 
- * The query represented by this method is not executed until the object is enumerated either by 
+ * Represents a sorted sequence. The methods of this class are implemented by using deferred execution.
+ * The immediate return value is an object that stores all the information that is required to perform the action.
+ * The query represented by this method is not executed until the object is enumerated either by
  * calling its ToDictionary, ToLookup, ToList or ToArray methods
  */
 class OrderedList<T> extends List<T> {
