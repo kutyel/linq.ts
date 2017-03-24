@@ -114,6 +114,7 @@ test('Any', t => {
 
     // determine whether any pets over age 1 are also unvaccinated.
     t.true(pets.Any(p => p.Age > 1 && p.Vaccinated === false));
+    t.true(pets.Any());
 });
 
 test('Average', t => {
@@ -176,7 +177,7 @@ test('DistinctBy', t => {
         new Pet({ Age: 8, Name: 'Barley' }),
         new Pet({ Age: 4, Name: 'Daisy' })
     ]);
-    
+
     const result = new List<Pet>([
         new Pet({ Age: 1, Name: 'Whiskers' }),
         new Pet({ Age: 4, Name: 'Boots' }),
