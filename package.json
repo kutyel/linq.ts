@@ -62,7 +62,7 @@
     "semantic-release": "^6.3.2",
     "ts-loader": "^2.0.0",
     "ts-node": "^3.0.0",
-    "tslint": "^4.0.2",
+    "tslint": "^5.0.0",
     "typedoc": "^0.5.0",
     "webpack": "^2.2.0"
   },
