@@ -56,6 +56,20 @@ export class List<T> {
     }
 
     /**
+     * Determines whether or not the number of elements in the sequence is greater than or equal to the given integer.
+     */
+    public AtLeast(count: number): boolean {
+        return this._elements.length >= count;
+    }
+
+    /**
+     * Determines whether or not the number of elements in the sequence is lesser than or equal to the given integer.
+     */
+    public AtMost(count: number): boolean {
+        return this._elements.length <= count;
+    }
+
+    /**
      * Computes the average of a sequence of number values that are obtained by invoking
      * a transform function on each element of the input sequence.
      */
@@ -134,6 +148,13 @@ export class List<T> {
      */
     public ElementAtOrDefault(index: number): T {
         return this.ElementAt(index) || undefined;
+    }
+
+    /**
+     * Determines whether or not the number of elements in the sequence is equals to the given integer.
+     */
+    public Exactly(count: number): boolean {
+        return this._elements.length == count;
     }
 
     /**
@@ -250,10 +271,24 @@ export class List<T> {
     }
 
     /**
+     * Returns the maximal element of the given sequence, based on the given projection.
+     */
+    public MaxBy(keySelector: (key: T) => any): T {
+        return this.OrderByDescending(keySelector).First();
+    }
+
+    /**
      * Returns the minimum value in a generic sequence.
      */
     public Min(): T {
         return this.Aggregate((x, y) => x < y ? x : y);
+    }
+
+    /**
+     * Returns the minimal element of the given sequence, based on the given projection.
+     */
+    public MinBy(keySelector: (key: T) => any): T {
+        return this.OrderBy(keySelector).First();
     }
 
     /**
