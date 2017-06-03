@@ -57,7 +57,7 @@
     "cz-conventional-changelog": "^2.0.0",
     "ghooks": "^2.0.0",
     "npm-run-all": "^4.0.0",
-    "nyc": "^10.0.0",
+    "nyc": "^11.0.2",
     "rimraf": "^2.5.4",
     "semantic-release": "^6.3.2",
     "ts-loader": "^2.0.0",
