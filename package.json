@@ -64,7 +64,7 @@
     "ts-node": "^3.0.0",
     "tslint": "^5.0.0",
     "typedoc": "^0.7.0",
-    "webpack": "^2.2.0"
+    "webpack": "^3.0.0"
   },
   "config": {
     "ghooks": {
