@@ -12,7 +12,11 @@
 ## Install
 
 ```
-npm install linqts
+npm install --save linqts
+```
+or
+```
+yarn add linqts
 ```
 
 ## Sample
@@ -20,7 +24,7 @@ npm install linqts
 ```javascript
 import { List } from 'linqts';
 
-let arr = new List<number>([1,2,3,4,5])
+let arr = new List<number>([1, 2, 3, 4, 5])
     .Where(x => x > 3)
     .Select(y => y * 2)
     .ToArray(); // > [8, 10]
@@ -43,6 +47,10 @@ If you do not know LinQ or just want to remember what is all about, have a look 
 
 ```
 npm test
+```
+or
+```
+yarn test
 ```
 
 Powered by [AVA](https://github.com/sindresorhus/ava)
