@@ -47,9 +47,7 @@
     "url": "https://github.com/kutyel/linq.ts/issues"
   },
   "homepage": "https://github.com/kutyel/linq.ts#readme",
-  "dependencies": {
-    "typescript": "^2.3.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "ava": "^0.20.0",
     "commitizen": "^2.8.6",
@@ -64,6 +62,7 @@
     "ts-node": "^3.0.0",
     "tslint": "^5.0.0",
     "typedoc": "^0.7.0",
+    "typescript": "^2.4.1",
     "webpack": "^3.0.0"
   },
   "config": {
