@@ -56,7 +56,7 @@
     "ghooks": "^2.0.0",
     "npm-run-all": "^4.0.0",
     "nyc": "^11.0.2",
-    "rimraf": "^2.5.4",
+    "rimraf": "^2.6.1",
     "semantic-release": "^6.3.2",
     "ts-loader": "^2.0.0",
     "ts-node": "^3.0.0",
