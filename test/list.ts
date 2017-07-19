@@ -60,6 +60,12 @@ class Pet implements IPet {
     }
 }
 
+class Dog extends Pet {
+    public Speak(): string {
+        return 'Bark';
+    }
+}
+
 class PetOwner {
     constructor(public Name: string, public Pets: List<Pet>) { }
 }
@@ -126,6 +132,19 @@ test('Average', t => {
     ]);
     t.is(grades.Average(), 77.6);
     t.is(people.Average(x => x.Age), 30);
+});
+
+test('Cast', t => {
+    const pets = new List<Pet>([
+        new Dog({ Age: 8, Name: 'Barley', Vaccinated: true }),
+        new Pet({ Age: 1, Name: 'Whiskers', Vaccinated: false })
+    ]);
+
+    var dogs = pets.Cast<Dog>();
+
+    t.true(typeof dogs.First().Speak === 'function');
+    t.is(dogs.First().Speak(), 'Bark');
+    t.true(typeof dogs.Last().Speak === 'undefined');
 });
 
 test('Concat', t => {
@@ -336,6 +355,22 @@ test('Max', t => {
 
 test('Min', t => {
     t.is(new List<number>([1, 2, 3, 4, 5]).Min(), 1);
+});
+
+test('OfType', t => {
+    const pets = new List<Pet>([
+        new Dog({ Age: 8, Name: 'Barley', Vaccinated: true }),
+        new Pet({ Age: 1, Name: 'Whiskers', Vaccinated: false })
+    ]);
+    const anyArray = new List<any>(['dogs', 'cats', 13, true]);
+
+    t.is(anyArray.OfType(String).Count(), 2);
+    t.is(anyArray.OfType(Number).Count(), 1);
+    t.is(anyArray.OfType(Boolean).Count(), 1);
+    t.is(anyArray.OfType(Function).Count(), 0);
+
+    t.is(pets.OfType(Dog).Count(), 1);
+    t.is(pets.OfType<Dog>(Dog).First().Speak(), 'Bark');
 });
 
 test('OrderBy', t => {
