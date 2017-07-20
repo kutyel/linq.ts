@@ -434,7 +434,9 @@ export class List<T> {
     /**
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
-    public ToDictionary<TKey, TValue>(key: (key: T) => TKey, value?: (value: T) => TValue): Object {
+    public ToDictionary<TKey>(key: (key: T) => TKey): { [id: string]: T; }
+    public ToDictionary<TKey, TValue>(key: (key: T) => TKey, value: (value: T) => TValue): { [id: string]: TValue; }
+    public ToDictionary<TKey, TValue>(key: (key: T) => TKey, value?: (value: T) => TValue): { [id: string]: TValue | T; } {
         return this.Aggregate((o, v, i) => ((<any>o)[this.Select(key).ElementAt(i).toString()] = value ? this.Select(value).ElementAt(i) : v, o), {});
     }
 
