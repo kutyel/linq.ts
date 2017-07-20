@@ -571,6 +571,8 @@ test('ToDictionary', t => {
     ]);
     const dictionary = people.ToDictionary(x => x.Name);
     t.deepEqual(dictionary['Bob'], { Age: 50, Name: 'Bob' });
+    t.is(dictionary['Bob'].Age, 50);
+
     const dictionary2 = people.ToDictionary(x => x.Name, y => y.Age);
     t.is(dictionary2['Alice'], 25);
 });
