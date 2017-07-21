@@ -22,7 +22,7 @@
     "docs": "typedoc --out ../docs/ linq.ts -m commonjs -t ES6",
     "report-coverage": "nyc report --reporter=text-lcov | coveralls",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "check-coverage": "nyc check-coverage --statements 100 --branches 90 --functions 100 --lines 100"
+    "check-coverage": "nyc check-coverage --statements 100 --branches 90 --functions 98 --lines 100"
   },
   "repository": {
     "type": "git",
@@ -49,7 +49,7 @@
   "homepage": "https://github.com/kutyel/linq.ts#readme",
   "dependencies": {},
   "devDependencies": {
-    "ava": "^0.20.0",
+    "ava": "^0.21.0",
     "commitizen": "^2.8.6",
     "coveralls": "^2.11.14",
     "cz-conventional-changelog": "^2.0.0",

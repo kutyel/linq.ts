@@ -66,6 +66,13 @@ export class List<T> {
     }
 
     /**
+     * Casts the elements of a sequence to the specified type.
+     */
+    public Cast<U>(): List<U> {
+        return new List<U>(this._elements as any);
+    }
+
+    /**
      * Concatenates two sequences.
      */
     public Concat(list: List<T>): List<T> {
@@ -257,6 +264,33 @@ export class List<T> {
     }
 
     /**
+     * Filters the elements of a sequence based on a specified type.
+     */
+    public OfType<U>(type: any): List<U> {
+        var typeName;
+        switch (type) {
+            case Number:
+                typeName = typeof 0;
+                break;
+            case String:
+                typeName = typeof ""
+                break;
+            case Boolean:
+                typeName = typeof true;
+                break;
+            case Function:
+                typeName = typeof function () { };
+                break;
+            default:
+                typeName = null;
+                break;
+        }
+        return (typeName === null)
+            ? this.Where(x => x instanceof type).Cast<U>()
+            : this.Where(x => typeof x === typeName).Cast<U>();
+    }
+
+    /**
      * Sorts the elements of a sequence in ascending order according to a key.
      */
     public OrderBy(keySelector: (key: T) => any): List<T> {
@@ -400,7 +434,9 @@ export class List<T> {
     /**
      * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
      */
-    public ToDictionary<TKey, TValue>(key: (key: T) => TKey, value?: (value: T) => TValue): Object {
+    public ToDictionary<TKey>(key: (key: T) => TKey): { [id: string]: T; }
+    public ToDictionary<TKey, TValue>(key: (key: T) => TKey, value: (value: T) => TValue): { [id: string]: TValue; }
+    public ToDictionary<TKey, TValue>(key: (key: T) => TKey, value?: (value: T) => TValue): { [id: string]: TValue | T; } {
         return this.Aggregate((o, v, i) => ((<any>o)[this.Select(key).ElementAt(i).toString()] = value ? this.Select(value).ElementAt(i) : v, o), {});
     }
 
