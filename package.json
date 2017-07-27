@@ -61,7 +61,7 @@
     "ts-loader": "^2.0.0",
     "ts-node": "^3.0.0",
     "tslint": "^5.0.0",
-    "typedoc": "^0.7.0",
+    "typedoc": "^0.8.0",
     "typescript": "^2.4.1",
     "webpack": "^3.0.0"
   },
