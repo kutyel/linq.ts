@@ -429,7 +429,11 @@ export class List<T> {
   ): TOut {
     return this.Aggregate(
       (ac, v, i) => (
-        ac.AddRange(this.Select(mapper).ElementAt(i).ToArray()),
+        ac.AddRange(
+          this.Select(mapper)
+            .ElementAt(i)
+            .ToArray()
+        ),
         ac
       ),
       new List<TOut>()
@@ -448,11 +452,13 @@ export class List<T> {
   /**
    * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
    */
-  public Single(): T {
-    if (this.Count() !== 1) {
+  public Single(
+    predicate?: (value?: T, index?: number, list?: T[]) => boolean
+  ): T {
+    if (this.Count(predicate) !== 1) {
       throw new Error('The collection does not contain exactly one element.')
     } else {
-      return this.First()
+      return this.First(predicate)
     }
   }
 
@@ -460,8 +466,10 @@ export class List<T> {
    * Returns the only element of a sequence, or a default value if the sequence is empty;
    * this method throws an exception if there is more than one element in the sequence.
    */
-  public SingleOrDefault(): T {
-    return this.Count() ? this.Single() : undefined
+  public SingleOrDefault(
+    predicate?: (value?: T, index?: number, list?: T[]) => boolean
+  ): T {
+    return this.Count(predicate) ? this.Single(predicate) : undefined
   }
 
   /**
@@ -543,9 +551,11 @@ export class List<T> {
   ): { [id: string]: TValue | T } {
     return this.Aggregate(
       (o, v, i) => (
-        ((o as any)[this.Select(key).ElementAt(i).toString()] = value
-          ? this.Select(value).ElementAt(i)
-          : v),
+        ((o as any)[
+          this.Select(key)
+            .ElementAt(i)
+            .toString()
+        ] = value ? this.Select(value).ElementAt(i) : v),
         o
       ),
       {}
