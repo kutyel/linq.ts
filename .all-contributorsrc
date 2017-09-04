@@ -105,6 +105,16 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "grofit",
+      "name": "LP",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/927201?v=4",
+      "profile": "https://github.com/grofit",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ]
 }
