@@ -727,9 +727,9 @@ test('Single', t => {
     () => fruits3.Single(),
     /The collection does not contain exactly one element./
   )
-  t.is(numbers1.Single(x => x == 1), 1)
+  t.is(numbers1.Single(x => x === 1), 1)
   t.throws(
-    () => numbers1.Single(x => x == 5),
+    () => numbers1.Single(x => x === 5),
     /The collection does not contain exactly one element./
   )
   t.throws(
@@ -749,10 +749,10 @@ test('SingleOrDefault', t => {
     () => fruits3.SingleOrDefault(),
     /The collection does not contain exactly one element./
   )
-  t.is(numbers1.SingleOrDefault(x => x == 1), 1)
+  t.is(numbers1.SingleOrDefault(x => x === 1), 1)
   t.is(numbers1.SingleOrDefault(x => x > 5), undefined)
   t.throws(
-    () => numbers1.SingleOrDefault(x => x == 5),
+    () => numbers1.SingleOrDefault(x => x === 5),
     /The collection does not contain exactly one element./
   )
 })
