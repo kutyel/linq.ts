@@ -207,16 +207,32 @@ test('DefaultIfEmpty', t => {
     new Pet({ Age: 1, Name: 'Whiskers' })
   ])
   t.is(
-    pets.DefaultIfEmpty().Select(pet => pet.Name).ToArray().toString(),
+    pets
+      .DefaultIfEmpty()
+      .Select(pet => pet.Name)
+      .ToArray()
+      .toString(),
     'Barley,Boots,Whiskers'
   )
   const numbers = new List<number>()
-  t.is(numbers.DefaultIfEmpty(0).ToArray().toString(), '0')
+  t.is(
+    numbers
+      .DefaultIfEmpty(0)
+      .ToArray()
+      .toString(),
+    '0'
+  )
 })
 
 test('Distinct', t => {
   const ages = new List<number>([21, 46, 46, 55, 17, 21, 55, 55])
-  t.is(ages.Distinct().ToArray().toString(), '21,46,55,17')
+  t.is(
+    ages
+      .Distinct()
+      .ToArray()
+      .toString(),
+    '21,46,55,17'
+  )
 })
 
 test('DistinctBy', t => {
@@ -257,7 +273,13 @@ test('ElementAtOrDefault', t => {
 test('Except', t => {
   const numbers1 = new List<number>([2.0, 2.1, 2.2, 2.3, 2.4, 2.5])
   const numbers2 = new List<number>([2.2, 2.3])
-  t.is(numbers1.Except(numbers2).ToArray().toString(), '2,2.1,2.4,2.5')
+  t.is(
+    numbers1
+      .Except(numbers2)
+      .ToArray()
+      .toString(),
+    '2,2.1,2.4,2.5'
+  )
 })
 
 test('First', t => {
@@ -404,7 +426,10 @@ test('Join', t => {
   const result =
     'Hedlund, Magnus - Daisy,Adams, Terry - Barley,Adams, Terry - Boots,Weiss, Charlotte - Whiskers'
   t.is(
-    query.Select(obj => `${obj.OwnerName} - ${obj.Pet}`).ToArray().toString(),
+    query
+      .Select(obj => `${obj.OwnerName} - ${obj.Pet}`)
+      .ToArray()
+      .toString(),
     result
   )
 })
@@ -444,12 +469,21 @@ test('OfType', t => {
   t.is(anyArray.OfType(Function).Count(), 0)
 
   t.is(pets.OfType(Dog).Count(), 1)
-  t.is(pets.OfType<Dog>(Dog).First().Speak(), 'Bark')
+  t.is(
+    pets
+      .OfType<Dog>(Dog)
+      .First()
+      .Speak(),
+    'Bark'
+  )
 })
 
 test('OrderBy', t => {
   t.is(
-    new List<number>([4, 5, 6, 3, 2, 1]).OrderBy(x => x).ToArray().toString(),
+    new List<number>([4, 5, 6, 3, 2, 1])
+      .OrderBy(x => x)
+      .ToArray()
+      .toString(),
     '1,2,3,4,5,6'
   )
 })
@@ -491,7 +525,10 @@ test('ThenBy', t => {
 
   // test omission of OrderBy
   t.is(
-    new List<number>([4, 5, 6, 3, 2, 1]).ThenBy(x => x).ToArray().toString(),
+    new List<number>([4, 5, 6, 3, 2, 1])
+      .ThenBy(x => x)
+      .ToArray()
+      .toString(),
     '1,2,3,4,5,6'
   )
 })
@@ -616,14 +653,20 @@ test('RemoveAt', t => {
 
 test('Reverse', t => {
   t.is(
-    new List<number>([1, 2, 3, 4, 5]).Reverse().ToArray().toString(),
+    new List<number>([1, 2, 3, 4, 5])
+      .Reverse()
+      .ToArray()
+      .toString(),
     '5,4,3,2,1'
   )
 })
 
 test('Select', t => {
   t.is(
-    new List<number>([1, 2, 3]).Select(x => x * 2).ToArray().toString(),
+    new List<number>([1, 2, 3])
+      .Select(x => x * 2)
+      .ToArray()
+      .toString(),
     '2,4,6'
   )
 })
@@ -674,6 +717,7 @@ test('Single', t => {
   const fruits1 = new List<string>()
   const fruits2 = new List<string>(['orange'])
   const fruits3 = new List<string>(['orange', 'apple'])
+  const numbers1 = new List([1, 2, 3, 4, 5, 5])
   t.is(fruits2.Single(), 'orange')
   t.throws(
     () => fruits1.Single(),
@@ -683,16 +727,32 @@ test('Single', t => {
     () => fruits3.Single(),
     /The collection does not contain exactly one element./
   )
+  t.is(numbers1.Single(x => x === 1), 1)
+  t.throws(
+    () => numbers1.Single(x => x === 5),
+    /The collection does not contain exactly one element./
+  )
+  t.throws(
+    () => numbers1.Single(x => x > 5),
+    /The collection does not contain exactly one element./
+  )
 })
 
 test('SingleOrDefault', t => {
   const fruits1 = new List<string>()
   const fruits2 = new List<string>(['orange'])
   const fruits3 = new List<string>(['orange', 'apple'])
+  const numbers1 = new List([1, 2, 3, 4, 5, 5])
   t.is(fruits1.SingleOrDefault(), undefined)
   t.is(fruits2.SingleOrDefault(), 'orange')
   t.throws(
     () => fruits3.SingleOrDefault(),
+    /The collection does not contain exactly one element./
+  )
+  t.is(numbers1.SingleOrDefault(x => x === 1), 1)
+  t.is(numbers1.SingleOrDefault(x => x > 5), undefined)
+  t.throws(
+    () => numbers1.SingleOrDefault(x => x === 5),
     /The collection does not contain exactly one element./
   )
 })
@@ -700,7 +760,11 @@ test('SingleOrDefault', t => {
 test('Skip', t => {
   const grades = new List<number>([59, 82, 70, 56, 92, 98, 85])
   t.is(
-    grades.OrderByDescending(x => x).Skip(3).ToArray().toString(),
+    grades
+      .OrderByDescending(x => x)
+      .Skip(3)
+      .ToArray()
+      .toString(),
     '82,70,59,56'
   )
 })
@@ -730,7 +794,11 @@ test('Sum', t => {
 test('Take', t => {
   const grades = new List<number>([59, 82, 70, 56, 92, 98, 85])
   t.is(
-    grades.OrderByDescending(x => x).Take(3).ToArray().toString(),
+    grades
+      .OrderByDescending(x => x)
+      .Take(3)
+      .ToArray()
+      .toString(),
     '98,92,85'
   )
 })
@@ -745,7 +813,10 @@ test('TakeWhile', t => {
     'grape'
   ])
   t.is(
-    fruits.TakeWhile(fruit => fruit !== 'orange').ToArray().toString(),
+    fruits
+      .TakeWhile(fruit => fruit !== 'orange')
+      .ToArray()
+      .toString(),
     'apple,banana,mango'
   )
 })
@@ -769,7 +840,13 @@ test('ToDictionary', t => {
 })
 
 test('ToList', t => {
-  t.is(new List<number>([1, 2, 3]).ToList().ToArray().toString(), '1,2,3')
+  t.is(
+    new List<number>([1, 2, 3])
+      .ToList()
+      .ToArray()
+      .toString(),
+    '1,2,3'
+  )
 })
 
 test('ToLookup', t => {
@@ -821,7 +898,13 @@ test('ToLookup', t => {
 test('Union', t => {
   const ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7])
   const ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0])
-  t.is(ints1.Union(ints2).ToArray().toString(), '5,3,9,7,8,6,4,1,0')
+  t.is(
+    ints1
+      .Union(ints2)
+      .ToArray()
+      .toString(),
+    '5,3,9,7,8,6,4,1,0'
+  )
 
   const result = [
     { Name: 'apple', Code: 9 },
@@ -851,7 +934,10 @@ test('Where', t => {
     'strawberry'
   ])
   t.is(
-    fruits.Where(fruit => fruit.length < 6).ToArray().toString(),
+    fruits
+      .Where(fruit => fruit.length < 6)
+      .ToArray()
+      .toString(),
     'apple,mango,grape'
   )
 })
