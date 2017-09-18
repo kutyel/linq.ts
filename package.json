@@ -61,7 +61,7 @@
     "nyc": "^11.0.2",
     "prettier": "^1.5.3",
     "rimraf": "^2.6.1",
-    "semantic-release": "^7.0.1",
+    "semantic-release": "^8.0.0",
     "ts-loader": "^2.0.0",
     "ts-node": "^3.0.0",
     "tslint": "^5.0.0",
