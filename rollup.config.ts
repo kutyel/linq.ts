@@ -1,7 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import sourceMaps from 'rollup-plugin-sourcemaps'
-import camelCase from 'lodash.camelcase'
 
 const pkg = require('./package.json')
 
@@ -10,7 +9,7 @@ const libraryName = 'linq'
 export default {
   entry: `dist/${libraryName}.js`,
   targets: [
-    { dest: pkg['umd:main'], moduleName: camelCase(libraryName), format: 'umd' },
+    { dest: pkg['umd:main'], moduleName: libraryName, format: 'umd' },
   ],
   sourcemap: true,
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
