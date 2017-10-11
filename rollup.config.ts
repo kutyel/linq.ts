@@ -4,12 +4,12 @@ import sourceMaps from 'rollup-plugin-sourcemaps'
 
 const pkg = require('./package.json')
 
-const libraryName = 'linq'
+const moduleName = 'linq'
 
 export default {
-  entry: `dist/${libraryName}.js`,
+  entry: `dist/${moduleName}.js`,
   targets: [
-    { dest: pkg['umd:main'], moduleName: libraryName, format: 'umd' },
+    { dest: pkg['umd:main'], moduleName: moduleName, format: 'umd' },
   ],
   sourcemap: true,
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
