@@ -9,7 +9,7 @@ const moduleName = 'linq'
 export default {
   entry: `dist/${moduleName}.js`,
   targets: [
-    { dest: pkg['umd:main'], moduleName: moduleName, format: 'umd' },
+    { dest: pkg['umd:main'], moduleName, format: 'umd' },
   ],
   sourcemap: true,
   external: [],
