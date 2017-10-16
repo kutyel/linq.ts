@@ -3,6 +3,7 @@
   "version": "0.0.0-semantic-release",
   "description": "LinQ + TypeScript",
   "main": "dist/linq.js",
+  "es2015": "linq.ts",
   "umd:main": "dist/linq.umd.js",
   "typescript": {
     "definition": "dist/linq.d.ts"
@@ -35,6 +36,7 @@
   ],
   "files": [
     "dist",
+    "linq.ts",
     "readme.md"
   ],
   "author": {
