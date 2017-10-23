@@ -16,9 +16,5 @@ export default {
   watch: {
     include: 'dist/**',
   },
-  plugins: [
-    commonjs(),
-    resolve(),
-    sourceMaps(),
-  ],
+  plugins: [commonjs(), resolve(), sourceMaps()],
 }
