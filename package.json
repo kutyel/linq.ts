@@ -52,7 +52,7 @@
   "homepage": "https://github.com/kutyel/linq.ts#readme",
   "dependencies": {},
   "devDependencies": {
-    "ava": "^0.22.0",
+    "ava": "^0.23.0",
     "commitizen": "^2.8.6",
     "coveralls": "^3.0.0",
     "cz-conventional-changelog": "^2.0.0",
