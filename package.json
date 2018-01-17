@@ -60,7 +60,7 @@
     "nyc": "^11.0.2",
     "prettier": "^1.5.3",
     "rimraf": "^2.6.1",
-    "rollup": "^0.54.0",
+    "rollup": "^0.54.1",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
