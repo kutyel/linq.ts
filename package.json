@@ -8,7 +8,7 @@
   "types": "dist/linqts.d.ts",
   "umd:main": "dist/linqts.umd.js",
   "scripts": {
-    "build": "microbundle -o dist",
+    "build": "microbundle",
     "check-coverage": "nyc check-coverage --statements 100 --branches 97 --functions 97 --lines 100",
     "commit": "git-cz",
     "compile": "tsc index.ts -t es6 -m es6",
