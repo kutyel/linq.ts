@@ -1,5 +1,5 @@
 import test from 'ava'
-import { List } from '../linq'
+import { List } from '..'
 
 interface IPackage {
   Company: string

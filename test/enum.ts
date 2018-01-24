@@ -1,5 +1,5 @@
 import test from 'ava'
-import { Enumerable } from '../linq'
+import { Enumerable } from '..'
 
 test('Range', t => {
   t.deepEqual(
