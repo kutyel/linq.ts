@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
-    "target": "es3",
+    "target": "es2015",
     "outDir": "dist"
   },
   "exclude": ["node_modules"]
