@@ -12,14 +12,10 @@
 ## Install
 
 ```
-npm install --save linqts
-```
-or
-```
-yarn add linqts
+npm install linqts
 ```
 
-## Sample
+## Usage
 
 ```javascript
 import { List } from 'linqts';
@@ -47,10 +43,6 @@ If you do not know LinQ or just want to remember what is all about, have a look 
 
 ```
 npm test
-```
-or
-```
-yarn test
 ```
 
 Powered by [AVA](https://github.com/sindresorhus/ava)

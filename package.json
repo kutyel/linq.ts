@@ -8,8 +8,8 @@
   "types": "dist/linqts.d.ts",
   "umd:main": "dist/linqts.umd.js",
   "scripts": {
-    "build": "microbundle",
-    "check-coverage": "nyc check-coverage --statements 100 --branches 96 --functions 97 --lines 100",
+    "build": "microbundle -o dist",
+    "check-coverage": "nyc check-coverage --statements 100 --branches 97 --functions 100 --lines 100",
     "commit": "git-cz",
     "compile": "tsc",
     "cover": "nyc --reporter=lcov npm t",
