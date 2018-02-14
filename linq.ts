@@ -125,7 +125,12 @@ export class List<T> {
    * Returns distinct elements from a sequence by using the default equality comparer to compare values.
    */
   public Distinct(): List<T> {
-    return this.Where((value, index, iter) => iter.indexOf(value) === index)
+    return this.Where(
+      (value, index, iter) =>
+        (typeof value === 'object'
+          ? iter.findIndex(obj => this._equals(obj, value))
+          : iter.indexOf(value)) === index
+    )
   }
 
   /**
@@ -605,6 +610,16 @@ export class List<T> {
     return list.Count() < this.Count()
       ? list.Select((x, y) => result(this.ElementAt(y), x))
       : this.Select((x, y) => result(x, list.ElementAt(y)))
+  }
+
+  /**
+   * Determine if two objects are equal
+   */
+  private _equals<T, U>(x: T, y: U): boolean {
+    const keys = Object.keys(x)
+    return (
+      keys.length === Object.keys(y).length && keys.every(k => this[k] === y[k])
+    )
   }
 
   /**
