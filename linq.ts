@@ -128,7 +128,7 @@ export class List<T> {
     return this.Where(
       (value, index, iter) =>
         (typeof value === 'object'
-          ? iter.findIndex(obj => this._equals(obj, value))
+          ? iter.findIndex(obj => this._equal(obj, value))
           : iter.indexOf(value)) === index
     )
   }
@@ -612,10 +612,10 @@ export class List<T> {
   /**
    * Determine if two objects are equal
    */
-  private _equals<T, U>(a: T, b: U): boolean {
+  private _equal<T, U>(a: T, b: U): boolean {
     return Object.entries(a).every(
       ([key, val]) =>
-        typeof val === 'object' ? this._equals(b[key], val) : b[key] === val
+        typeof val === 'object' ? this._equal(b[key], val) : b[key] === val
     )
   }
 
