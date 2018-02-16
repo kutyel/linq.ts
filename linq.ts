@@ -612,10 +612,10 @@ export class List<T> {
   /**
    * Determine if two objects are equal
    */
-  private _equals<T, U>(x: T, y: U): boolean {
-    const keys = Object.keys(x)
-    return (
-      keys.length === Object.keys(y).length && keys.every(k => this[k] === y[k])
+  private _equals<T, U>(a: T, b: U): boolean {
+    return Object.entries(a).every(
+      ([key, val]) =>
+        typeof val === 'object' ? this._equals(b[key], val) : b[key] === val
     )
   }
 
