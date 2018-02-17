@@ -9,8 +9,8 @@
     "definition": "dist/linq.d.ts"
   },
   "scripts": {
-    "build": "tsc linq.ts -t es3 -m commonjs -d --outDir dist &&  rollup -c rollup.config.ts",
-    "check-coverage": "nyc check-coverage --statements 100 --branches 90 --functions 98 --lines 100",
+    "build": "tsc linq.ts -t es6 -m commonjs -d --outDir dist &&  rollup -c rollup.config.ts",
+    "check-coverage": "nyc check-coverage --statements 100 --branches 95 --functions 98 --lines 100",
     "commit": "git-cz",
     "compile": "tsc",
     "cover": "nyc --reporter=lcov npm t",
