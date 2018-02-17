@@ -1,4 +1,24 @@
 /**
+ * Checks if the argument passed is an object
+ */
+const isObj = <T>(x: T): boolean => typeof x === 'object'
+
+/**
+ * Determine if two objects are equal
+ */
+const equal = <T, U>(a: T, b: U): boolean =>
+  Object.keys(a).every(
+    key => (isObj(a[key]) ? this._equal(b[key], a[key]) : b[key] === a[key])
+  )
+
+/**
+ * Creates a function that negates the result of the predicate
+ */
+const negate = <T>(
+  predicate: (value?: T, index?: number, list?: T[]) => boolean
+): (() => boolean) => (...args) => !predicate(...args)
+
+/**
  * LinQ to TypeScript
  *
  * Documentation from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aspx)
@@ -127,8 +147,8 @@ export class List<T> {
   public Distinct(): List<T> {
     return this.Where(
       (value, index, iter) =>
-        (typeof value === 'object'
-          ? iter.findIndex(obj => this._equal(obj, value))
+        (isObj(value)
+          ? iter.findIndex(obj => equal(obj, value))
           : iter.indexOf(value)) === index
     )
   }
@@ -397,7 +417,7 @@ export class List<T> {
   public RemoveAll(
     predicate: (value?: T, index?: number, list?: T[]) => boolean
   ): List<T> {
-    return this.Where(this._negate(predicate))
+    return this.Where(negate(predicate))
   }
 
   /**
@@ -607,27 +627,6 @@ export class List<T> {
     return list.Count() < this.Count()
       ? list.Select((x, y) => result(this.ElementAt(y), x))
       : this.Select((x, y) => result(x, list.ElementAt(y)))
-  }
-
-  /**
-   * Determine if two objects are equal
-   */
-  private _equal<T, U>(a: T, b: U): boolean {
-    return Object.entries(a).every(
-      ([key, val]) =>
-        typeof val === 'object' ? this._equal(b[key], val) : b[key] === val
-    )
-  }
-
-  /**
-   * Creates a function that negates the result of the predicate
-   */
-  private _negate(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): () => any {
-    return function(): any {
-      return !predicate.apply(this, arguments)
-    }
   }
 }
 
