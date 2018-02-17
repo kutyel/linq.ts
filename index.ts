@@ -133,13 +133,10 @@ export class List<T> {
    */
   public DistinctBy(keySelector: (key: T) => any): List<T> {
     const groups = this.GroupBy(keySelector, obj => obj)
-    const results = new List<T>()
-    for (let index in groups) {
-      if (groups.hasOwnProperty(index)) {
-        results.Add(groups[index][0])
-      }
-    }
-    return results
+    return Object.keys(groups).reduce((res, key) => {
+      res.Add(groups[key][0])
+      return res
+    }, new List<T>())
   }
 
   /**
@@ -416,21 +413,21 @@ export class List<T> {
    * Projects each element of a sequence into a new form.
    */
   public Select<TOut>(
-    mapper: (value?: T, index?: number, list?: T[]) => TOut
+    selector: (element: T, index: number) => TOut
   ): List<TOut> {
-    return new List<any>(this._elements.map(mapper))
+    return new List<TOut>(this._elements.map(selector))
   }
 
   /**
    * Projects each element of a sequence to a List<any> and flattens the resulting sequences into one sequence.
    */
   public SelectMany<TOut extends List<any>>(
-    mapper: (value?: T, index?: number, list?: T[]) => TOut
+    selector: (element: T, index: number) => TOut
   ): TOut {
     return this.Aggregate(
       (ac, v, i) => (
         ac.AddRange(
-          this.Select(mapper)
+          this.Select(selector)
             .ElementAt(i)
             .ToArray()
         ),
