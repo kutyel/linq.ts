@@ -5,10 +5,11 @@
   "es2015": "index.ts",
   "main": "dist/linqts.js",
   "module": "dist/linqts.es.js",
-  "types": "dist/linqts.d.ts",
+  "types": "dist/index.d.ts",
   "umd:main": "dist/linqts.umd.js",
   "scripts": {
     "build": "microbundle -o dist",
+    "postbuild": "rimraf .rpt2_cache ./dist/test",
     "check-coverage": "nyc check-coverage --statements 100 --branches 95 --functions 98 --lines 100",
     "commit": "git-cz",
     "compile": "tsc",
