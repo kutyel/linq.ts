@@ -226,13 +226,18 @@ test('DefaultIfEmpty', t => {
 
 test('Distinct', t => {
   const ages = new List<number>([21, 46, 46, 55, 17, 21, 55, 55])
-  t.is(
-    ages
-      .Distinct()
-      .ToArray()
-      .toString(),
-    '21,46,55,17'
-  )
+  const pets = new List<Pet>([
+    new Pet({ Age: 1, Name: 'Whiskers' }),
+    new Pet({ Age: 1, Name: 'Whiskers' }),
+    new Pet({ Age: 8, Name: 'Barley' }),
+    new Pet({ Age: 8, Name: 'Barley' })
+  ])
+  const expected = new List<Pet>([
+    new Pet({ Age: 1, Name: 'Whiskers' }),
+    new Pet({ Age: 8, Name: 'Barley' })
+  ])
+  t.deepEqual(ages.Distinct(), new List<number>([21, 46, 55, 17]))
+  t.deepEqual(pets.Distinct(), expected)
 })
 
 test('DistinctBy', t => {
