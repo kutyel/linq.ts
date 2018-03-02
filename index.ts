@@ -8,7 +8,7 @@ const isObj = <T>(x: T): boolean => typeof x === 'object'
  */
 const equal = <T, U>(a: T, b: U): boolean =>
   Object.keys(a).every(
-    key => (isObj(a[key]) ? this._equal(b[key], a[key]) : b[key] === a[key])
+    key => (isObj(a[key]) ? equal(b[key], a[key]) : b[key] === a[key])
   )
 
 /**
