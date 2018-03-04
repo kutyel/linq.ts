@@ -646,20 +646,12 @@ class ComparerHelper {
     _keySelector: (key: T) => any,
     descending?: boolean
   ): number {
-    let sortKeyA = _keySelector(a)
-    let sortKeyB = _keySelector(b)
+    const sortKeyA = _keySelector(a)
+    const sortKeyB = _keySelector(b)
     if (sortKeyA > sortKeyB) {
-      if (!descending) {
-        return 1
-      } else {
-        return -1
-      }
+      return !descending ? 1 : -1
     } else if (sortKeyA < sortKeyB) {
-      if (!descending) {
-        return -1
-      } else {
-        return 1
-      }
+      return !descending ? -1 : 1
     } else {
       return 0
     }
@@ -670,12 +662,10 @@ class ComparerHelper {
     currentComparer: (a: T, b: T) => number
   ): (a: T, b: T) => number {
     return (a: T, b: T) => {
-      let resultOfPreviousComparer = previousComparer(a, b)
-      if (!resultOfPreviousComparer) {
-        return currentComparer(a, b)
-      } else {
-        return resultOfPreviousComparer
-      }
+      const resultOfPreviousComparer = previousComparer(a, b)
+      return !resultOfPreviousComparer
+        ? currentComparer(a, b)
+        : resultOfPreviousComparer
     }
   }
 }
