@@ -19,6 +19,39 @@ const negate = <T>(
 ): (() => boolean) => (...args) => !predicate(...args)
 
 /**
+ * Comparer helpers
+ */
+
+const compare = <T>(
+  a: T,
+  b: T,
+  _keySelector: (key: T) => any,
+  descending?: boolean
+): number => {
+  const sortKeyA = _keySelector(a)
+  const sortKeyB = _keySelector(b)
+  if (sortKeyA > sortKeyB) {
+    return !descending ? 1 : -1
+  } else if (sortKeyA < sortKeyB) {
+    return !descending ? -1 : 1
+  } else {
+    return 0
+  }
+}
+
+const composeComparers = <T>(
+  previousComparer: (a: T, b: T) => number,
+  currentComparer: (a: T, b: T) => number
+): ((a: T, b: T) => number) => (a: T, b: T) =>
+  previousComparer(a, b) || currentComparer(a, b)
+
+const keyComparer = <T>(
+  _keySelector: (key: T) => any,
+  descending?: boolean
+): ((a: T, b: T) => number) => (a: T, b: T) =>
+  compare(a, b, _keySelector, descending)
+
+/**
  * LinQ to TypeScript
  *
  * Documentation from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aspx)
@@ -372,20 +405,14 @@ export class List<T> {
    * Sorts the elements of a sequence in ascending order according to a key.
    */
   public OrderBy(keySelector: (key: T) => any): List<T> {
-    return new OrderedList<T>(
-      this._elements,
-      ComparerHelper.ComparerForKey(keySelector, false)
-    )
+    return new OrderedList<T>(this._elements, keyComparer(keySelector, false))
   }
 
   /**
    * Sorts the elements of a sequence in descending order according to a key.
    */
   public OrderByDescending(keySelector: (key: T) => any): List<T> {
-    return new OrderedList<T>(
-      this._elements,
-      ComparerHelper.ComparerForKey(keySelector, true)
-    )
+    return new OrderedList<T>(this._elements, keyComparer(keySelector, true))
   }
 
   /**
@@ -630,46 +657,6 @@ export class List<T> {
   }
 }
 
-class ComparerHelper {
-  public static ComparerForKey<T>(
-    _keySelector: (key: T) => any,
-    descending?: boolean
-  ): (a: T, b: T) => number {
-    return (a: T, b: T) => {
-      return ComparerHelper.Compare(a, b, _keySelector, descending)
-    }
-  }
-
-  public static Compare<T>(
-    a: T,
-    b: T,
-    _keySelector: (key: T) => any,
-    descending?: boolean
-  ): number {
-    const sortKeyA = _keySelector(a)
-    const sortKeyB = _keySelector(b)
-    if (sortKeyA > sortKeyB) {
-      return !descending ? 1 : -1
-    } else if (sortKeyA < sortKeyB) {
-      return !descending ? -1 : 1
-    } else {
-      return 0
-    }
-  }
-
-  public static ComposeComparers<T>(
-    previousComparer: (a: T, b: T) => number,
-    currentComparer: (a: T, b: T) => number
-  ): (a: T, b: T) => number {
-    return (a: T, b: T) => {
-      const resultOfPreviousComparer = previousComparer(a, b)
-      return !resultOfPreviousComparer
-        ? currentComparer(a, b)
-        : resultOfPreviousComparer
-    }
-  }
-}
-
 /**
  * Represents a sorted sequence. The methods of this class are implemented by using deferred execution.
  * The immediate return value is an object that stores all the information that is required to perform the action.
@@ -689,10 +676,7 @@ class OrderedList<T> extends List<T> {
   public ThenBy(keySelector: (key: T) => any): List<T> {
     return new OrderedList(
       this._elements,
-      ComparerHelper.ComposeComparers(
-        this._comparer,
-        ComparerHelper.ComparerForKey(keySelector, false)
-      )
+      composeComparers(this._comparer, keyComparer(keySelector, false))
     )
   }
 
@@ -703,10 +687,7 @@ class OrderedList<T> extends List<T> {
   public ThenByDescending(keySelector: (key: T) => any): List<T> {
     return new OrderedList(
       this._elements,
-      ComparerHelper.ComposeComparers(
-        this._comparer,
-        ComparerHelper.ComparerForKey(keySelector, true)
-      )
+      composeComparers(this._comparer, keyComparer(keySelector, true))
     )
   }
 }
