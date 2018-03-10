@@ -12,6 +12,11 @@ const equal = <T, U>(a: T, b: U): boolean =>
   )
 
 /**
+ * Returns the index of the first item matching the predicate
+ */
+const findIndex = f => xs => xs.reduceRight((x, y, i) => (f(y) ? i : x))
+
+/**
  * Creates a function that negates the result of the predicate
  */
 const negate = <T>(
@@ -181,7 +186,7 @@ export class List<T> {
     return this.Where(
       (value, index, iter) =>
         (isObj(value)
-          ? iter.findIndex(obj => equal(obj, value))
+          ? findIndex(obj => equal(obj, value))(iter)
           : iter.indexOf(value)) === index
     )
   }
