@@ -89,7 +89,7 @@ test('Add', t => {
 test('AddRange', t => {
   const list = new List<string>()
   list.AddRange(['hey', "what's", 'up'])
-  t.is(list.ToArray().toString(), "hey,what's,up")
+  t.deepEqual(list.ToArray(), ['hey', "what's", 'up'])
 })
 
 test('Aggregate', t => {
@@ -164,14 +164,13 @@ test('Concat', t => {
     new Pet({ Age: 14, Name: 'Snoopy' }),
     new Pet({ Age: 9, Name: 'Fido' })
   ])
-  const result = 'Barley,Boots,Whiskers,Bounder,Snoopy,Fido'
-  t.is(
+  const expected = ['Barley', 'Boots', 'Whiskers', 'Bounder', 'Snoopy', 'Fido']
+  t.deepEqual(
     cats
       .Select(cat => cat.Name)
       .Concat(dogs.Select(dog => dog.Name))
-      .ToArray()
-      .toString(),
-    result
+      .ToArray(),
+    expected
   )
 })
 
@@ -206,22 +205,15 @@ test('DefaultIfEmpty', t => {
     new Pet({ Age: 4, Name: 'Boots' }),
     new Pet({ Age: 1, Name: 'Whiskers' })
   ])
-  t.is(
+  t.deepEqual(
     pets
       .DefaultIfEmpty()
       .Select(pet => pet.Name)
-      .ToArray()
-      .toString(),
-    'Barley,Boots,Whiskers'
+      .ToArray(),
+    ['Barley', 'Boots', 'Whiskers']
   )
   const numbers = new List<number>()
-  t.is(
-    numbers
-      .DefaultIfEmpty(0)
-      .ToArray()
-      .toString(),
-    '0'
-  )
+  t.deepEqual(numbers.DefaultIfEmpty(0).ToArray(), [0])
 })
 
 test('Distinct', t => {
@@ -278,13 +270,7 @@ test('ElementAtOrDefault', t => {
 test('Except', t => {
   const numbers1 = new List<number>([2.0, 2.1, 2.2, 2.3, 2.4, 2.5])
   const numbers2 = new List<number>([2.2, 2.3])
-  t.is(
-    numbers1
-      .Except(numbers2)
-      .ToArray()
-      .toString(),
-    '2,2.1,2.4,2.5'
-  )
+  t.deepEqual(numbers1.Except(numbers2).ToArray(), [2, 2.1, 2.4, 2.5])
 })
 
 test('First', t => {
@@ -348,14 +334,14 @@ test('GroupJoin', t => {
       Pets: petCollection.Select(pet => pet.Name)
     })
   )
-  const result =
-    'Hedlund, Magnus: Daisy,Adams, Terry: Barley,Boots,Weiss, Charlotte: Whiskers'
-  t.is(
-    query
-      .Select(obj => `${obj.OwnerName}: ${obj.Pets.ToArray()}`)
-      .ToArray()
-      .toString(),
-    result
+  const expected = [
+    'Hedlund, Magnus: Daisy',
+    'Adams, Terry: Barley,Boots',
+    'Weiss, Charlotte: Whiskers'
+  ]
+  t.deepEqual(
+    query.Select(obj => `${obj.OwnerName}: ${obj.Pets.ToArray()}`).ToArray(),
+    expected
   )
 })
 
@@ -428,14 +414,15 @@ test('Join', t => {
     pet => pet.Owner,
     (person, pet) => ({ OwnerName: person.Name, Pet: pet.Name })
   )
-  const result =
-    'Hedlund, Magnus - Daisy,Adams, Terry - Barley,Adams, Terry - Boots,Weiss, Charlotte - Whiskers'
-  t.is(
-    query
-      .Select(obj => `${obj.OwnerName} - ${obj.Pet}`)
-      .ToArray()
-      .toString(),
-    result
+  const expected = [
+    'Hedlund, Magnus - Daisy',
+    'Adams, Terry - Barley',
+    'Adams, Terry - Boots',
+    'Weiss, Charlotte - Whiskers'
+  ]
+  t.deepEqual(
+    query.Select(obj => `${obj.OwnerName} - ${obj.Pet}`).ToArray(),
+    expected
   )
 })
 
@@ -484,22 +471,23 @@ test('OfType', t => {
 })
 
 test('OrderBy', t => {
-  t.is(
-    new List<number>([4, 5, 6, 3, 2, 1])
-      .OrderBy(x => x)
-      .ToArray()
-      .toString(),
-    '1,2,3,4,5,6'
+  const expected = [1, 2, 3, 4, 5, 6]
+  t.deepEqual(
+    new List<number>([4, 5, 6, 3, 2, 1]).OrderBy(x => x).ToArray(),
+    expected
+  )
+  t.deepEqual(
+    new List<string>(['Deutschland', 'Griechenland', 'Ägypten'])
+      .OrderBy(x => x, (a, b) => a.localeCompare(b))
+      .ToArray(),
+    ['Ägypten', 'Deutschland', 'Griechenland']
   )
 })
 
 test('OrderByDescending', t => {
-  t.is(
-    new List<number>([4, 5, 6, 3, 2, 1])
-      .OrderByDescending(x => x)
-      .ToArray()
-      .toString(),
-    '6,5,4,3,2,1'
+  t.deepEqual(
+    new List<number>([4, 5, 6, 3, 2, 1]).OrderByDescending(x => x).ToArray(),
+    [6, 5, 4, 3, 2, 1]
   )
 })
 
@@ -514,27 +502,30 @@ test('ThenBy', t => {
     'apple',
     'blueberry'
   ])
-
   // sort the strings first by their length and then
   // alphabetically by passing the identity selector function.
-  const result =
-    'apple,grape,mango,banana,orange,blueberry,raspberry,passionfruit'
-  t.is(
+  const expected = [
+    'apple',
+    'grape',
+    'mango',
+    'banana',
+    'orange',
+    'blueberry',
+    'raspberry',
+    'passionfruit'
+  ]
+  t.deepEqual(
     fruits
       .OrderBy(fruit => fruit.length)
       .ThenBy(fruit => fruit)
-      .ToArray()
-      .toString(),
-    result
+      .ToArray(),
+    expected
   )
-
+  const expectedNums = [1, 2, 3, 4, 5, 6]
   // test omission of OrderBy
-  t.is(
-    new List<number>([4, 5, 6, 3, 2, 1])
-      .ThenBy(x => x)
-      .ToArray()
-      .toString(),
-    '1,2,3,4,5,6'
+  t.deepEqual(
+    new List<number>([4, 5, 6, 3, 2, 1]).ThenBy(x => x).ToArray(),
+    expectedNums
   )
 })
 
@@ -569,22 +560,26 @@ test('ThenByDescending', t => {
 
   // sort the strings first by their length and then
   // alphabetically descending by passing the identity selector function.
-  const result =
-    'mango,grape,apple,orange,banana,raspberry,blueberry,passionfruit'
-  t.is(
+  const expected = [
+    'mango',
+    'grape',
+    'apple',
+    'orange',
+    'banana',
+    'raspberry',
+    'blueberry',
+    'passionfruit'
+  ]
+  t.deepEqual(
     fruits
       .OrderBy(fruit => fruit.length)
       .ThenByDescending(fruit => fruit)
-      .ToArray()
-      .toString(),
-    result
+      .ToArray(),
+    expected
   )
-  t.is(
-    new List<number>([4, 5, 6, 3, 2, 1])
-      .ThenByDescending(x => x)
-      .ToArray()
-      .toString(),
-    '6,5,4,3,2,1'
+  t.deepEqual(
+    new List<number>([4, 5, 6, 3, 2, 1]).ThenByDescending(x => x).ToArray(),
+    [6, 5, 4, 3, 2, 1]
   )
 })
 
@@ -657,23 +652,21 @@ test('RemoveAt', t => {
 })
 
 test('Reverse', t => {
-  t.is(
-    new List<number>([1, 2, 3, 4, 5])
-      .Reverse()
-      .ToArray()
-      .toString(),
-    '5,4,3,2,1'
-  )
+  t.deepEqual(new List<number>([1, 2, 3, 4, 5]).Reverse().ToArray(), [
+    5,
+    4,
+    3,
+    2,
+    1
+  ])
 })
 
 test('Select', t => {
-  t.is(
-    new List<number>([1, 2, 3])
-      .Select(x => x * 2)
-      .ToArray()
-      .toString(),
-    '2,4,6'
-  )
+  t.deepEqual(new List<number>([1, 2, 3]).Select(x => x * 2).ToArray(), [
+    2,
+    4,
+    6
+  ])
 })
 
 test('SelectMany', t => {
@@ -694,14 +687,13 @@ test('SelectMany', t => {
       ])
     )
   ])
-  const result = 'Scruffy,Sam,Walker,Sugar,Scratches,Diesel'
-  t.is(
+  const expected = ['Scruffy', 'Sam', 'Walker', 'Sugar', 'Scratches', 'Diesel']
+  t.deepEqual(
     petOwners
       .SelectMany(petOwner => petOwner.Pets)
       .Select(pet => pet.Name)
-      .ToArray()
-      .toString(),
-    result
+      .ToArray(),
+    expected
   )
 })
 
@@ -764,25 +756,23 @@ test('SingleOrDefault', t => {
 
 test('Skip', t => {
   const grades = new List<number>([59, 82, 70, 56, 92, 98, 85])
-  t.is(
+  t.deepEqual(
     grades
       .OrderByDescending(x => x)
       .Skip(3)
-      .ToArray()
-      .toString(),
-    '82,70,59,56'
+      .ToArray(),
+    [82, 70, 59, 56]
   )
 })
 
 test('SkipWhile', t => {
   const grades = new List<number>([59, 82, 70, 56, 92, 98, 85])
-  t.is(
+  t.deepEqual(
     grades
       .OrderByDescending(x => x)
       .SkipWhile(grade => grade >= 80)
-      .ToArray()
-      .toString(),
-    '70,59,56'
+      .ToArray(),
+    [70, 59, 56]
   )
 })
 
@@ -798,17 +788,17 @@ test('Sum', t => {
 
 test('Take', t => {
   const grades = new List<number>([59, 82, 70, 56, 92, 98, 85])
-  t.is(
+  t.deepEqual(
     grades
       .OrderByDescending(x => x)
       .Take(3)
-      .ToArray()
-      .toString(),
-    '98,92,85'
+      .ToArray(),
+    [98, 92, 85]
   )
 })
 
 test('TakeWhile', t => {
+  const expected = ['apple', 'banana', 'mango']
   const fruits = new List<string>([
     'apple',
     'banana',
@@ -817,17 +807,11 @@ test('TakeWhile', t => {
     'passionfruit',
     'grape'
   ])
-  t.is(
-    fruits
-      .TakeWhile(fruit => fruit !== 'orange')
-      .ToArray()
-      .toString(),
-    'apple,banana,mango'
-  )
+  t.deepEqual(fruits.TakeWhile(fruit => fruit !== 'orange').ToArray(), expected)
 })
 
 test('ToArray', t => {
-  t.is(new List<number>([1, 2, 3, 4, 5]).ToArray().toString(), '1,2,3,4,5')
+  t.deepEqual(new List<number>([1, 2, 3, 4, 5]).ToArray(), [1, 2, 3, 4, 5])
 })
 
 test('ToDictionary', t => {
@@ -845,13 +829,7 @@ test('ToDictionary', t => {
 })
 
 test('ToList', t => {
-  t.is(
-    new List<number>([1, 2, 3])
-      .ToList()
-      .ToArray()
-      .toString(),
-    '1,2,3'
-  )
+  t.deepEqual(new List<number>([1, 2, 3]).ToList().ToArray(), [1, 2, 3])
 })
 
 test('ToLookup', t => {
@@ -903,13 +881,7 @@ test('ToLookup', t => {
 test('Union', t => {
   const ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7])
   const ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0])
-  t.is(
-    ints1
-      .Union(ints2)
-      .ToArray()
-      .toString(),
-    '5,3,9,7,8,6,4,1,0'
-  )
+  t.deepEqual(ints1.Union(ints2).ToArray(), [5, 3, 9, 7, 8, 6, 4, 1, 0])
 
   const result = [
     { Name: 'apple', Code: 9 },
@@ -938,53 +910,40 @@ test('Where', t => {
     'grape',
     'strawberry'
   ])
-  t.is(
-    fruits
-      .Where(fruit => fruit.length < 6)
-      .ToArray()
-      .toString(),
-    'apple,mango,grape'
-  )
+  const expected = ['apple', 'mango', 'grape']
+  t.deepEqual(fruits.Where(fruit => fruit.length < 6).ToArray(), expected)
 })
 
 test('Zip', t => {
   const numbers = new List<number>([1, 2, 3, 4])
   const words = new List<string>(['one', 'two', 'three'])
-  t.is(
-    numbers
-      .Zip(words, (first, second) => `${first} ${second}`)
-      .ToArray()
-      .toString(),
-    '1 one,2 two,3 three'
+  t.deepEqual(
+    numbers.Zip(words, (first, second) => `${first} ${second}`).ToArray(),
+    ['1 one', '2 two', '3 three']
   )
-
   // larger second array
+  const expected = ['one 1', 'two 2', 'three 3']
   const numbers2 = new List<number>([1, 2, 3, 4])
   const words2 = new List<string>(['one', 'two', 'three'])
-  t.is(
-    words2
-      .Zip(numbers2, (first, second) => `${first} ${second}`)
-      .ToArray()
-      .toString(),
-    'one 1,two 2,three 3'
+  t.deepEqual(
+    words2.Zip(numbers2, (first, second) => `${first} ${second}`).ToArray(),
+    expected
   )
 })
 
 test('Where().Select()', t => {
-  t.is(
+  t.deepEqual(
     new List<number>([1, 2, 3, 4, 5])
       .Where(x => x > 3)
       .Select(y => y * 2)
-      .ToArray()
-      .toString(),
-    '8,10'
+      .ToArray(),
+    [8, 10]
   )
-  t.is(
+  t.deepEqual(
     new List<number>([1, 2, 3, 4, 5])
       .Where(x => x > 3)
       .Select(y => y + 'a')
-      .ToArray()
-      .toString(),
-    '4a,5a'
+      .ToArray(),
+    ['4a', '5a']
   )
 })

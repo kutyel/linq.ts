@@ -409,15 +409,21 @@ export class List<T> {
   /**
    * Sorts the elements of a sequence in ascending order according to a key.
    */
-  public OrderBy(keySelector: (key: T) => any): List<T> {
-    return new OrderedList<T>(this._elements, keyComparer(keySelector, false))
+  public OrderBy(
+    keySelector: (key: T) => any,
+    comparer = keyComparer(keySelector, false)
+  ): List<T> {
+    return new OrderedList<T>(this._elements, comparer)
   }
 
   /**
    * Sorts the elements of a sequence in descending order according to a key.
    */
-  public OrderByDescending(keySelector: (key: T) => any): List<T> {
-    return new OrderedList<T>(this._elements, keyComparer(keySelector, true))
+  public OrderByDescending(
+    keySelector: (key: T) => any,
+    comparer = keyComparer(keySelector, true)
+  ): List<T> {
+    return new OrderedList<T>(this._elements, comparer)
   }
 
   /**
