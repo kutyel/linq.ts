@@ -4,6 +4,5 @@ coverage
 .DS_Store
 *.js
 *.js.map
-.vscode
 .idea
 /dist/

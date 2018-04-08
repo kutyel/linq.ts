@@ -1,0 +1,130 @@
+{
+  "projectName": "linq.ts",
+  "projectOwner": "kutyel",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "contributors": [
+    {
+      "login": "kutyel",
+      "name": "Flavio Corpa",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/5127501?v=3",
+      "profile": "http://flaviocorpa.com",
+      "contributions": [
+        "code",
+        "question",
+        "doc",
+        "review"
+      ]
+    },
+    {
+      "login": "Kurtz1993",
+      "name": "Luis Rogelio Hernández López",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/5412470?v=3",
+      "profile": "https://github.com/Kurtz1993",
+      "contributions": [
+        "code",
+        "tool"
+      ]
+    },
+    {
+      "login": "zskovacs",
+      "name": "Zsolt Kovács",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/20083522?v=3",
+      "profile": "https://github.com/zskovacs",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "abbasmhd",
+      "name": "Mo Abbas",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1510389?v=3",
+      "profile": "https://github.com/abbasmhd",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "keropodium",
+      "name": "Julián Salgado Napolitano",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/13154847?v=3",
+      "profile": "https://euipo.europa.eu/ohimportal/404",
+      "contributions": [
+        "code",
+        "tool"
+      ]
+    },
+    {
+      "login": "mstrzoda",
+      "name": "mstrzoda",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/22657637?v=3",
+      "profile": "https://github.com/mstrzoda",
+      "contributions": [
+        "code",
+        "bug",
+        "test"
+      ]
+    },
+    {
+      "login": "Zoxive",
+      "name": "Kyle Wascher",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/124676?v=3",
+      "profile": "https://github.com/Zoxive",
+      "contributions": [
+        "test"
+      ]
+    },
+    {
+      "login": "jamesrichford",
+      "name": "James Richford",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/8244919?v=3",
+      "profile": "https://github.com/jamesrichford",
+      "contributions": [
+        "tool"
+      ]
+    },
+    {
+      "login": "natarajanmca11",
+      "name": "Natarajan Ganapathi",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/9244766?v=3",
+      "profile": "https://in.linkedin.com/in/natarajanganapathi",
+      "contributions": [
+        "code",
+        "tool"
+      ]
+    },
+    {
+      "login": "jbrekle",
+      "name": "Jonas Brekle",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/797614?v=3",
+      "profile": "https://github.com/jbrekle",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "grofit",
+      "name": "LP",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/927201?v=4",
+      "profile": "https://github.com/grofit",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "asierferro",
+      "name": "Asier Ferro",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1768777?v=4",
+      "profile": "https://github.com/asierferro",
+      "contributions": [
+        "code",
+        "tool"
+      ]
+    }
+  ]
+}
