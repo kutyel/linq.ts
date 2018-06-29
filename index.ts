@@ -21,7 +21,7 @@ const findIndex = f => xs => xs.reduceRight((x, y, i) => (f(y) ? i : x))
  */
 const negate = <T>(
   predicate: (value?: T, index?: number, list?: T[]) => boolean
-): (() => boolean) => (...args) => !predicate(...args)
+): any => (...args) => !predicate(...args)
 
 /**
  * Comparer helpers
