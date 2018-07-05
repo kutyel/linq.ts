@@ -441,10 +441,22 @@ test('LastOrDefault', t => {
 })
 
 test('Max', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+  t.is(people.Max(x => x.Age), 50)
   t.is(new List<number>([1, 2, 3, 4, 5]).Max(), 5)
 })
 
 test('Min', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+  t.is(people.Min(x => x.Age), 15)
   t.is(new List<number>([1, 2, 3, 4, 5]).Min(), 1)
 })
 
@@ -823,9 +835,14 @@ test('ToDictionary', t => {
   const dictionary = people.ToDictionary(x => x.Name)
   t.deepEqual(dictionary['Bob'], { Age: 50, Name: 'Bob' })
   t.is(dictionary['Bob'].Age, 50)
-
   const dictionary2 = people.ToDictionary(x => x.Name, y => y.Age)
   t.is(dictionary2['Alice'], 25)
+  // Dictionary should behave just like in C#
+  t.is(dictionary.Max(x => x.Value.Age), 50)
+  t.is(dictionary.Min(x => x.Value.Age), 15)
+  const expectedKeys = new List(['Cathy', 'Alice', 'Bob'])
+  t.deepEqual(dictionary.Select(x => x.Key), expectedKeys)
+  t.deepEqual(dictionary.Select(x => x.Value), people)
 })
 
 test('ToList', t => {

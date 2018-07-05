@@ -10,7 +10,7 @@
   "scripts": {
     "build": "microbundle -o dist",
     "postbuild": "rimraf .rpt2_cache ./dist/test",
-    "check-coverage": "nyc check-coverage --statements 100 --branches 95 --functions 98 --lines 100",
+    "check-coverage": "nyc check-coverage --statements 100 --branches 97 --functions 99 --lines 100",
     "commit": "git-cz",
     "compile": "tsc -t es2015",
     "cover": "nyc --reporter=lcov npm t",
