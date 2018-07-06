@@ -301,12 +301,22 @@ test('GroupBy', t => {
     new Pet({ Age: 1, Name: 'Whiskers' }),
     new Pet({ Age: 4, Name: 'Daisy' })
   ])
-  const result = {
+  const grouped = pets.GroupBy(pet => pet.Age, pet => pet.Name)
+  // const expected = new List<{ Key: string; Value: string[] }>([
+  //   { Key: '1', Value: ['Whiskers'] },
+  //   { Key: '4', Value: ['Boots', 'Daisy'] },
+  //   { Key: '8', Value: ['Barley'] }
+  // ])
+  const expected = {
     '1': ['Whiskers'],
     '4': ['Boots', 'Daisy'],
     '8': ['Barley']
   }
-  t.deepEqual(pets.GroupBy(pet => pet.Age, pet => pet.Name), result)
+  const expectedKeys = new List(Object.keys(expected))
+  const expectedValues = new List(Object.values(expected))
+  t.is(grouped, expected)
+  // t.deepEqual(grouped.Select(x => x.Key), expectedKeys)
+  // t.deepEqual(grouped.Select(x => x.Value), expectedValues)
 })
 
 test('GroupJoin', t => {

@@ -269,15 +269,17 @@ export class List<T> {
   /**
    * Groups the elements of a sequence according to a specified key selector function.
    */
-  public GroupBy(grouper: (key: T) => any, mapper: (element: T) => any): any {
+  public GroupBy<TKey, TValue>(
+    grouper: (key: T) => any,
+    mapper: (element: T) => any
+  ): List<{ Key: TKey; Value: TValue }> | { [id: string]: TValue[] } {
     return this.Aggregate(
-      (ac, v) => (
-        (ac as any)[grouper(v)]
-          ? (ac as any)[grouper(v)].push(mapper(v))
-          : ((ac as any)[grouper(v)] = [mapper(v)]),
-        ac
-      ),
-      {}
+      (group, v) => ({
+        // group.Add({ Key: grouper(v), Value: mapper(v) })
+        ...group,
+        [group[grouper(v)]]: [...(group[grouper(v)] || [mapper(v)]), mapper(v)]
+      }),
+      new List<{ Key: TKey; Value: TValue }>()
     )
   }
 
