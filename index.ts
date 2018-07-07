@@ -368,15 +368,25 @@ export class List<T> {
   /**
    * Returns the maximum value in a generic sequence.
    */
-  public Max(): T {
-    return this.Aggregate((x, y) => (x > y ? x : y))
+  public Max(): number
+  public Max(selector: (value: T, index: number, array: T[]) => number): number
+  public Max(
+    selector?: (value: T, index: number, array: T[]) => number
+  ): number {
+    const id = x => x
+    return Math.max(...this._elements.map(selector || id))
   }
 
   /**
    * Returns the minimum value in a generic sequence.
    */
-  public Min(): T {
-    return this.Aggregate((x, y) => (x < y ? x : y))
+  public Min(): number
+  public Min(selector: (value: T, index: number, array: T[]) => number): number
+  public Min(
+    selector?: (value: T, index: number, array: T[]) => number
+  ): number {
+    const id = x => x
+    return Math.min(...this._elements.map(selector || id))
   }
 
   /**
@@ -600,26 +610,29 @@ export class List<T> {
   /**
    * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
    */
-  public ToDictionary<TKey>(key: (key: T) => TKey): { [id: string]: T }
+  public ToDictionary<TKey>(
+    key: (key: T) => TKey
+  ): List<{ Key: TKey; Value: T }>
   public ToDictionary<TKey, TValue>(
     key: (key: T) => TKey,
     value: (value: T) => TValue
-  ): { [id: string]: TValue }
+  ): List<{ Key: TKey; Value: T | TValue }>
   public ToDictionary<TKey, TValue>(
     key: (key: T) => TKey,
     value?: (value: T) => TValue
-  ): { [id: string]: TValue | T } {
-    return this.Aggregate(
-      (o, v, i) => (
-        ((o as any)[
-          this.Select(key)
-            .ElementAt(i)
-            .toString()
-        ] = value ? this.Select(value).ElementAt(i) : v),
-        o
-      ),
-      {}
-    )
+  ): List<{ Key: TKey; Value: T | TValue }> {
+    return this.Aggregate((dicc, v, i) => {
+      dicc[
+        this.Select(key)
+          .ElementAt(i)
+          .toString()
+      ] = value ? this.Select(value).ElementAt(i) : v
+      dicc.Add({
+        Key: this.Select(key).ElementAt(i),
+        Value: value ? this.Select(value).ElementAt(i) : v
+      })
+      return dicc
+    }, new List<{ Key: TKey; Value: T | TValue }>())
   }
 
   /**
