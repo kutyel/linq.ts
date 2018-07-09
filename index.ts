@@ -7,8 +7,8 @@ const isObj = <T>(x: T): boolean => typeof x === 'object'
  * Determine if two objects are equal
  */
 const equal = <T, U>(a: T, b: U): boolean =>
-  Object.keys(a).every(
-    key => (isObj(a[key]) ? equal(b[key], a[key]) : b[key] === a[key])
+  Object.entries(a).every(
+    ([key, value]) => (isObj(value) ? equal(b[key], value) : b[key] === value)
   )
 
 /**
@@ -272,15 +272,20 @@ export class List<T> {
   public GroupBy<TKey, TValue>(
     grouper: (key: T) => any,
     mapper: (element: T) => any
-  ): List<{ Key: TKey; Value: TValue }> | { [id: string]: TValue[] } {
-    return this.Aggregate(
+  ): List<{ Key: TKey; Value: TValue }> {
+    let result = new List<{ Key: TKey; Value: TValue }>()
+    const grouped = this.Aggregate(
       (group, v) => ({
-        // group.Add({ Key: grouper(v), Value: mapper(v) })
         ...group,
-        [group[grouper(v)]]: [...(group[grouper(v)] || [mapper(v)]), mapper(v)]
+        [grouper(v)]: [...(group[grouper(v)] || []), mapper(v)]
       }),
-      new List<{ Key: TKey; Value: TValue }>()
+      {}
     )
+    Object.entries(grouped).map(([key, value]) =>
+      // @ts-ignore
+      result.Add({ Key: key as TKey, Value: value as TValue })
+    )
+    return Object.assign(result, grouped)
   }
 
   /**
