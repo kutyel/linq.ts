@@ -53,7 +53,7 @@
   "dependencies": {},
   "devDependencies": {
     "ava": "^0.25.0",
-    "commitizen": "^2.10.1",
+    "commitizen": "^3.0.0",
     "coveralls": "^3.0.1",
     "cz-conventional-changelog": "^2.1.0",
     "ghooks": "^2.0.4",
