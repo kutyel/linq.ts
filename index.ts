@@ -194,8 +194,8 @@ export class List<T> {
   /**
    * Returns distinct elements from a sequence according to specified key selector.
    */
-  public DistinctBy(keySelector: (key: T) => any): List<T> {
-    const groups = this.GroupBy(keySelector, obj => obj)
+  public DistinctBy(keySelector: (key: T) => string | number): List<T> {
+    const groups = this.GroupBy(keySelector)
     return Object.keys(groups).reduce((res, key) => {
       res.Add(groups[key][0])
       return res
@@ -269,16 +269,25 @@ export class List<T> {
   /**
    * Groups the elements of a sequence according to a specified key selector function.
    */
-  public GroupBy(grouper: (key: T) => any, mapper: (element: T) => any): any {
-    return this.Aggregate(
-      (ac, v) => (
-        (ac as any)[grouper(v)]
-          ? (ac as any)[grouper(v)].push(mapper(v))
-          : ((ac as any)[grouper(v)] = [mapper(v)]),
-        ac
-      ),
-      {}
-    )
+  public GroupBy<TResult = T>(
+    grouper: (key: T) => string | number,
+    mapper?: (element: T) => TResult
+  ): { [key: string]: TResult[] } {
+    const initialValue: { [key: string]: TResult[] } = {}
+    if (!mapper) {
+      mapper = val => <TResult>(<any>val)
+    }
+    return this.Aggregate((ac, v) => {
+      const key = grouper(v)
+      const existingGroup = ac[key]
+      const mappedValue = mapper(v)
+      if (existingGroup) {
+        existingGroup.push(mappedValue)
+      } else {
+        ac[key] = [mappedValue]
+      }
+      return ac
+    }, initialValue)
   }
 
   /**
@@ -645,10 +654,10 @@ export class List<T> {
   /**
    * Creates a Lookup<TKey, TElement> from an IEnumerable<T> according to specified key selector and element selector functions.
    */
-  public ToLookup(
-    keySelector: (key: T) => any,
-    elementSelector: (element: T) => any
-  ): any {
+  public ToLookup<TResult>(
+    keySelector: (key: T) => string | number,
+    elementSelector: (element: T) => TResult
+  ): { [key: string]: TResult[] } {
     return this.GroupBy(keySelector, elementSelector)
   }
 
