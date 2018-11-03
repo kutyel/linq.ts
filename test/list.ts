@@ -222,11 +222,13 @@ test('Distinct', t => {
     new Pet({ Age: 1, Name: 'Whiskers' }),
     new Pet({ Age: 1, Name: 'Whiskers' }),
     new Pet({ Age: 8, Name: 'Barley' }),
-    new Pet({ Age: 8, Name: 'Barley' })
+    new Pet({ Age: 8, Name: 'Barley' }),
+    new Pet({ Age: 9, Name: 'Corey' })
   ])
   const expected = new List<Pet>([
     new Pet({ Age: 1, Name: 'Whiskers' }),
-    new Pet({ Age: 8, Name: 'Barley' })
+    new Pet({ Age: 8, Name: 'Barley' }),
+    new Pet({ Age: 9, Name: 'Corey' })
   ])
   t.deepEqual(ages.Distinct(), new List<number>([21, 46, 55, 17]))
   t.deepEqual(pets.Distinct(), expected)
