@@ -125,6 +125,28 @@
         "code",
         "tool"
       ]
+    },
+    {
+      "login": "marlon-tucker",
+      "name": "marlon-tucker",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1166915?v=4",
+      "profile": "https://github.com/marlon-tucker",
+      "contributions": [
+        "code",
+        "tool",
+        "platform"
+      ]
+    },
+    {
+      "login": "SkeletonSkelettron",
+      "name": "Misha Sulikashvili",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/26940527?v=4",
+      "profile": "https://github.com/SkeletonSkelettron",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
-  ]
+  ],
+  "repoType": "github"
 }
