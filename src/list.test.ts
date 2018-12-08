@@ -1,5 +1,6 @@
 import test from 'ava'
-import { List } from '..'
+
+import List from './list'
 
 interface IPackage {
   Company: string

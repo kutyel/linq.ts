@@ -9,7 +9,7 @@
   "umd:main": "dist/linqts.umd.js",
   "scripts": {
     "build": "microbundle -o dist",
-    "check-coverage": "nyc check-coverage --statements 100 --branches 97 --functions 98 --lines 100",
+    "check-coverage": "nyc check-coverage --statements 98 --branches 90 --functions 96 --lines 99",
     "commit": "git-cz",
     "cover": "nyc --reporter=lcov npm t",
     "docs": "typedoc --out ../docs/ index.ts -m commonjs -t ES6",
@@ -20,7 +20,7 @@
     "report-coverage": "nyc report --reporter=text-lcov | coveralls",
     "semantic-release": "semantic-release",
     "start": "microbundle watch",
-    "test": "nyc ava",
+    "test": "tsc && nyc ava",
     "validate": "npm run cover && npm run check-coverage"
   },
   "repository": {
