@@ -9,21 +9,17 @@
   "umd:main": "dist/linqts.umd.js",
   "scripts": {
     "build": "microbundle -o dist",
-    "postbuild": "rimraf .rpt2_cache ./dist/test",
     "check-coverage": "nyc check-coverage --statements 100 --branches 97 --functions 98 --lines 100",
     "commit": "git-cz",
-    "compile": "tsc -t es2015",
     "cover": "nyc --reporter=lcov npm t",
-    "dev": "microbundle watch",
     "docs": "typedoc --out ../docs/ index.ts -m commonjs -t ES6",
     "nyan": "ava --tap | tap-nyan",
+    "postbuild": "rimraf .rpt2_cache ./dist/test",
     "prebuild": "rimraf dist",
-    "precompile": "npm run pretty",
-    "pretest": "npm run compile",
-    "pretty": "prettier index.ts test/**/*.ts --write",
+    "pretty": "prettier index.ts /src/**/*.ts --write",
     "report-coverage": "nyc report --reporter=text-lcov | coveralls",
     "semantic-release": "semantic-release",
-    "start": "tsc -w",
+    "start": "microbundle watch",
     "test": "nyc ava",
     "validate": "npm run cover && npm run check-coverage"
   },
@@ -62,6 +58,7 @@
     "prettier": "^1.13.7",
     "rimraf": "^2.6.2",
     "semantic-release": "^15.6.0",
+    "tap-nyan": "^1.1.0",
     "ts-node": "^7.0.0",
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.13.0",
@@ -76,5 +73,14 @@
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
     }
+  },
+  "ava": {
+    "compileEnhancements": false,
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
   }
 }
