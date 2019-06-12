@@ -81,10 +81,6 @@
     "extensions": [
       "ts"
     ],
-    "files": [
-      "src/**/*.test.js",
-      "!dist"
-    ],
     "require": [
       "esm"
     ]

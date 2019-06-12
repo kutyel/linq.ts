@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import Enumerable from './enumerable'
+import Enumerable from '../src/enumerable'
 
 test('Range', t => {
   t.deepEqual(
