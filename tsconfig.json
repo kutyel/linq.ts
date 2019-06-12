@@ -1,5 +1,5 @@
 {
-  "exclude": ["node_modules", "**/*.test.*"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "target": "es2017",
     "module": "es6",

@@ -922,7 +922,7 @@ test('Union', t => {
     new Product({ Name: 'apple', Code: 9 }),
     new Product({ Name: 'lemon', Code: 12 })
   ])
-  // t.deepEqual(store1.Union(store2).ToArray(), result);
+  t.skip.deepEqual(store1.Union(store2).ToArray(), result)
 })
 
 test('Where', t => {
