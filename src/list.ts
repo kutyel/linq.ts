@@ -141,7 +141,7 @@ class List<T> {
    * Returns the element at a specified index in a sequence.
    */
   public ElementAt(index: number): T {
-    if (index < this.Count()) {
+    if (index < this.Count() && index >= 0) {
       return this._elements[index]
     } else {
       const MSG =
@@ -154,7 +154,7 @@ class List<T> {
    * Returns the element at a specified index in a sequence or a default value if the index is out of range.
    */
   public ElementAtOrDefault(index: number): T {
-    return this.ElementAt(index) || undefined
+    return this.ElementAt(index) !== undefined && this.ElementAt(index)
   }
 
   /**

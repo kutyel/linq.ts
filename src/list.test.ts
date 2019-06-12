@@ -259,11 +259,17 @@ test('ElementAt', t => {
     () => a.ElementAt(4),
     /ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source./
   )
+  t.throws(
+    () => a.ElementAt(-1),
+    /ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source./
+  )
 })
 
 test('ElementAtOrDefault', t => {
   const a = new List<string>(['hey', 'hola', 'que', 'tal'])
+  const b = new List<number>([2, 1, 0, -1, -2])
   t.is(a.ElementAtOrDefault(0), 'hey')
+  t.is(b.ElementAtOrDefault(2), 0)
   t.throws(
     () => a.ElementAtOrDefault(4),
     /ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source./
