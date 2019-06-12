@@ -17,7 +17,6 @@
     "nyan": "ava --tap | tap-nyan",
     "postbuild": "rimraf .rts2_*",
     "prebuild": "rimraf dist",
-    "pretest": "rimraf dist",
     "pretty": "prettier index.ts /src/**/*.ts --write",
     "report-coverage": "nyc report --reporter=text-lcov | coveralls",
     "semantic-release": "semantic-release",
