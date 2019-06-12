@@ -1,14 +1,14 @@
 /**
  * Checks if the argument passed is an object
  */
-export const isObj = <T>(x: T): boolean => typeof x === 'object'
+export const isObj = <T>(x: T): boolean => !!x && typeof x === 'object'
 
 /**
  * Determine if two objects are equal
  */
 export const equal = <T, U>(a: T, b: U): boolean =>
-  Object.keys(a).every(
-    key => (isObj(a[key]) ? equal(b[key], a[key]) : b[key] === a[key])
+  Object.entries(a).every(
+    ([key, val]) => (isObj(val) ? equal(b[key], val) : b[key] === val)
   )
 
 /**
