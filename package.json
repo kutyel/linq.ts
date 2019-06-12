@@ -12,7 +12,7 @@
     "build": "microbundle",
     "check-coverage": "nyc check-coverage --statements 98 --branches 90 --functions 96 --lines 99",
     "commit": "git-cz",
-    "cover": "nyc --reporter=lcov npm t",
+    "cover": "nyc --require esm --reporter=lcov npm t",
     "docs": "typedoc --out ../docs/ index.ts -m commonjs -t ES6",
     "nyan": "ava --tap | tap-nyan",
     "postbuild": "rimraf .rts2_*",
