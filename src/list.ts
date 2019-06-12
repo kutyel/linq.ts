@@ -235,9 +235,7 @@ class List<T> {
     key2: (k: U) => any,
     result: (first: T, second: List<U>) => any
   ): List<any> {
-    return this.Select((x, y) =>
-      result(x, list.Where(z => key1(x) === key2(z)))
-    )
+    return this.Select(x => result(x, list.Where(z => key1(x) === key2(z))))
   }
 
   /**
@@ -442,7 +440,7 @@ class List<T> {
     selector: (element: T, index: number) => TOut
   ): TOut {
     return this.Aggregate(
-      (ac, v, i) => (
+      (ac, _, i) => (
         ac.AddRange(
           this.Select(selector)
             .ElementAt(i)
@@ -500,10 +498,7 @@ class List<T> {
     predicate: (value?: T, index?: number, list?: T[]) => boolean
   ): List<T> {
     return this.Skip(
-      this.Aggregate(
-        (ac, val) => (predicate(this.ElementAt(ac)) ? ++ac : ac),
-        0
-      )
+      this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
     )
   }
 
@@ -537,10 +532,7 @@ class List<T> {
     predicate: (value?: T, index?: number, list?: T[]) => boolean
   ): List<T> {
     return this.Take(
-      this.Aggregate(
-        (ac, val) => (predicate(this.ElementAt(ac)) ? ++ac : ac),
-        0
-      )
+      this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
     )
   }
 

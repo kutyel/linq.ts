@@ -3,19 +3,21 @@
   "version": "1.12.3",
   "description": "LinQ + TypeScript",
   "es2015": "index.ts",
+  "source": "index.ts",
   "main": "dist/linqts.js",
   "module": "dist/linqts.es.js",
   "types": "dist/index.d.ts",
   "umd:main": "dist/linqts.umd.js",
   "scripts": {
-    "build": "microbundle -o dist",
+    "build": "microbundle",
     "check-coverage": "nyc check-coverage --statements 98 --branches 90 --functions 96 --lines 99",
     "commit": "git-cz",
     "cover": "nyc --reporter=lcov npm t",
     "docs": "typedoc --out ../docs/ index.ts -m commonjs -t ES6",
     "nyan": "ava --tap | tap-nyan",
-    "postbuild": "rimraf .rpt2_cache ./dist/test",
+    "postbuild": "rimraf .rts2_*",
     "prebuild": "rimraf dist",
+    "pretest": "rimraf dist",
     "pretty": "prettier index.ts /src/**/*.ts --write",
     "report-coverage": "nyc report --reporter=text-lcov | coveralls",
     "semantic-release": "semantic-release",
@@ -52,6 +54,7 @@
     "commitizen": "^3.1.1",
     "coveralls": "^3.0.1",
     "cz-conventional-changelog": "^2.1.0",
+    "esm": "^3.2.25",
     "ghooks": "^2.0.4",
     "microbundle": "^0.11.0",
     "nyc": "^12.0.2",
@@ -80,7 +83,7 @@
       "ts"
     ],
     "require": [
-      "ts-node/register"
+      "esm"
     ]
   }
 }

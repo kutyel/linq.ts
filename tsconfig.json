@@ -1,8 +1,14 @@
 {
+  "exclude": ["node_modules", "**/*.test.*"],
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es5",
-    "lib": ["esnext"]
-  },
-  "exclude": ["node_modules"]
+    "target": "es2017",
+    "module": "es6",
+    "outDir": "dist",
+    "declaration": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "esModuleInterop": true
+  }
 }
