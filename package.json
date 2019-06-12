@@ -1,6 +1,6 @@
 {
   "name": "linqts",
-  "version": "1.12.3",
+  "version": "1.12.4",
   "description": "LinQ + TypeScript",
   "es2015": "index.ts",
   "source": "index.ts",
