@@ -4,10 +4,10 @@
   "description": "LinQ + TypeScript",
   "es2015": "index.ts",
   "source": "index.ts",
-  "main": "dist/linqts.js",
-  "module": "dist/linqts.es.js",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
-  "umd:main": "dist/linqts.umd.js",
+  "umd:main": "dist/index.umd.js",
   "scripts": {
     "build": "microbundle",
     "check-coverage": "nyc check-coverage --statements 98 --branches 90 --functions 96 --lines 99",
