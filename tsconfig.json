@@ -1,8 +1,11 @@
 {
-  "exclude": ["node_modules", "dist"],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
   "compilerOptions": {
-    "target": "es2017",
-    "module": "es6",
+    "target": "esnext",
+    "module": "esnext",
     "outDir": "dist",
     "declaration": true,
     "noUnusedLocals": true,
