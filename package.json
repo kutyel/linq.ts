@@ -9,7 +9,7 @@
   "types": "dist/index.d.ts",
   "umd:main": "dist/index.umd.js",
   "scripts": {
-    "build": "microbundle --target node",
+    "build": "microbundle index.ts",
     "check-coverage": "nyc check-coverage --statements 98 --branches 90 --functions 96 --lines 99",
     "commit": "git-cz",
     "cover": "nyc --require esm --reporter=lcov npm t",
@@ -65,7 +65,7 @@
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.13.0",
     "tslint-config-standard": "^7.1.0",
-    "typedoc": "^0.14.2",
+    "typedoc": "^0.17.6",
     "typescript": "^2.9.2"
   },
   "config": {

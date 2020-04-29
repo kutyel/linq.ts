@@ -80,6 +80,13 @@ class List<T> {
   }
 
   /**
+   * Removes all elements from the List<T>.
+   */
+  public Clear(): void {
+    this._elements.length = 0
+  }
+
+  /**
    * Concatenates two sequences.
    */
   public Concat(list: List<T>): List<T> {
@@ -347,7 +354,7 @@ class List<T> {
         typeName = typeof true
         break
       case Function:
-        typeName = typeof function() {} // tslint:disable-line no-empty
+        typeName = typeof function () { } // tslint:disable-line no-empty
         break
       default:
         typeName = null
