@@ -68,7 +68,7 @@ class Dog extends Pet {
 }
 
 class PetOwner {
-  constructor(public Name: string, public Pets: List<Pet>) {}
+  constructor(public Name: string, public Pets: List<Pet>) { }
 }
 
 class Product implements IProduct {
@@ -152,6 +152,17 @@ test('Cast', t => {
   t.true(typeof dogs.First().Speak === 'function')
   t.is(dogs.First().Speak(), 'Bark')
   t.true(typeof dogs.Last().Speak === 'undefined')
+})
+
+test('Clear', t => {
+  const pets = new List<Pet>([
+    new Dog({ Age: 8, Name: 'Barley', Vaccinated: true }),
+    new Pet({ Age: 1, Name: 'Whiskers', Vaccinated: false })
+  ])
+
+  t.is(pets.Count(), 2)
+  pets.Clear()
+  t.is(pets.Count(), 0)
 })
 
 test('Concat', t => {
