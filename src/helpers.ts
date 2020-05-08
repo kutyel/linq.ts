@@ -7,8 +7,8 @@ export const isObj = <T>(x: T): boolean => !!x && typeof x === 'object'
  * Determine if two objects are equal
  */
 export const equal = <T, U>(a: T, b: U): boolean =>
-  Object.entries(a).every(
-    ([key, val]) => (isObj(val) ? equal(b[key], val) : b[key] === val)
+  Object.entries(a).every(([key, val]) =>
+    isObj(val) ? equal(b[key], val) : b[key] === val
   )
 
 /**

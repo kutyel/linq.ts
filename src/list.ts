@@ -242,7 +242,12 @@ class List<T> {
     key2: (k: U) => any,
     result: (first: T, second: List<U>) => any
   ): List<any> {
-    return this.Select(x => result(x, list.Where(z => key1(x) === key2(z))))
+    return this.Select(x =>
+      result(
+        x,
+        list.Where(z => key1(x) === key2(z))
+      )
+    )
   }
 
   /**
@@ -354,7 +359,7 @@ class List<T> {
         typeName = typeof true
         break
       case Function:
-        typeName = typeof function () { } // tslint:disable-line no-empty
+        typeName = typeof function() {} // tslint:disable-line no-empty
         break
       default:
         typeName = null
@@ -463,8 +468,8 @@ class List<T> {
    * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
    */
   public SequenceEqual(list: List<T>): boolean {
-    return !!this._elements.reduce(
-      (x, y, z) => (list._elements[z] === y ? x : undefined)
+    return !!this._elements.reduce((x, y, z) =>
+      list._elements[z] === y ? x : undefined
     )
   }
 
