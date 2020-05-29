@@ -1,71 +1,6 @@
-/**
- * Checks if the argument passed is an object
- */
-const isObj = <T>(x: T): boolean => typeof x === 'object'
+import { composeComparers, negate, isObj, equal, keyComparer } from './helpers'
 
-/**
- * Determine if two objects are equal
- */
-const equal = <T, U>(a: T, b: U): boolean =>
-  Object.keys(a).every(
-    key => (isObj(a[key]) ? equal(b[key], a[key]) : b[key] === a[key])
-  )
-
-/**
- * Returns the index of the first item matching the predicate
- */
-const findIndex = f => xs => xs.reduceRight((x, y, i) => (f(y) ? i : x))
-
-/**
- * Creates a function that negates the result of the predicate
- */
-const negate = <T>(
-  predicate: (value?: T, index?: number, list?: T[]) => boolean
-): (() => boolean) => (...args) => !predicate(...args)
-
-/**
- * Comparer helpers
- */
-
-const compare = <T>(
-  a: T,
-  b: T,
-  _keySelector: (key: T) => any,
-  descending?: boolean
-): number => {
-  const sortKeyA = _keySelector(a)
-  const sortKeyB = _keySelector(b)
-  if (sortKeyA > sortKeyB) {
-    return !descending ? 1 : -1
-  } else if (sortKeyA < sortKeyB) {
-    return !descending ? -1 : 1
-  } else {
-    return 0
-  }
-}
-
-const composeComparers = <T>(
-  previousComparer: (a: T, b: T) => number,
-  currentComparer: (a: T, b: T) => number
-): ((a: T, b: T) => number) => (a: T, b: T) =>
-  previousComparer(a, b) || currentComparer(a, b)
-
-const keyComparer = <T>(
-  _keySelector: (key: T) => any,
-  descending?: boolean
-): ((a: T, b: T) => number) => (a: T, b: T) =>
-  compare(a, b, _keySelector, descending)
-
-/**
- * LinQ to TypeScript
- *
- * Documentation from LinQ .NET specification (https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aspx)
- *
- * Created by Flavio Corpa (@kutyel)
- * Copyright © 2016 Flavio Corpa. All rights reserved.
- *
- */
-export class List<T> {
+class List<T> {
   protected _elements: T[]
 
   /**
@@ -145,6 +80,13 @@ export class List<T> {
   }
 
   /**
+   * Removes all elements from the List<T>.
+   */
+  public Clear(): void {
+    this._elements.length = 0
+  }
+
+  /**
    * Concatenates two sequences.
    */
   public Concat(list: List<T>): List<T> {
@@ -186,7 +128,7 @@ export class List<T> {
     return this.Where(
       (value, index, iter) =>
         (isObj(value)
-          ? findIndex(obj => equal(obj, value))(iter)
+          ? iter.findIndex(obj => equal(obj, value))
           : iter.indexOf(value)) === index
     )
   }
@@ -194,8 +136,8 @@ export class List<T> {
   /**
    * Returns distinct elements from a sequence according to specified key selector.
    */
-  public DistinctBy(keySelector: (key: T) => any): List<T> {
-    const groups = this.GroupBy(keySelector, obj => obj)
+  public DistinctBy(keySelector: (key: T) => string | number): List<T> {
+    const groups = this.GroupBy(keySelector)
     return Object.keys(groups).reduce((res, key) => {
       res.Add(groups[key][0])
       return res
@@ -206,7 +148,7 @@ export class List<T> {
    * Returns the element at a specified index in a sequence.
    */
   public ElementAt(index: number): T {
-    if (index < this.Count()) {
+    if (index < this.Count() && index >= 0) {
       return this._elements[index]
     } else {
       const MSG =
@@ -219,7 +161,7 @@ export class List<T> {
    * Returns the element at a specified index in a sequence or a default value if the index is out of range.
    */
   public ElementAtOrDefault(index: number): T {
-    return this.ElementAt(index) || undefined
+    return this.ElementAt(index) !== undefined && this.ElementAt(index)
   }
 
   /**
@@ -269,16 +211,25 @@ export class List<T> {
   /**
    * Groups the elements of a sequence according to a specified key selector function.
    */
-  public GroupBy(grouper: (key: T) => any, mapper: (element: T) => any): any {
-    return this.Aggregate(
-      (ac, v) => (
-        (ac as any)[grouper(v)]
-          ? (ac as any)[grouper(v)].push(mapper(v))
-          : ((ac as any)[grouper(v)] = [mapper(v)]),
-        ac
-      ),
-      {}
-    )
+  public GroupBy<TResult = T>(
+    grouper: (key: T) => string | number,
+    mapper?: (element: T) => TResult
+  ): { [key: string]: TResult[] } {
+    const initialValue: { [key: string]: TResult[] } = {}
+    if (!mapper) {
+      mapper = val => <TResult>(<any>val)
+    }
+    return this.Aggregate((ac, v) => {
+      const key = grouper(v)
+      const existingGroup = ac[key]
+      const mappedValue = mapper(v)
+      if (existingGroup) {
+        existingGroup.push(mappedValue)
+      } else {
+        ac[key] = [mappedValue]
+      }
+      return ac
+    }, initialValue)
   }
 
   /**
@@ -291,8 +242,11 @@ export class List<T> {
     key2: (k: U) => any,
     result: (first: T, second: List<U>) => any
   ): List<any> {
-    return this.Select((x, y) =>
-      result(x, list.Where(z => key1(x) === key2(z)))
+    return this.Select(x =>
+      result(
+        x,
+        list.Where(z => key1(x) === key2(z))
+      )
     )
   }
 
@@ -368,15 +322,25 @@ export class List<T> {
   /**
    * Returns the maximum value in a generic sequence.
    */
-  public Max(): T {
-    return this.Aggregate((x, y) => (x > y ? x : y))
+  public Max(): number
+  public Max(selector: (value: T, index: number, array: T[]) => number): number
+  public Max(
+    selector?: (value: T, index: number, array: T[]) => number
+  ): number {
+    const id = x => x
+    return Math.max(...this._elements.map(selector || id))
   }
 
   /**
    * Returns the minimum value in a generic sequence.
    */
-  public Min(): T {
-    return this.Aggregate((x, y) => (x < y ? x : y))
+  public Min(): number
+  public Min(selector: (value: T, index: number, array: T[]) => number): number
+  public Min(
+    selector?: (value: T, index: number, array: T[]) => number
+  ): number {
+    const id = x => x
+    return Math.min(...this._elements.map(selector || id))
   }
 
   /**
@@ -488,7 +452,7 @@ export class List<T> {
     selector: (element: T, index: number) => TOut
   ): TOut {
     return this.Aggregate(
-      (ac, v, i) => (
+      (ac, _, i) => (
         ac.AddRange(
           this.Select(selector)
             .ElementAt(i)
@@ -504,8 +468,8 @@ export class List<T> {
    * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
    */
   public SequenceEqual(list: List<T>): boolean {
-    return !!this._elements.reduce(
-      (x, y, z) => (list._elements[z] === y ? x : undefined)
+    return !!this._elements.reduce((x, y, z) =>
+      list._elements[z] === y ? x : undefined
     )
   }
 
@@ -546,10 +510,7 @@ export class List<T> {
     predicate: (value?: T, index?: number, list?: T[]) => boolean
   ): List<T> {
     return this.Skip(
-      this.Aggregate(
-        (ac, val) => (predicate(this.ElementAt(ac)) ? ++ac : ac),
-        0
-      )
+      this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
     )
   }
 
@@ -583,10 +544,7 @@ export class List<T> {
     predicate: (value?: T, index?: number, list?: T[]) => boolean
   ): List<T> {
     return this.Take(
-      this.Aggregate(
-        (ac, val) => (predicate(this.ElementAt(ac)) ? ++ac : ac),
-        0
-      )
+      this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
     )
   }
 
@@ -600,26 +558,29 @@ export class List<T> {
   /**
    * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
    */
-  public ToDictionary<TKey>(key: (key: T) => TKey): { [id: string]: T }
+  public ToDictionary<TKey>(
+    key: (key: T) => TKey
+  ): List<{ Key: TKey; Value: T }>
   public ToDictionary<TKey, TValue>(
     key: (key: T) => TKey,
     value: (value: T) => TValue
-  ): { [id: string]: TValue }
+  ): List<{ Key: TKey; Value: T | TValue }>
   public ToDictionary<TKey, TValue>(
     key: (key: T) => TKey,
     value?: (value: T) => TValue
-  ): { [id: string]: TValue | T } {
-    return this.Aggregate(
-      (o, v, i) => (
-        ((o as any)[
-          this.Select(key)
-            .ElementAt(i)
-            .toString()
-        ] = value ? this.Select(value).ElementAt(i) : v),
-        o
-      ),
-      {}
-    )
+  ): List<{ Key: TKey; Value: T | TValue }> {
+    return this.Aggregate((dicc, v, i) => {
+      dicc[
+        this.Select(key)
+          .ElementAt(i)
+          .toString()
+      ] = value ? this.Select(value).ElementAt(i) : v
+      dicc.Add({
+        Key: this.Select(key).ElementAt(i),
+        Value: value ? this.Select(value).ElementAt(i) : v
+      })
+      return dicc
+    }, new List<{ Key: TKey; Value: T | TValue }>())
   }
 
   /**
@@ -632,10 +593,10 @@ export class List<T> {
   /**
    * Creates a Lookup<TKey, TElement> from an IEnumerable<T> according to specified key selector and element selector functions.
    */
-  public ToLookup(
-    keySelector: (key: T) => any,
-    elementSelector: (element: T) => any
-  ): any {
+  public ToLookup<TResult>(
+    keySelector: (key: T) => string | number,
+    elementSelector: (element: T) => TResult
+  ): { [key: string]: TResult[] } {
     return this.GroupBy(keySelector, elementSelector)
   }
 
@@ -703,26 +664,4 @@ class OrderedList<T> extends List<T> {
   }
 }
 
-export class Enumerable {
-  /**
-   * Generates a sequence of integral numbers within a specified range.
-   */
-  public static Range(start: number, count: number): List<number> {
-    let result = new List<number>()
-    while (count--) {
-      result.Add(start++)
-    }
-    return result
-  }
-
-  /**
-   * Generates a sequence that contains one repeated value.
-   */
-  public static Repeat<T>(element: T, count: number): List<T> {
-    let result = new List<T>()
-    while (count--) {
-      result.Add(element)
-    }
-    return result
-  }
-}
+export default List

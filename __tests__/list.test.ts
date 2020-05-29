@@ -1,5 +1,6 @@
 import test from 'ava'
-import { List } from '..'
+
+import List from '../src/list'
 
 interface IPackage {
   Company: string
@@ -67,7 +68,7 @@ class Dog extends Pet {
 }
 
 class PetOwner {
-  constructor(public Name: string, public Pets: List<Pet>) {}
+  constructor(public Name: string, public Pets: List<Pet>) { }
 }
 
 class Product implements IProduct {
@@ -153,6 +154,17 @@ test('Cast', t => {
   t.true(typeof dogs.Last().Speak === 'undefined')
 })
 
+test('Clear', t => {
+  const pets = new List<Pet>([
+    new Dog({ Age: 8, Name: 'Barley', Vaccinated: true }),
+    new Pet({ Age: 1, Name: 'Whiskers', Vaccinated: false })
+  ])
+
+  t.is(pets.Count(), 2)
+  pets.Clear()
+  t.is(pets.Count(), 0)
+})
+
 test('Concat', t => {
   const cats = new List<Pet>([
     new Pet({ Age: 8, Name: 'Barley' }),
@@ -222,11 +234,13 @@ test('Distinct', t => {
     new Pet({ Age: 1, Name: 'Whiskers' }),
     new Pet({ Age: 1, Name: 'Whiskers' }),
     new Pet({ Age: 8, Name: 'Barley' }),
-    new Pet({ Age: 8, Name: 'Barley' })
+    new Pet({ Age: 8, Name: 'Barley' }),
+    new Pet({ Age: 9, Name: 'Corey' })
   ])
   const expected = new List<Pet>([
     new Pet({ Age: 1, Name: 'Whiskers' }),
-    new Pet({ Age: 8, Name: 'Barley' })
+    new Pet({ Age: 8, Name: 'Barley' }),
+    new Pet({ Age: 9, Name: 'Corey' })
   ])
   t.deepEqual(ages.Distinct(), new List<number>([21, 46, 55, 17]))
   t.deepEqual(pets.Distinct(), expected)
@@ -256,11 +270,17 @@ test('ElementAt', t => {
     () => a.ElementAt(4),
     /ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source./
   )
+  t.throws(
+    () => a.ElementAt(-1),
+    /ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source./
+  )
 })
 
 test('ElementAtOrDefault', t => {
   const a = new List<string>(['hey', 'hola', 'que', 'tal'])
+  const b = new List<number>([2, 1, 0, -1, -2])
   t.is(a.ElementAtOrDefault(0), 'hey')
+  t.is(b.ElementAtOrDefault(2), 0)
   t.throws(
     () => a.ElementAtOrDefault(4),
     /ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source./
@@ -441,10 +461,22 @@ test('LastOrDefault', t => {
 })
 
 test('Max', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+  t.is(people.Max(x => x.Age), 50)
   t.is(new List<number>([1, 2, 3, 4, 5]).Max(), 5)
 })
 
 test('Min', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+  t.is(people.Min(x => x.Age), 15)
   t.is(new List<number>([1, 2, 3, 4, 5]).Min(), 1)
 })
 
@@ -823,9 +855,14 @@ test('ToDictionary', t => {
   const dictionary = people.ToDictionary(x => x.Name)
   t.deepEqual(dictionary['Bob'], { Age: 50, Name: 'Bob' })
   t.is(dictionary['Bob'].Age, 50)
-
   const dictionary2 = people.ToDictionary(x => x.Name, y => y.Age)
   t.is(dictionary2['Alice'], 25)
+  // Dictionary should behave just like in C#
+  t.is(dictionary.Max(x => x.Value.Age), 50)
+  t.is(dictionary.Min(x => x.Value.Age), 15)
+  const expectedKeys = new List(['Cathy', 'Alice', 'Bob'])
+  t.deepEqual(dictionary.Select(x => x.Key), expectedKeys)
+  t.deepEqual(dictionary.Select(x => x.Value), people)
 })
 
 test('ToList', t => {
@@ -896,7 +933,7 @@ test('Union', t => {
     new Product({ Name: 'apple', Code: 9 }),
     new Product({ Name: 'lemon', Code: 12 })
   ])
-  // t.deepEqual(store1.Union(store2).ToArray(), result);
+  t.skip.deepEqual(store1.Union(store2).ToArray(), result)
 })
 
 test('Where', t => {
