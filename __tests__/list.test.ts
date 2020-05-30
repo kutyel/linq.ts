@@ -87,6 +87,20 @@ test('Add', t => {
   t.is(list.First(), 'hey')
 })
 
+test('Append', t => {
+  const list = new List<string>()
+  list.AddRange(['hey', "what's", 'up'])
+  list.Append('there')
+  t.is(list.Last(), 'there')
+})
+
+test('Prepend', t => {
+  const list = new List<string>()
+  list.AddRange(['hey', "what's", 'up'])
+  list.Prepend('there')
+  t.is(list.First(), 'there')
+})
+
 test('AddRange', t => {
   const list = new List<string>()
   list.AddRange(['hey', "what's", 'up'])
@@ -281,10 +295,7 @@ test('ElementAtOrDefault', t => {
   const b = new List<number>([2, 1, 0, -1, -2])
   t.is(a.ElementAtOrDefault(0), 'hey')
   t.is(b.ElementAtOrDefault(2), 0)
-  t.throws(
-    () => a.ElementAtOrDefault(4),
-    /ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source./
-  )
+  t.is(a.ElementAtOrDefault(4), undefined)
 })
 
 test('Except', t => {
@@ -797,6 +808,17 @@ test('Skip', t => {
   )
 })
 
+test('SkipLast', t => {
+  const grades = new List<number>([59, 82, 70, 56, 92, 98, 85])
+  t.deepEqual(
+    grades
+      .OrderByDescending(x => x)
+      .SkipLast(3)
+      .ToArray(),
+    [98, 92, 85, 82]
+  )
+})
+
 test('SkipWhile', t => {
   const grades = new List<number>([59, 82, 70, 56, 92, 98, 85])
   t.deepEqual(
@@ -826,6 +848,17 @@ test('Take', t => {
       .Take(3)
       .ToArray(),
     [98, 92, 85]
+  )
+})
+
+test('TakeLast', t => {
+  const grades = new List<number>([59, 82, 70, 56, 92, 98, 85])
+  t.deepEqual(
+    grades
+      .OrderByDescending(x => x)
+      .TakeLast(3)
+      .ToArray(),
+    [70, 59, 56]
   )
 })
 
