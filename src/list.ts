@@ -1,5 +1,7 @@
 import { composeComparers, negate, isObj, equal, keyComparer } from './helpers'
 
+type PredicateType<T> = (value?: T, index?: number, list?: T[]) => boolean;
+
 class List<T> {
   protected _elements: T[]
 
@@ -16,6 +18,21 @@ class List<T> {
   public Add(element: T): void {
     this._elements.push(element)
   }
+
+  /**
+   * Appends an object to the end of the List<T>.
+   */
+  public Append(element: T): void {
+    this.Add(element)
+  }
+
+  /**
+   * Add an object to the start of the List<T>.
+   */
+  public Prepend(element: T): void {
+    this._elements.unshift(element)
+  }
+
 
   /**
    * Adds the elements of the specified collection to the end of the List<T>.
@@ -37,9 +54,7 @@ class List<T> {
   /**
    * Determines whether all elements of a sequence satisfy a condition.
    */
-  public All(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): boolean {
+  public All(predicate: PredicateType<T>): boolean {
     return this._elements.every(predicate)
   }
 
@@ -47,12 +62,8 @@ class List<T> {
    * Determines whether a sequence contains any elements.
    */
   public Any(): boolean
-  public Any(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): boolean
-  public Any(
-    predicate?: (value?: T, index?: number, list?: T[]) => boolean
-  ): boolean {
+  public Any(predicate: PredicateType<T>): boolean
+  public Any(predicate?: PredicateType<T>): boolean {
     return predicate
       ? this._elements.some(predicate)
       : this._elements.length > 0
@@ -104,12 +115,8 @@ class List<T> {
    * Returns the number of elements in a sequence.
    */
   public Count(): number
-  public Count(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): number
-  public Count(
-    predicate?: (value?: T, index?: number, list?: T[]) => boolean
-  ): number {
+  public Count(predicate: PredicateType<T>): number
+  public Count(predicate?: PredicateType<T>): number {
     return predicate ? this.Where(predicate).Count() : this._elements.length
   }
 
@@ -160,8 +167,12 @@ class List<T> {
   /**
    * Returns the element at a specified index in a sequence or a default value if the index is out of range.
    */
-  public ElementAtOrDefault(index: number): T {
-    return this.ElementAt(index) !== undefined && this.ElementAt(index)
+  public ElementAtOrDefault(index: number): T | null {
+    if (index < this.Count() && index >= 0) {
+      return this._elements[index]
+    } else {
+      return undefined;
+    }
   }
 
   /**
@@ -175,10 +186,8 @@ class List<T> {
    * Returns the first element of a sequence.
    */
   public First(): T
-  public First(predicate: (value?: T, index?: number, list?: T[]) => boolean): T
-  public First(
-    predicate?: (value?: T, index?: number, list?: T[]) => boolean
-  ): T {
+  public First(predicate: PredicateType<T>): T
+  public First(predicate?: PredicateType<T>): T {
     if (this.Count()) {
       return predicate ? this.Where(predicate).First() : this._elements[0]
     } else {
@@ -192,12 +201,8 @@ class List<T> {
    * Returns the first element of a sequence, or a default value if the sequence contains no elements.
    */
   public FirstOrDefault(): T
-  public FirstOrDefault(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): T
-  public FirstOrDefault(
-    predicate?: (value?: T, index?: number, list?: T[]) => boolean
-  ): T {
+  public FirstOrDefault(predicate: PredicateType<T>): T
+  public FirstOrDefault(predicate?: PredicateType<T>): T {
     return this.Count(predicate) ? this.First(predicate) : undefined
   }
 
@@ -293,10 +298,8 @@ class List<T> {
    * Returns the last element of a sequence.
    */
   public Last(): T
-  public Last(predicate: (value?: T, index?: number, list?: T[]) => boolean): T
-  public Last(
-    predicate?: (value?: T, index?: number, list?: T[]) => boolean
-  ): T {
+  public Last(predicate: PredicateType<T>): T
+  public Last(predicate?: PredicateType<T>): T {
     if (this.Count()) {
       return predicate
         ? this.Where(predicate).Last()
@@ -310,12 +313,8 @@ class List<T> {
    * Returns the last element of a sequence, or a default value if the sequence contains no elements.
    */
   public LastOrDefault(): T
-  public LastOrDefault(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): T
-  public LastOrDefault(
-    predicate?: (value?: T, index?: number, list?: T[]) => boolean
-  ): T {
+  public LastOrDefault(predicate: PredicateType<T>): T
+  public LastOrDefault(predicate?: PredicateType<T>): T {
     return this.Count(predicate) ? this.Last(predicate) : undefined
   }
 
@@ -416,9 +415,7 @@ class List<T> {
   /**
    * Removes all the elements that match the conditions defined by the specified predicate.
    */
-  public RemoveAll(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): List<T> {
+  public RemoveAll(predicate: PredicateType<T>): List<T> {
     return this.Where(negate(predicate))
   }
 
@@ -476,9 +473,7 @@ class List<T> {
   /**
    * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
    */
-  public Single(
-    predicate?: (value?: T, index?: number, list?: T[]) => boolean
-  ): T {
+  public Single(predicate?: PredicateType<T>): T {
     if (this.Count(predicate) !== 1) {
       throw new Error('The collection does not contain exactly one element.')
     } else {
@@ -490,9 +485,7 @@ class List<T> {
    * Returns the only element of a sequence, or a default value if the sequence is empty;
    * this method throws an exception if there is more than one element in the sequence.
    */
-  public SingleOrDefault(
-    predicate?: (value?: T, index?: number, list?: T[]) => boolean
-  ): T {
+  public SingleOrDefault(predicate?: PredicateType<T>): T {
     return this.Count(predicate) ? this.Single(predicate) : undefined
   }
 
@@ -504,11 +497,16 @@ class List<T> {
   }
 
   /**
+   * Omit the last specified number of elements in a sequence and then returns the remaining elements.
+   */
+  public SkipLast(amount: number): List<T> {
+    return new List<T>(this._elements.slice(0, -Math.max(0, amount)))
+  }
+
+  /**
    * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
    */
-  public SkipWhile(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): List<T> {
+  public SkipWhile(predicate: PredicateType<T>): List<T> {
     return this.Skip(
       this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
     )
@@ -538,11 +536,16 @@ class List<T> {
   }
 
   /**
+   * Returns a specified number of contiguous elements from the end of a sequence.
+   */
+  public TakeLast(amount: number): List<T> {
+    return new List<T>(this._elements.slice(-Math.max(0, amount)))
+  }
+
+  /**
    * Returns elements from a sequence as long as a specified condition is true.
    */
-  public TakeWhile(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): List<T> {
+  public TakeWhile(predicate: PredicateType<T>): List<T> {
     return this.Take(
       this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
     )
@@ -610,9 +613,7 @@ class List<T> {
   /**
    * Filters a sequence of values based on a predicate.
    */
-  public Where(
-    predicate: (value?: T, index?: number, list?: T[]) => boolean
-  ): List<T> {
+  public Where(predicate: PredicateType<T>): List<T> {
     return new List<T>(this._elements.filter(predicate))
   }
 
