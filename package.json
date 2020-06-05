@@ -4,7 +4,7 @@
   "description": "LinQ + TypeScript",
   "es2015": "index.ts",
   "source": "index.ts",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc",
