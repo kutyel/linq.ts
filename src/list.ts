@@ -221,7 +221,7 @@ class List<T> {
   ): { [key: string]: TResult[] } {
     const initialValue: { [key: string]: TResult[] } = {}
     if (!mapper) {
-      mapper = val => <TResult>(<any>val)
+      mapper = val => (val as unknown) as TResult
     }
     return this.Aggregate((ac, v) => {
       const key = grouper(v)
@@ -375,6 +375,7 @@ class List<T> {
     keySelector: (key: T) => any,
     comparer = keyComparer(keySelector, false)
   ): List<T> {
+    // tslint:disable-next-line: no-use-before-declare
     return new OrderedList<T>(this._elements, comparer)
   }
 
@@ -385,6 +386,7 @@ class List<T> {
     keySelector: (key: T) => any,
     comparer = keyComparer(keySelector, true)
   ): List<T> {
+    // tslint:disable-next-line: no-use-before-declare
     return new OrderedList<T>(this._elements, comparer)
   }
 
