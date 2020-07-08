@@ -1,6 +1,6 @@
 import { composeComparers, negate, isObj, equal, keyComparer } from './helpers'
 
-type PredicateType<T> = (value?: T, index?: number, list?: T[]) => boolean;
+type PredicateType<T> = (value?: T, index?: number, list?: T[]) => boolean
 
 class List<T> {
   protected _elements: T[]
@@ -32,7 +32,6 @@ class List<T> {
   public Prepend(element: T): void {
     this._elements.unshift(element)
   }
-
 
   /**
    * Adds the elements of the specified collection to the end of the List<T>.
@@ -108,7 +107,7 @@ class List<T> {
    * Determines whether an element is in the List<T>.
    */
   public Contains(element: T): boolean {
-    return this._elements.some(x => x === element)
+    return this.Any(x => x === element)
   }
 
   /**
@@ -171,7 +170,7 @@ class List<T> {
     if (index < this.Count() && index >= 0) {
       return this._elements[index]
     } else {
-      return undefined;
+      return undefined
     }
   }
 
@@ -465,9 +464,7 @@ class List<T> {
    * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
    */
   public SequenceEqual(list: List<T>): boolean {
-    return !!this._elements.reduce((x, y, z) =>
-      list._elements[z] === y ? x : undefined
-    )
+    return this.All(e => list.Contains(e))
   }
 
   /**
