@@ -157,9 +157,9 @@ class List<T> {
     if (index < this.Count() && index >= 0) {
       return this._elements[index]
     } else {
-      const MSG =
+      throw new Error(
         'ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source.'
-      throw new Error(MSG)
+      )
     }
   }
 
@@ -167,11 +167,9 @@ class List<T> {
    * Returns the element at a specified index in a sequence or a default value if the index is out of range.
    */
   public ElementAtOrDefault(index: number): T | null {
-    if (index < this.Count() && index >= 0) {
-      return this._elements[index]
-    } else {
-      return undefined
-    }
+    return index < this.Count() && index >= 0
+      ? this._elements[index]
+      : undefined
   }
 
   /**
@@ -217,21 +215,16 @@ class List<T> {
    */
   public GroupBy<TResult = T>(
     grouper: (key: T) => string | number,
-    mapper?: (element: T) => TResult
+    mapper: (element: T) => TResult = val => (val as unknown) as TResult
   ): { [key: string]: TResult[] } {
     const initialValue: { [key: string]: TResult[] } = {}
-    if (!mapper) {
-      mapper = val => (val as unknown) as TResult
-    }
     return this.Aggregate((ac, v) => {
       const key = grouper(v)
       const existingGroup = ac[key]
       const mappedValue = mapper(v)
-      if (existingGroup) {
-        existingGroup.push(mappedValue)
-      } else {
-        ac[key] = [mappedValue]
-      }
+      existingGroup
+        ? existingGroup.push(mappedValue)
+        : (ac[key] = [mappedValue])
       return ac
     }, initialValue)
   }
