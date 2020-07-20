@@ -15,8 +15,8 @@ export const equal = <T, U>(a: T, b: U): boolean =>
  * Creates a function that negates the result of the predicate
  */
 export const negate = <T>(
-  predicate: (value?: T, index?: number, list?: T[]) => boolean
-): any => (...args) => !predicate(...args)
+  pred: (...args: readonly T[]) => boolean
+): ((...args: readonly T[]) => boolean) => (...args) => !pred(...args)
 
 /**
  * Comparer helpers
@@ -29,7 +29,7 @@ export const composeComparers = <T>(
   previousComparer(a, b) || currentComparer(a, b)
 
 export const keyComparer = <T>(
-  _keySelector: (key: T) => any,
+  _keySelector: (key: T) => string,
   descending?: boolean
 ): ((a: T, b: T) => number) => (a: T, b: T) => {
   const sortKeyA = _keySelector(a)
