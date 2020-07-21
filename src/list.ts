@@ -43,10 +43,15 @@ class List<T> {
   /**
    * Applies an accumulator function over a sequence.
    */
-  public Aggregate<U>(
-    accumulator: (accum: U, value?: T, index?: number, list?: T[]) => any,
-    initialValue?: U
-  ): any {
+  public Aggregate(
+    accumulator: (
+      previousValue: T,
+      currentValue: T,
+      currentIndex: number,
+      array: T[]
+    ) => T,
+    initialValue: T
+  ): T {
     return this._elements.reduce(accumulator, initialValue)
   }
 
@@ -79,7 +84,9 @@ class List<T> {
   public Average(
     transform?: (value?: T, index?: number, list?: T[]) => any
   ): number {
-    return this.Sum(transform) / this.Count(transform)
+    return transform
+      ? this.Sum() / this.Count()
+      : this.Sum(transform) / this.Count()
   }
 
   /**
@@ -123,7 +130,7 @@ class List<T> {
    * Returns the elements of the specified sequence or the type parameter's default value
    * in a singleton collection if the sequence is empty.
    */
-  public DefaultIfEmpty(defaultValue?: T): List<T> {
+  public DefaultIfEmpty(defaultValue: T): List<T> {
     return this.Count() ? this : new List<T>([defaultValue])
   }
 
@@ -132,10 +139,10 @@ class List<T> {
    */
   public Distinct(): List<T> {
     return this.Where(
-      (value, index, iter) =>
+      (value, index, iter = []) =>
         (isObj(value)
           ? iter.findIndex(obj => equal(obj, value))
-          : iter.indexOf(value)) === index
+          : iter.indexOf(value ?? ({} as T))) === index
     )
   }
 
@@ -166,7 +173,7 @@ class List<T> {
   /**
    * Returns the element at a specified index in a sequence or a default value if the index is out of range.
    */
-  public ElementAtOrDefault(index: number): T | null {
+  public ElementAtOrDefault(index: number): T | undefined {
     return index < this.Count() && index >= 0
       ? this._elements[index]
       : undefined
@@ -176,7 +183,7 @@ class List<T> {
    * Produces the set difference of two sequences by using the default equality comparer to compare values.
    */
   public Except(source: List<T>): List<T> {
-    return this.Where(x => !source.Contains(x))
+    return this.Where(x => !!x && !source.Contains(x))
   }
 
   /**
@@ -199,8 +206,14 @@ class List<T> {
    */
   public FirstOrDefault(): T
   public FirstOrDefault(predicate: PredicateType<T>): T
-  public FirstOrDefault(predicate?: PredicateType<T>): T {
-    return this.Count(predicate) ? this.First(predicate) : undefined
+  public FirstOrDefault(predicate?: PredicateType<T>): T | undefined {
+    return predicate
+      ? this.Count(predicate)
+        ? this.First(predicate)
+        : undefined
+      : this.Count()
+      ? this.First()
+      : undefined
   }
 
   /**
@@ -269,7 +282,7 @@ class List<T> {
    * Produces the set intersection of two sequences by using the default equality comparer to compare values.
    */
   public Intersect(source: List<T>): List<T> {
-    return this.Where(x => source.Contains(x))
+    return this.Where(x => !!x && source.Contains(x))
   }
 
   /**
@@ -282,7 +295,9 @@ class List<T> {
     result: (first: T, second: U) => any
   ): List<any> {
     return this.SelectMany(x =>
-      list.Where(y => key2(y) === key1(x)).Select(z => result(x, z))
+      list
+        .Where(y => key2(y ?? ({} as U)) === key1(x))
+        .Select(z => result(x, z))
     )
   }
 
@@ -510,14 +525,14 @@ class List<T> {
    */
   public Sum(): number
   public Sum(
-    transform: (value?: T, index?: number, list?: T[]) => number
+    transform: (value: T, index?: number, list?: T[]) => number
   ): number
   public Sum(
-    transform?: (value?: T, index?: number, list?: T[]) => number
+    transform?: (value: T, index?: number, list?: T[]) => number
   ): number {
     return transform
-      ? this.Select(transform).Sum()
-      : this.Aggregate((ac, v) => (ac += +v), 0)
+      ? this.Select(transform).Sum() ?? 0
+      : this.Aggregate<number>((ac, v) => (ac += Number(v)), 0)
   }
 
   /**
