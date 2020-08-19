@@ -233,12 +233,12 @@ class List<T> {
    * Correlates the elements of two sequences based on equality of keys and groups the results.
    * The default equality comparer is used to compare keys.
    */
-  public GroupJoin<U>(
+  public GroupJoin<U, R>(
     list: List<U>,
     key1: (k: T) => any,
     key2: (k: U) => any,
-    result: (first: T, second: List<U>) => any
-  ): List<any> {
+    result: (first: T, second: List<U>) => R
+  ): List<R> {
     return this.Select(x =>
       result(
         x,
@@ -275,12 +275,12 @@ class List<T> {
   /**
    * Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
    */
-  public Join<U>(
+  public Join<U, R>(
     list: List<U>,
     key1: (key: T) => any,
     key2: (key: U) => any,
-    result: (first: T, second: U) => any
-  ): List<any> {
+    result: (first: T, second: U) => R
+  ): List<R> {
     return this.SelectMany(x =>
       list.Where(y => key2(y) === key1(x)).Select(z => result(x, z))
     )
