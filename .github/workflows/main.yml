@@ -1,0 +1,22 @@
+on:
+  - push
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo 
+        uses: actions/checkout@v2
+
+      - name: Node 15.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15.x
+      - name : npm commands
+        run : |
+          npm run cover
+          npm run check-coverage
+          npm run build
+          npm run report-coverage
+          npm run semantic-release
