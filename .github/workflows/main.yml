@@ -1,24 +1,32 @@
-on:
-  - push
+on: ["push", "pull_request"]
+
+name: Test Coveralls
+
 jobs:
 
-  test:
+  build:
+    name: Build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Clone repo 
-        uses: actions/checkout@v2
 
-      - name: Node 15.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 15.x
-      - name : npm commands
-        run : |
-          npm prune
-          npm install
-          npm run cover
-          npm run check-coverage
-          npm run build
-          npm run report-coverage
-          npm run semantic-release
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js 15.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 15.x
+
+    - name: npm install, make test-coverage
+      run: |
+        npm prune
+        npm install
+        npm run cover
+        npm run check-coverage
+        npm run build
+        npm run semantic-release
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        
