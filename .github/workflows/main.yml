@@ -1,0 +1,35 @@
+on: ["push", "pull_request"]
+name: CI Build
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Read .nvmrc
+      run: echo NVMRC=`cat .nvmrc` >> $GITHUB_ENV
+
+    - name: Setup node
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ env.NVMRC }}
+
+    - name: NPM
+      run: |
+        npm prune
+        npm install
+        npm run cover
+        npm run check-coverage
+        npm run build
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Semantic Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: npx semantic-release
