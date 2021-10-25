@@ -164,6 +164,15 @@
       "contributions": [
         "financial"
       ]
+    },
+    {
+      "login": "Mrgove10",
+      "name": "Adrien",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25491408?v=4",
+      "profile": "http://www.adrienrichard.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoType": "github",
