@@ -6,10 +6,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Use Latest Node.js
+    
+    - name: Read .nvmrc
+      run: echo NVMRC=`cat .nvmrc` >> $GITHUB_ENV
+
+    - name: Setup node
       uses: actions/setup-node@v2
       with:
-        node-version: lts/fermium
+        node-version: ${{ env.NVMRC }}
 
     - name: NPM
       run: |
