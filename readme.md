@@ -1,6 +1,6 @@
 # LinQ for TypeScript
 
-[![Build](https://img.shields.io/travis/kutyel/linq.ts/master.svg)](https://travis-ci.org/kutyel/linq.ts)
+[![Build](https://github.com/kutyel/linq.ts/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/kutyel/linq.ts/actions/workflows/main.yml)
 [![Dependencies](https://img.shields.io/david/kutyel/linq.ts.svg)](https://david-dm.org/kutyel/linq.ts)
 [![Coverage Status](https://coveralls.io/repos/github/kutyel/linq.ts/badge.svg?branch=master)](https://coveralls.io/github/kutyel/linq.ts?branch=master)
 [![Downloads](https://img.shields.io/npm/dm/linqts.svg)](https://npmjs.com/package/linqts)
