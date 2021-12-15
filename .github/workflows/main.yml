@@ -1,35 +1,35 @@
-on: ["push", "pull_request"]
+on: ['push', 'pull_request']
 name: CI Build
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Read .nvmrc
-      run: echo NVMRC=`cat .nvmrc` >> $GITHUB_ENV
+      - uses: actions/checkout@v2
 
-    - name: Setup node
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ env.NVMRC }}
+      - name: Read .nvmrc
+        run: echo NVMRC=`cat .nvmrc` >> $GITHUB_ENV
 
-    - name: NPM
-      run: |
-        npm prune
-        npm install
-        npm run cover
-        npm run check-coverage
-        npm run build
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NVMRC }}
+          cache: yarn
 
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Yarn
+        run: |
+          yarn install --immutable --immutable-cache --check-cache
+          yarn run cover
+          yarn run check-coverage
+          yarn run build
 
-    - name: Semantic Release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      run: npx semantic-release
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
