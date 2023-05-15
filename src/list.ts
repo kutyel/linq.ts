@@ -573,8 +573,6 @@ class List<T> {
       ? list.Select((x, y) => result(this.ElementAt(y), x))
       : this.Select((x, y) => result(x, list.ElementAt(y)))
   }
-
-  private map
 }
 
 /**
