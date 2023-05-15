@@ -3,13 +3,30 @@ import { composeComparers, negate, isObj, equal, keyComparer } from './helpers'
 type PredicateType<T> = (value?: T, index?: number, list?: T[]) => boolean
 
 class List<T> {
+
   protected _elements: T[]
+
+  /**
+   * Make the List iterable and Spreadable
+   */
+  *[Symbol.iterator]() {
+    for (let element of this._elements) {
+      yield element;
+    }
+  }
+
+  /**
+   * property represents the Object name
+   */
+  get [Symbol.toStringTag]() {
+    return 'List'; // Expected output: "[object List]"
+  }
 
   /**
    * Defaults the elements of the list
    */
   constructor(elements: T[] = []) {
-    this._elements = elements
+    this._elements = [...elements];
   }
 
   /**
@@ -43,10 +60,7 @@ class List<T> {
   /**
    * Applies an accumulator function over a sequence.
    */
-  public Aggregate<U>(
-    accumulator: (accum: U, value?: T, index?: number, list?: T[]) => any,
-    initialValue?: U
-  ): any {
+  public Aggregate<U>(accumulator: (accum: U, value?: T, index?: number, list?: T[]) => any, initialValue?: U): any {
     return this._elements.reduce(accumulator, initialValue)
   }
 
@@ -60,8 +74,6 @@ class List<T> {
   /**
    * Determines whether a sequence contains any elements.
    */
-  public Any(): boolean
-  public Any(predicate: PredicateType<T>): boolean
   public Any(predicate?: PredicateType<T>): boolean {
     return predicate
       ? this._elements.some(predicate)
@@ -72,13 +84,7 @@ class List<T> {
    * Computes the average of a sequence of number values that are obtained by invoking
    * a transform function on each element of the input sequence.
    */
-  public Average(): number
-  public Average(
-    transform: (value?: T, index?: number, list?: T[]) => any
-  ): number
-  public Average(
-    transform?: (value?: T, index?: number, list?: T[]) => any
-  ): number {
+  public Average(transform?: (value?: T, index?: number, list?: T[]) => any): number {
     return this.Sum(transform) / this.Count(transform)
   }
 
@@ -113,10 +119,10 @@ class List<T> {
   /**
    * Returns the number of elements in a sequence.
    */
-  public Count(): number
-  public Count(predicate: PredicateType<T>): number
   public Count(predicate?: PredicateType<T>): number {
-    return predicate ? this.Where(predicate).Count() : this._elements.length
+    return predicate
+      ? this.Where(predicate).Count()
+      : this._elements.length
   }
 
   /**
@@ -124,7 +130,9 @@ class List<T> {
    * in a singleton collection if the sequence is empty.
    */
   public DefaultIfEmpty(defaultValue?: T): List<T> {
-    return this.Count() ? this : new List<T>([defaultValue])
+    return this.Count()
+      ? this
+      : new List<T>([defaultValue])
   }
 
   /**
@@ -156,11 +164,8 @@ class List<T> {
   public ElementAt(index: number): T {
     if (index < this.Count() && index >= 0) {
       return this._elements[index]
-    } else {
-      throw new Error(
-        'ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source.'
-      )
     }
+    throw new Error('ArgumentOutOfRangeException: index is less than 0 or greater than or equal to the number of elements in source.')
   }
 
   /**
@@ -182,23 +187,16 @@ class List<T> {
   /**
    * Returns the first element of a sequence.
    */
-  public First(): T
-  public First(predicate: PredicateType<T>): T
   public First(predicate?: PredicateType<T>): T {
     if (this.Count()) {
       return predicate ? this.Where(predicate).First() : this._elements[0]
-    } else {
-      throw new Error(
-        'InvalidOperationException: The source sequence is empty.'
-      )
     }
+    throw new Error('InvalidOperationException: The source sequence is empty.')
   }
 
   /**
    * Returns the first element of a sequence, or a default value if the sequence contains no elements.
    */
-  public FirstOrDefault(): T
-  public FirstOrDefault(predicate: PredicateType<T>): T
   public FirstOrDefault(predicate?: PredicateType<T>): T {
     return this.Count(predicate) ? this.First(predicate) : undefined
   }
@@ -281,31 +279,24 @@ class List<T> {
     key2: (key: U) => any,
     result: (first: T, second: U) => R
   ): List<R> {
-    return this.SelectMany(x =>
-      list.Where(y => key2(y) === key1(x)).Select(z => result(x, z))
-    )
+    return this.SelectMany(x => list.Where(y => key2(y) === key1(x)).Select(z => result(x, z)))
   }
 
   /**
    * Returns the last element of a sequence.
    */
-  public Last(): T
-  public Last(predicate: PredicateType<T>): T
   public Last(predicate?: PredicateType<T>): T {
     if (this.Count()) {
       return predicate
         ? this.Where(predicate).Last()
         : this._elements[this.Count() - 1]
-    } else {
-      throw Error('InvalidOperationException: The source sequence is empty.')
     }
+    throw Error('InvalidOperationException: The source sequence is empty.')
   }
 
   /**
    * Returns the last element of a sequence, or a default value if the sequence contains no elements.
    */
-  public LastOrDefault(): T
-  public LastOrDefault(predicate: PredicateType<T>): T
   public LastOrDefault(predicate?: PredicateType<T>): T {
     return this.Count(predicate) ? this.Last(predicate) : undefined
   }
@@ -313,11 +304,7 @@ class List<T> {
   /**
    * Returns the maximum value in a generic sequence.
    */
-  public Max(): number
-  public Max(selector: (value: T, index: number, array: T[]) => number): number
-  public Max(
-    selector?: (value: T, index: number, array: T[]) => number
-  ): number {
+  public Max(selector?: (value: T, index: number, array: T[]) => number): number {
     const id = x => x
     return Math.max(...this._elements.map(selector || id))
   }
@@ -325,11 +312,7 @@ class List<T> {
   /**
    * Returns the minimum value in a generic sequence.
    */
-  public Min(): number
-  public Min(selector: (value: T, index: number, array: T[]) => number): number
-  public Min(
-    selector?: (value: T, index: number, array: T[]) => number
-  ): number {
+  public Min(selector?: (value: T, index: number, array: T[]) => number): number {
     const id = x => x
     return Math.min(...this._elements.map(selector || id))
   }
@@ -338,7 +321,7 @@ class List<T> {
    * Filters the elements of a sequence based on a specified type.
    */
   public OfType<U>(type: any): List<U> {
-    let typeName
+    let typeName: string
     switch (type) {
       case Number:
         typeName = typeof 0
@@ -350,7 +333,7 @@ class List<T> {
         typeName = typeof true
         break
       case Function:
-        typeName = typeof function() {} // tslint:disable-line no-empty
+        typeName = typeof function () { } // tslint:disable-line no-empty
         break
       default:
         typeName = null
@@ -364,10 +347,7 @@ class List<T> {
   /**
    * Sorts the elements of a sequence in ascending order according to a key.
    */
-  public OrderBy(
-    keySelector: (key: T) => any,
-    comparer = keyComparer(keySelector, false)
-  ): List<T> {
+  public OrderBy(keySelector: (key: T) => any, comparer = keyComparer(keySelector, false)): List<T> {
     // tslint:disable-next-line: no-use-before-declare
     return new OrderedList<T>(this._elements, comparer)
   }
@@ -375,10 +355,7 @@ class List<T> {
   /**
    * Sorts the elements of a sequence in descending order according to a key.
    */
-  public OrderByDescending(
-    keySelector: (key: T) => any,
-    comparer = keyComparer(keySelector, true)
-  ): List<T> {
+  public OrderByDescending(keySelector: (key: T) => any, comparer = keyComparer(keySelector, true)): List<T> {
     // tslint:disable-next-line: no-use-before-declare
     return new OrderedList<T>(this._elements, comparer)
   }
@@ -430,18 +407,14 @@ class List<T> {
   /**
    * Projects each element of a sequence into a new form.
    */
-  public Select<TOut>(
-    selector: (element: T, index: number) => TOut
-  ): List<TOut> {
+  public Select<TOut>(selector: (element: T, index: number) => TOut): List<TOut> {
     return new List<TOut>(this._elements.map(selector))
   }
 
   /**
    * Projects each element of a sequence to a List<any> and flattens the resulting sequences into one sequence.
    */
-  public SelectMany<TOut extends List<any>>(
-    selector: (element: T, index: number) => TOut
-  ): TOut {
+  public SelectMany<TOut extends List<any>>(selector: (element: T, index: number) => TOut): TOut {
     return this.Aggregate(
       (ac, _, i) => (
         ac.AddRange(
@@ -468,9 +441,8 @@ class List<T> {
   public Single(predicate?: PredicateType<T>): T {
     if (this.Count(predicate) !== 1) {
       throw new Error('The collection does not contain exactly one element.')
-    } else {
-      return this.First(predicate)
     }
+    return this.First(predicate)
   }
 
   /**
@@ -478,7 +450,9 @@ class List<T> {
    * this method throws an exception if there is more than one element in the sequence.
    */
   public SingleOrDefault(predicate?: PredicateType<T>): T {
-    return this.Count(predicate) ? this.Single(predicate) : undefined
+    return this.Count(predicate)
+      ? this.Single(predicate)
+      : undefined
   }
 
   /**
@@ -508,13 +482,7 @@ class List<T> {
    * Computes the sum of the sequence of number values that are obtained by invoking
    * a transform function on each element of the input sequence.
    */
-  public Sum(): number
-  public Sum(
-    transform: (value?: T, index?: number, list?: T[]) => number
-  ): number
-  public Sum(
-    transform?: (value?: T, index?: number, list?: T[]) => number
-  ): number {
+  public Sum(transform?: (value?: T, index?: number, list?: T[]) => number): number {
     return transform
       ? this.Select(transform).Sum()
       : this.Aggregate((ac, v) => (ac += +v), 0)
@@ -553,23 +521,14 @@ class List<T> {
   /**
    * Creates a Dictionary<TKey, TValue> from a List<T> according to a specified key selector function.
    */
-  public ToDictionary<TKey>(
-    key: (key: T) => TKey
-  ): List<{ Key: TKey; Value: T }>
-  public ToDictionary<TKey, TValue>(
-    key: (key: T) => TKey,
-    value: (value: T) => TValue
-  ): List<{ Key: TKey; Value: T | TValue }>
-  public ToDictionary<TKey, TValue>(
-    key: (key: T) => TKey,
-    value?: (value: T) => TValue
-  ): List<{ Key: TKey; Value: T | TValue }> {
+  public ToDictionary<TKey, TValue>(key: (key: T) => TKey, value?: (value: T) => TValue): List<{ Key: TKey; Value: T | TValue }> {
     return this.Aggregate((dicc, v, i) => {
       dicc[
         this.Select(key)
           .ElementAt(i)
           .toString()
       ] = value ? this.Select(value).ElementAt(i) : v
+
       dicc.Add({
         Key: this.Select(key).ElementAt(i),
         Value: value ? this.Select(value).ElementAt(i) : v
@@ -588,10 +547,7 @@ class List<T> {
   /**
    * Creates a Lookup<TKey, TElement> from an IEnumerable<T> according to specified key selector and element selector functions.
    */
-  public ToLookup<TResult>(
-    keySelector: (key: T) => string | number,
-    elementSelector: (element: T) => TResult
-  ): { [key: string]: TResult[] } {
+  public ToLookup<TResult>(keySelector: (key: T) => string | number, elementSelector: (element: T) => TResult): { [key: string]: TResult[] } {
     return this.GroupBy(keySelector, elementSelector)
   }
 
@@ -612,14 +568,13 @@ class List<T> {
   /**
    * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
    */
-  public Zip<U, TOut>(
-    list: List<U>,
-    result: (first: T, second: U) => TOut
-  ): List<TOut> {
+  public Zip<U, TOut>(list: List<U>, result: (first: T, second: U) => TOut): List<TOut> {
     return list.Count() < this.Count()
       ? list.Select((x, y) => result(this.ElementAt(y), x))
       : this.Select((x, y) => result(x, list.ElementAt(y)))
   }
+
+  private map
 }
 
 /**

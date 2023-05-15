@@ -81,6 +81,41 @@ class Product implements IProduct {
   }
 }
 
+test('Iterator', t => {
+  const pets = new List<Pet>([
+    new Pet({ Age: 10, Name: 'Barley' }),
+    new Pet({ Age: 4, Name: 'Boots' }),
+    new Pet({ Age: 6, Name: 'Bissy' })
+  ])
+
+  for (const pet of pets) {
+    // determine whether all pet names
+    // in the array start with 'B'.
+    t.true(pet.Name.startsWith('B'))
+  }
+})
+
+test('Spread', t => {
+  const pets = new List<Pet>([
+    new Pet({ Age: 10, Name: 'Barley' }),
+    new Pet({ Age: 4, Name: 'Boots' }),
+    new Pet({ Age: 6, Name: 'Bissy' })
+  ])
+  const petsCopy = [...pets];
+  for (const pet of petsCopy) {
+    // determine whether all pet names
+    // in the array start with 'B'.
+    t.true(pet.Name.startsWith('B'))
+  }
+})
+
+test('toStringTag', t => {
+  const pets = new List<Pet>([])
+  t.true(pets.toString() === '[object List]')
+  t.true(`${pets}` === '[object List]')
+})
+
+
 test('Add', t => {
   const list = new List<string>()
   list.Add('hey')
@@ -885,7 +920,7 @@ test('ToDictionary', t => {
     { Age: 25, Name: 'Alice' },
     { Age: 50, Name: 'Bob' }
   ])
-  const dictionary = people.ToDictionary(x => x.Name)
+  const dictionary = people.ToDictionary<string, IPerson>(x => x.Name)
   t.deepEqual(dictionary['Bob'], { Age: 50, Name: 'Bob' })
   t.is(dictionary['Bob'].Age, 50)
   const dictionary2 = people.ToDictionary(x => x.Name, y => y.Age)
