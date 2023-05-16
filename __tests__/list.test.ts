@@ -619,6 +619,39 @@ test('OrderByDescending', t => {
       .ToArray(),
     [6, 5, 4, 3, 2, 1]
   )
+
+  // sorting with custom comparer function
+  const items = new List([
+    new Product({ Name: 'Edward', Code: 21 }),
+    new Product({ Name: 'Sharpe', Code: 37 }),
+    new Product({ Name: 'And', Code: 45 }),
+    new Product({ Name: 'The', Code: -12 }),
+    new Product({ Name: 'Magnetic', Code: 13 }),
+    new Product({ Name: 'Zeros', Code: 37 })
+  ])
+
+  const nameComparerFn = (a: IProduct, b: IProduct) => {
+    const nameA = a.Name.toUpperCase() // ignore upper and lowercase
+    const nameB = b.Name.toUpperCase() // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1
+    }
+    if (nameA > nameB) {
+      return 1
+    }
+
+    // names must be equal
+    return 0
+  }
+  const ordered = new List([
+    new Product({ Name: 'And', Code: 45 }),
+    new Product({ Name: 'Edward', Code: 21 }),
+    new Product({ Name: 'Magnetic', Code: 13 }),
+    new Product({ Name: 'Sharpe', Code: 37 }),
+    new Product({ Name: 'The', Code: -12 }),
+    new Product({ Name: 'Zeros', Code: 37 })
+  ])
+  t.deepEqual(items.OrderByDescending(a => a, nameComparerFn).ToList(), ordered)
 })
 
 test('ThenBy', t => {
@@ -1074,15 +1107,15 @@ test('ToLookup', t => {
   t.deepEqual(lookup, result)
 })
 
-test.skip('Union', t => {
+test('Union', t => {
   const ints1 = new List<number>([5, 3, 9, 7, 5, 9, 3, 7])
   const ints2 = new List<number>([8, 3, 6, 4, 4, 9, 1, 0])
   t.deepEqual(ints1.Union(ints2).ToArray(), [5, 3, 9, 7, 8, 6, 4, 1, 0])
 
   const result = [
-    { Name: 'apple', Code: 9 },
-    { Name: 'orange', Code: 4 },
-    { Name: 'lemon', Code: 12 }
+    new Product({ Name: 'apple', Code: 9 }),
+    new Product({ Name: 'orange', Code: 4 }),
+    new Product({ Name: 'lemon', Code: 12 })
   ]
   const store1 = new List<Product>([
     new Product({ Name: 'apple', Code: 9 }),
