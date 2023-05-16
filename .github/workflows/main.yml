@@ -14,14 +14,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NVMRC }}
-          cache: yarn
 
-      - name: Yarn
+      - name: NPM
         run: |
-          yarn install --immutable --immutable-cache --check-cache
-          yarn run cover
-          yarn run check-coverage
-          yarn run build
+          npm ci
+          npm run cover
+          npm run check-coverage
+          npm run build
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
