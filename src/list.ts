@@ -1,6 +1,6 @@
-import { composeComparers, negate, isObj, equal, keyComparer } from './helpers'
+import { composeComparers, isObj, equal, keyComparer } from './helpers'
 
-type PredicateType<T> = (value?: T, index?: number, list?: T[]) => boolean
+type PredicateType<T> = (value: T, index?: number, list?: T[]) => boolean
 
 class List<T> {
   protected _elements: T[];
@@ -60,8 +60,8 @@ class List<T> {
    * Applies an accumulator function over a sequence.
    */
   public Aggregate<U>(
-    accumulator: (accum: U, value?: T, index?: number, list?: T[]) => any,
-    initialValue?: U
+    accumulator: (accum: U, value: T, index: number, list?: T[]) => any,
+    initialValue: U
   ): any {
     return this._elements.reduce(accumulator, initialValue)
   }
@@ -132,7 +132,7 @@ class List<T> {
    * in a singleton collection if the sequence is empty.
    */
   public DefaultIfEmpty(defaultValue?: T): List<T> {
-    return this.Count() ? this : new List<T>([defaultValue])
+    return this.Count() ? this : new List<T>([defaultValue as T])
   }
 
   /**
@@ -142,8 +142,11 @@ class List<T> {
     return this.Where(
       (value, index, iter) =>
         (isObj(value)
-          ? iter.findIndex(obj => equal(obj, value))
-          : iter.indexOf(value)) === index
+          ? iter &&
+            iter.findIndex(obj =>
+              equal(obj as object, value as Record<string, unknown>)
+            )
+          : iter && iter.indexOf(value)) === index
     )
   }
 
@@ -174,9 +177,7 @@ class List<T> {
    * Returns the element at a specified index in a sequence or a default value if the index is out of range.
    */
   public ElementAtOrDefault(index: number): T | null {
-    return index < this.Count() && index >= 0
-      ? this._elements[index]
-      : undefined
+    return index < this.Count() && index >= 0 ? this._elements[index] : null
   }
 
   /**
@@ -199,8 +200,8 @@ class List<T> {
   /**
    * Returns the first element of a sequence, or a default value if the sequence contains no elements.
    */
-  public FirstOrDefault(predicate?: PredicateType<T>): T {
-    return this.Count(predicate) ? this.First(predicate) : undefined
+  public FirstOrDefault(defaultValue: T): T {
+    return this.Count() ? this.First() : defaultValue
   }
 
   /**
@@ -219,12 +220,18 @@ class List<T> {
   ): { [key: string]: TResult[] } {
     const initialValue: { [key: string]: TResult[] } = {}
     return this.Aggregate((ac, v) => {
-      const key = grouper(v)
-      const existingGroup = ac[key]
-      const mappedValue = mapper(v)
-      existingGroup
-        ? existingGroup.push(mappedValue)
-        : (ac[key] = [mappedValue])
+      if (v !== undefined) {
+        const key = grouper(v)
+        const existingGroup = isObj(ac)
+          ? (ac as { [key: string]: TResult[] })[key]
+          : undefined
+        const mappedValue = mapper(v)
+        if (existingGroup) {
+          existingGroup.push(mappedValue)
+        } else {
+          ;(ac as { [key: string]: TResult[] })[key] = [mappedValue]
+        }
+      }
       return ac
     }, initialValue)
   }
@@ -301,35 +308,31 @@ class List<T> {
   /**
    * Returns the last element of a sequence, or a default value if the sequence contains no elements.
    */
-  public LastOrDefault(predicate?: PredicateType<T>): T {
-    return this.Count(predicate) ? this.Last(predicate) : undefined
+  public LastOrDefault(defaultValue: T): T {
+    return this.Count() ? this.Last() : defaultValue
   }
 
   /**
    * Returns the maximum value in a generic sequence.
    */
-  public Max(
-    selector?: (value: T, index: number, array: T[]) => number
-  ): number {
-    const id = x => x
-    return Math.max(...this._elements.map(selector || id))
+  public Max(selector?: (element: T, index: number) => number): number {
+    const identity = (x: T): number => x as number
+    return Math.max(...this.Select(selector || identity).ToList())
   }
 
   /**
    * Returns the minimum value in a generic sequence.
    */
-  public Min(
-    selector?: (value: T, index: number, array: T[]) => number
-  ): number {
-    const id = x => x
-    return Math.min(...this._elements.map(selector || id))
+  public Min(selector?: (element: T, index: number) => number): number {
+    const identity = (x: T): number => x as number
+    return Math.min(...this.Select(selector || identity).ToList())
   }
 
   /**
    * Filters the elements of a sequence based on a specified type.
    */
   public OfType<U>(type: any): List<U> {
-    let typeName: string
+    let typeName: string | null
     switch (type) {
       case Number:
         typeName = typeof 0
@@ -401,7 +404,7 @@ class List<T> {
    * Removes all the elements that match the conditions defined by the specified predicate.
    */
   public RemoveAll(predicate: PredicateType<T>): List<T> {
-    return this.Where(negate(predicate))
+    return this.Where((value, index, list) => !predicate(value, index, list))
   }
 
   /**
@@ -467,10 +470,9 @@ class List<T> {
    * Returns the only element of a sequence, or a default value if the sequence is empty;
    * this method throws an exception if there is more than one element in the sequence.
    */
-  public SingleOrDefault(predicate?: PredicateType<T>): T {
-    return this.Count(predicate) ? this.Single(predicate) : undefined
+  public SingleOrDefault(defaultValue: T): T {
+    return this.Count() ? this.Single() : defaultValue
   }
-
   /**
    * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
    */
@@ -544,12 +546,10 @@ class List<T> {
     value?: (value: T) => TValue
   ): List<{ Key: TKey; Value: T | TValue }> {
     return this.Aggregate((dicc, v, i) => {
-      dicc[
-        this.Select(key)
-          .ElementAt(i)
-          .toString()
-      ] = value ? this.Select(value).ElementAt(i) : v
-
+      // const dictionaryKey = String(this.Select(key).ElementAt(i))
+      // ;((dicc as unknown) as Record<string, T | TValue>)[dictionaryKey] = value
+      //   ? this.Select(value).ElementAt(i)
+      //   : v
       dicc.Add({
         Key: this.Select(key).ElementAt(i),
         Value: value ? this.Select(value).ElementAt(i) : v

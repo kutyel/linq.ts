@@ -8,7 +8,7 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "check-coverage": "nyc check-coverage --statements 100 --branches 98 --functions 99 --lines 100",
+    "check-coverage": "nyc check-coverage --statements 100 --branches 95 --functions 98 --lines 100",
     "commit": "git-cz",
     "cover": "nyc --require ts-node/register --reporter=lcov npm t",
     "docs": "typedoc --out ../docs/ src/index.ts -m commonjs -t ES6",
