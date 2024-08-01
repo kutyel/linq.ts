@@ -6,17 +6,13 @@ export const isObj = <T>(x: T): boolean => !!x && typeof x === 'object'
 /**
  * Determine if two objects are equal
  */
-export const equal = <T, U>(a: T, b: U): boolean =>
+export const equal = <T extends object, U extends Record<string, unknown>>(
+  a: T,
+  b: U
+): boolean =>
   Object.entries(a).every(([key, val]) =>
-    isObj(val) ? equal(b[key], val) : b[key] === val
+    isObj(val) ? equal(b[key] as T, val) : b[key] === val
   )
-
-/**
- * Creates a function that negates the result of the predicate
- */
-export const negate = <T>(
-  pred: (...args: readonly T[]) => boolean
-): ((...args: readonly T[]) => boolean) => (...args) => !pred(...args)
 
 /**
  * Comparer helpers
