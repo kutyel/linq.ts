@@ -45,7 +45,7 @@
     "@ava/typescript": "^4.0.0",
     "all-contributors-cli": "^6.20.0",
     "ava": "^5.2.0",
-    "commitizen": "^3.1.1",
+    "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^2.1.0",
     "esm": "^3.2.25",
     "ghooks": "^2.0.4",
@@ -57,7 +57,7 @@
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.13.0",
     "tslint-config-standard": "^7.1.0",
-    "typedoc": "^0.17.6",
+    "typedoc": "^0.26.5",
     "typescript": "^5.0.4"
   },
   "config": {
@@ -70,11 +70,11 @@
   },
   "ava": {
     "typescript": {
-			"rewritePaths": {
-				"src/": "build/"
-			},
-			"compile": "tsc"
-		},
+      "rewritePaths": {
+        "src/": "build/"
+      },
+      "compile": "tsc"
+    },
     "require": [
       "ts-node/register"
     ]
