@@ -220,17 +220,14 @@ class List<T> {
   ): { [key: string]: TResult[] } {
     const initialValue: { [key: string]: TResult[] } = {}
     return this.Aggregate((ac, v) => {
-      if (v !== undefined) {
-        const key = grouper(v)
-        const existingGroup = isObj(ac)
-          ? (ac as { [key: string]: TResult[] })[key]
-          : undefined
-        const mappedValue = mapper(v)
-        if (existingGroup) {
-          existingGroup.push(mappedValue)
-        } else {
-          ;(ac as { [key: string]: TResult[] })[key] = [mappedValue]
-        }
+      const key = grouper(v)
+      const existingGroup =
+        isObj(ac) && (ac as { [key: string]: TResult[] })[key]
+      const mappedValue = mapper(v)
+      if (!!existingGroup) {
+        existingGroup.push(mappedValue)
+      } else {
+        ;(ac as { [key: string]: TResult[] })[key] = [mappedValue]
       }
       return ac
     }, initialValue)
@@ -552,7 +549,7 @@ class List<T> {
       //   : v
       dicc.Add({
         Key: this.Select(key).ElementAt(i),
-        Value: value ? this.Select(value).ElementAt(i) : v
+        Value: !!value ? this.Select(value).ElementAt(i) : v
       })
       return dicc
     }, new List<{ Key: TKey; Value: T | TValue }>())

@@ -13,6 +13,11 @@ interface IPerson {
   Age?: number
 }
 
+interface IDriver {
+  Id: number
+  Car: String
+}
+
 interface IPet {
   Name: string
   Age?: number
@@ -395,6 +400,24 @@ test('GroupBy', t => {
       pet => pet.Name
     ),
     result
+  )
+  // example taken from https://stackoverflow.com/a/7325306/2834553
+  const drivers = new List<IDriver>([
+    { Id: 1, Car: 'Ferrari' },
+    { Id: 1, Car: 'BMW' },
+    { Id: 2, Car: 'Audi' }
+  ])
+  const result2 = {
+    '1': ['Ferrari', 'BMW'],
+    '2': ['Audi']
+  }
+  t.deepEqual(
+    drivers.GroupBy(
+      p => p.Id,
+      p => p.Car
+      // (key, g) => ({ [key]: g.ToList() })
+    ),
+    result2
   )
 })
 
@@ -1052,6 +1075,13 @@ test('ToDictionary', t => {
     dictionary.Select(x => x.Value),
     people
   )
+  // example taken from https://stackoverflow.com/a/3611140/2834553
+  const dict = people.ToDictionary(
+    x => x,
+    x => x.Age
+  )
+  t.is(dict.Select(x => x.Value).Max(), 50)
+  t.is(dict.Select(x => x.Value).Min(), 15)
 })
 
 test('ToList', t => {
