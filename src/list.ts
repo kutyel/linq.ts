@@ -342,11 +342,11 @@ class List<T> {
       throw new Error('InvalidOperationException: No comparer available.')
     }
 
-    for (let i = 1; i < this._elements.length; i++) {
-      if (comparerToUse(this._elements[i], maxElem) > 0) {
-        maxElem = this._elements[i];
+    this._elements.forEach(elem => {
+      if (comparerToUse(elem, maxElem) > 0) {
+        maxElem = elem;
       }
-    }
+    })
 
     return maxElem;
   }
@@ -360,17 +360,15 @@ class List<T> {
     let minElem = this._elements[0];
     let comparerToUse = comparer || List.getComparer<T>(minElem);
 
-
     if (!comparerToUse) {
       throw new Error('InvalidOperationException: No comparer available.')
     }
 
-    for (let i = 1; i < this._elements.length; i++) {
-      if (comparerToUse(this._elements[i], minElem) < 0) {
-        minElem = this._elements[i];
+    this._elements.forEach(elem => {
+      if (comparerToUse(elem, minElem) < 0) {
+        minElem = elem;
       }
-    }
-
+    })
     return minElem;
   }
 
