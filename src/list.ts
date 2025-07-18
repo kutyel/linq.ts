@@ -311,7 +311,7 @@ class List<T> {
 
   // A map of built-in primitive type names to their default comparison functions.
   // This supports number, string, and boolean only
-  private static readonly comparers = new Map<string | Function, (a: any, b: any) => number>([
+  private static readonly comparers = new Map<string, Function>([
     ['number', (a: number, b: number) => a - b],
     ['string', (a: string, b: string) => a.localeCompare(b)],
     ['boolean', (a: boolean, b: boolean) => Number(a) - Number(b)]
