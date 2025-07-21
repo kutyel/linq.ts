@@ -328,11 +328,41 @@ class List<T> {
     const type = typeof sample;
     return List.comparers.get(type) as (a: T, b: T) => number;
   }
+  
+  /**
+   * Returns the maximum value in a generic sequence.
+   * @param selector - An optional function to extract a comparable value from each element.
+   */
+  public Max<R>(selector?: (element: T) => R): R | undefined {
+    if (this._elements.length === 0) return undefined;
+
+    if (!selector) {
+      return this.MaxWithComparer() as R |undefined;
+    }
+
+    let elements = this._elements.map(selector);
+    
+    let maxElem = elements[0];
+    let comparerToUse = List.getComparer<R>(maxElem);
+ 
+    if (!comparerToUse) {
+      throw new Error('InvalidOperationException: No comparer available.')
+    }
+
+    elements.forEach(elem => {
+      if (comparerToUse(elem, maxElem) > 0) {
+        maxElem = elem;
+      }
+    })
+
+    return maxElem;
+  }
 
   /**
    * Returns the maximum value in a generic sequence.
+   * @param comparer - An optional function to compare elements.
    */
-  public Max(comparer?: (element: T) => number): T | undefined {
+    public MaxWithComparer(comparer?: (element: T) => number): T | undefined {
     if (this._elements.length === 0) return undefined;
 
     let maxElem = this._elements[0];
@@ -353,8 +383,38 @@ class List<T> {
 
   /**
    * Returns the minimum value in a generic sequence.
+   * @param selector - An optional function to extract a comparable value from each element.
    */
-  public Min(comparer?: (element: T) => number): T | undefined {
+  public Min<R>(selector?: (element: T) => R): R | undefined {
+    if (this._elements.length === 0) return undefined;
+
+    if (!selector) {
+      return this.MinWithComparer() as R |undefined;
+    }
+
+    let elements = this._elements.map(selector);
+    
+    let minElem = elements[0];
+    let comparerToUse = List.getComparer<R>(minElem);
+ 
+    if (!comparerToUse) {
+      throw new Error('InvalidOperationException: No comparer available.')
+    }
+
+    elements.forEach(elem => {
+      if (comparerToUse(elem, minElem) < 0) {
+        minElem = elem;
+      }
+    })
+
+    return minElem;
+  }
+
+  /**
+   * Returns the minimum value in a generic sequence.
+   * @param comparer - An optional function to compare elements.
+   */
+    public MinWithComparer(comparer?: (element: T) => number): T | undefined {
     if (this._elements.length === 0) return undefined;
 
     let minElem = this._elements[0];
@@ -369,6 +429,7 @@ class List<T> {
         minElem = elem;
       }
     })
+
     return minElem;
   }
 

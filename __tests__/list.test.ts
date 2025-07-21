@@ -561,6 +561,7 @@ test('LastOrDefault', t => {
   t.is(new List<string>().LastOrDefault('default'), 'default')
 })
 
+
 test('Max', t => {
   const people = new List<IPerson>([
     { Age: 15, Name: 'Cathy' },
@@ -569,7 +570,7 @@ test('Max', t => {
   ])
   t.is(
     people.Max(x => x.Age ?? 0),
-    people.Last()
+    50
   )
   t.is(
     new List<number>([1, 2, 3, 4, 5]).Max(),
@@ -585,6 +586,18 @@ test('Max_undefinedComparer', t => {
   ])
 
   t.throws(() => people.Max(), {
+    message: /InvalidOperationException: No comparer available./
+  })
+})
+
+test('Max_withSelector_undefinedComparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  t.throws(() => people.Max(c=> new Object()), {
     message: /InvalidOperationException: No comparer available./
   })
 })
@@ -637,16 +650,17 @@ test('Max_boolean', t => {
 
 test('Min', t => {
   const people = new List<IPerson>([
+    { Age: 50, Name: 'Bob' },
     { Age: 15, Name: 'Cathy' },
-    { Age: 25, Name: 'Alice' },
-    { Age: 50, Name: 'Bob' }
+    { Age: 25, Name: 'Alice' }
+    
   ])
   t.is(
     people.Min(x => x.Age ?? 0),
-    people.First()
+    15
   )
   t.is(
-    new List<number>([1, 2, 3, 4, 5]).Min(),
+    new List<number>([5, 4, 3, 2, 1]).Min(),
     1
   )
 })
@@ -660,6 +674,18 @@ test('Min_undefinedComparer', t => {
   ])
 
   t.throws(() => people.Min(), {
+    message: /InvalidOperationException: No comparer available./
+  })
+})
+
+test('Min_withSelector_undefinedComparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  t.throws(() => people.Min(c=> new Object()), {
     message: /InvalidOperationException: No comparer available./
   })
 })
@@ -706,6 +732,155 @@ test('Min_boolean', t => {
   ])
   t.is(
     bools.Min(),
+    false
+  )
+})
+
+test('MaxWithComparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+  t.is(
+    people.MaxWithComparer(x => x.Age ?? 0),
+    people.Last()
+  )
+  t.is(
+    new List<number>([1, 2, 3, 4, 5]).Max(),
+    5
+  )
+})
+
+test('MaxWithComparer_undefinedComparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  t.throws(() => people.MaxWithComparer(), {
+    message: /InvalidOperationException: No comparer available./
+  })
+})
+
+test('MaxWithComparer_emptyElements', t => {
+  const people = new List<IPerson>([])
+
+  t.is(
+    people.MaxWithComparer(),
+    undefined
+  )
+})
+
+test('MaxWithComparer_number', t => {
+  const nums = new List<number>([
+    10,
+    5,
+    -5
+  ])
+  t.is(
+    nums.MaxWithComparer(),
+    10
+  )
+})
+
+test('MaxWithComparer_string', t => {
+  const people = new List<string>([
+    'Cathy',
+    'Alice',
+    'Bob'
+  ])
+  t.is(
+    people.MaxWithComparer(),
+    'Cathy'
+  )
+})
+
+test('MaxWithComparer_boolean', t => {
+  const bools = new List<boolean>([
+    true,
+    false,
+    true,
+    false
+  ])
+  t.is(
+    bools.MaxWithComparer(),
+    true
+  )
+})
+
+test('MinWithComparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+  t.is(
+    people.MinWithComparer(x => x.Age ?? 0),
+    people.First()
+  )
+  t.is(
+    new List<number>([1, 2, 3, 4, 5]).Min(),
+    1
+  )
+})
+
+
+test('MinWithComparer_undefinedComparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  t.throws(() => people.MinWithComparer(), {
+    message: /InvalidOperationException: No comparer available./
+  })
+})
+
+test('MinWithComparer_emptyElements', t => {
+  const people = new List<IPerson>([])
+
+  t.is(
+    people.MinWithComparer(),
+    undefined
+  )
+})
+
+test('MinWithComparer_number', t => {
+  const nums = new List<number>([
+    10,
+    5,
+    -5
+  ])
+  t.is(
+    nums.MinWithComparer(),
+    -5
+  )
+})
+
+test('MinWithComparer_string', t => {
+  const people = new List<string>([
+    'Cathy',
+    'Alice',
+    'Bob'
+  ])
+  t.is(
+    people.MinWithComparer(),
+    'Alice'
+  )
+})
+
+test('MinWithComparer_boolean', t => {
+  const bools = new List<boolean>([
+    true,
+    false,
+    true,
+    false
+  ])
+  t.is(
+    bools.MinWithComparer(),
     false
   )
 })
@@ -1177,12 +1352,12 @@ test('ToDictionary', t => {
   // t.is(dictionary2['Alice'], 25)
   // Dictionary should behave just like in C#
   t.is(
-    dictionary.Max(x => x?.Value?.Age ?? 0)?.Value,
-    people.Last()
+    dictionary.Max(x => x?.Value?.Age ?? 0),
+    50
   )
   t.is(
-    dictionary.Min(x => x?.Value?.Age ?? 0)?.Value,
-    people.First()
+    dictionary.Min(x => x?.Value?.Age ?? 0),
+    15
   )
   const expectedKeys = new List(['Cathy', 'Alice', 'Bob'])
   t.deepEqual(
