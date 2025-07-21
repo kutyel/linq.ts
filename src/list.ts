@@ -309,20 +309,67 @@ class List<T> {
     return this.Count() ? this.Last() : defaultValue
   }
 
+  // A map of built-in primitive type names to their default comparison functions.
+  // This supports number, string, and boolean only
+  private static readonly comparers = new Map<string, Function>([
+    ['number', (a: number, b: number) => a - b],
+    ['string', (a: string, b: string) => a.localeCompare(b)],
+    ['boolean', (a: boolean, b: boolean) => Number(a) - Number(b)]
+  ]);
+
+  /**
+ * Retrieves a default comparer function based on the type of the provided sample value.
+ * Only supports primitive types: number, string, and boolean.
+ * 
+ * @param sample - A sample value used to determine its type.
+ * @returns A comparison function suitable for the type of the sample, or undefined if unsupported.
+ */
+  private static getComparer<T>(sample: T): ((a: T, b: T) => number) | undefined {
+    const type = typeof sample;
+    return List.comparers.get(type) as (a: T, b: T) => number;
+  }
+
   /**
    * Returns the maximum value in a generic sequence.
    */
-  public Max(selector?: (element: T, index: number) => number): number {
-    const identity = (x: T): number => x as number
-    return Math.max(...this.Select(selector || identity).ToList())
+  public Max(comparer?: (element: T) => number): T | undefined {
+    if (this._elements.length === 0) return undefined;
+
+    let maxElem = this._elements[0];
+    let comparerToUse = comparer || List.getComparer<T>(maxElem);
+
+    if (!comparerToUse) {
+      throw new Error('InvalidOperationException: No comparer available.')
+    }
+
+    this._elements.forEach(elem => {
+      if (comparerToUse(elem, maxElem) > 0) {
+        maxElem = elem;
+      }
+    })
+
+    return maxElem;
   }
 
   /**
    * Returns the minimum value in a generic sequence.
    */
-  public Min(selector?: (element: T, index: number) => number): number {
-    const identity = (x: T): number => x as number
-    return Math.min(...this.Select(selector || identity).ToList())
+  public Min(comparer?: (element: T) => number): T | undefined {
+    if (this._elements.length === 0) return undefined;
+
+    let minElem = this._elements[0];
+    let comparerToUse = comparer || List.getComparer<T>(minElem);
+
+    if (!comparerToUse) {
+      throw new Error('InvalidOperationException: No comparer available.')
+    }
+
+    this._elements.forEach(elem => {
+      if (comparerToUse(elem, minElem) < 0) {
+        minElem = elem;
+      }
+    })
+    return minElem;
   }
 
   /**

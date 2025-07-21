@@ -569,11 +569,69 @@ test('Max', t => {
   ])
   t.is(
     people.Max(x => x.Age ?? 0),
-    50
+    people.Last()
   )
   t.is(
     new List<number>([1, 2, 3, 4, 5]).Max(),
     5
+  )
+})
+
+test('Max_undefinedComparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  t.throws(() => people.Max(), {
+    message: /InvalidOperationException: No comparer available./
+  })
+})
+
+test('Max_emptyElements', t => {
+  const people = new List<IPerson>([])
+
+  t.is(
+    people.Max(),
+    undefined
+  )
+})
+
+test('Max_number', t => {
+  const nums = new List<number>([
+    10,
+    5,
+    -5
+  ])
+  t.is(
+    nums.Max(),
+    10
+  )
+})
+
+test('Max_string', t => {
+  const people = new List<string>([
+    'Cathy',
+    'Alice',
+    'Bob'
+  ])
+  t.is(
+    people.Max(),
+    'Cathy'
+  )
+})
+
+test('Max_boolean', t => {
+  const bools = new List<boolean>([
+    true,
+    false,
+    true,
+    false
+  ])
+  t.is(
+    bools.Max(),
+    true
   )
 })
 
@@ -585,13 +643,73 @@ test('Min', t => {
   ])
   t.is(
     people.Min(x => x.Age ?? 0),
-    15
+    people.First()
   )
   t.is(
     new List<number>([1, 2, 3, 4, 5]).Min(),
     1
   )
 })
+
+
+test('Min_undefinedComparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  t.throws(() => people.Min(), {
+    message: /InvalidOperationException: No comparer available./
+  })
+})
+
+test('Min_emptyElements', t => {
+  const people = new List<IPerson>([])
+
+  t.is(
+    people.Min(),
+    undefined
+  )
+})
+
+test('Min_number', t => {
+  const nums = new List<number>([
+    10,
+    5,
+    -5
+  ])
+  t.is(
+    nums.Min(),
+    -5
+  )
+})
+
+test('Min_string', t => {
+  const people = new List<string>([
+    'Cathy',
+    'Alice',
+    'Bob'
+  ])
+  t.is(
+    people.Min(),
+    'Alice'
+  )
+})
+
+test('Min_boolean', t => {
+  const bools = new List<boolean>([
+    true,
+    false,
+    true,
+    false
+  ])
+  t.is(
+    bools.Min(),
+    false
+  )
+})
+
 
 test('OfType', t => {
   const pets = new List<Pet>([
@@ -1059,12 +1177,12 @@ test('ToDictionary', t => {
   // t.is(dictionary2['Alice'], 25)
   // Dictionary should behave just like in C#
   t.is(
-    dictionary.Max(x => x?.Value?.Age ?? 0),
-    50
+    dictionary.Max(x => x?.Value?.Age ?? 0)?.Value,
+    people.Last()
   )
   t.is(
-    dictionary.Min(x => x?.Value?.Age ?? 0),
-    15
+    dictionary.Min(x => x?.Value?.Age ?? 0)?.Value,
+    people.First()
   )
   const expectedKeys = new List(['Cathy', 'Alice', 'Bob'])
   t.deepEqual(
