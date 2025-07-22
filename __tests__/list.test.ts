@@ -743,7 +743,7 @@ test('MaxWithComparer', t => {
     { Age: 50, Name: 'Bob' }
   ])
   t.is(
-    people.MaxWithComparer(x => x.Age ?? 0),
+    people.MaxWithComparer((x, y) => (x.Age ?? 0) - (y.Age ?? 0)),
     people.Last()
   )
   t.is(
@@ -817,7 +817,7 @@ test('MinWithComparer', t => {
     { Age: 50, Name: 'Bob' }
   ])
   t.is(
-    people.MinWithComparer(x => x.Age ?? 0),
+    people.MinWithComparer((x, y) => (x.Age ?? 0) - (y.Age ?? 0)),
     people.First()
   )
   t.is(
