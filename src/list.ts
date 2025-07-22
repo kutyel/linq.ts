@@ -362,7 +362,7 @@ class List<T> {
    * Returns the maximum value in a generic sequence.
    * @param comparer - An optional function to compare elements.
    */
-    public MaxWithComparer(comparer?: (element: T) => number): T | undefined {
+    public MaxWithComparer(comparer?: (a: T, b: T) => number): T | undefined {
     if (this._elements.length === 0) return undefined;
 
     let maxElem = this._elements[0];
@@ -414,7 +414,7 @@ class List<T> {
    * Returns the minimum value in a generic sequence.
    * @param comparer - An optional function to compare elements.
    */
-    public MinWithComparer(comparer?: (element: T) => number): T | undefined {
+    public MinWithComparer(comparer?: (a: T, b: T) => number): T | undefined {
     if (this._elements.length === 0) return undefined;
 
     let minElem = this._elements[0];
