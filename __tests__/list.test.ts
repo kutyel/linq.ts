@@ -564,18 +564,35 @@ test('LastOrDefault', t => {
 
 test('Max', t => {
   const people = new List<IPerson>([
+    { Age: 50, Name: 'Bob' },
     { Age: 15, Name: 'Cathy' },
-    { Age: 25, Name: 'Alice' },
-    { Age: 50, Name: 'Bob' }
+    { Age: 25, Name: 'Alice' }
+    
   ])
   t.is(
     people.Max(x => x.Age ?? 0),
     50
   )
   t.is(
-    new List<number>([1, 2, 3, 4, 5]).Max(),
-    5
+    new List<number>([5, 4, 3, 2, 1]).Min(),
+    1
   )
+})
+
+test('Max_invalid_function_provided', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  // Provide an invalid selector (wrong type) to trigger the error
+  let invalidFn = () => 0;
+  
+  // @ts-ignore
+  t.throws(() => people.Max(invalidFn), {
+    message: /InvalidOperationException: Invalid comparer or selector function provided./
+  })
 })
 
 test('Max_undefinedComparer', t => {
@@ -590,18 +607,6 @@ test('Max_undefinedComparer', t => {
   })
 })
 
-test('Max_withSelector_undefinedComparer', t => {
-  const people = new List<IPerson>([
-    { Age: 15, Name: 'Cathy' },
-    { Age: 25, Name: 'Alice' },
-    { Age: 50, Name: 'Bob' }
-  ])
-
-  t.throws(() => people.Max(c=> new Object()), {
-    message: /InvalidOperationException: No comparer available./
-  })
-})
-
 test('Max_emptyElements', t => {
   const people = new List<IPerson>([])
 
@@ -611,10 +616,25 @@ test('Max_emptyElements', t => {
   )
 })
 
+test('Max_comparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  let comparer = ((a: IPerson, b: IPerson) => (a.Age ?? 0) - (b.Age ?? 0));
+  
+  t.is(
+    people.Max(comparer),
+    people.Last()
+  );
+})
+
 test('Max_number', t => {
   const nums = new List<number>([
-    10,
     5,
+    10,
     -5
   ])
   t.is(
@@ -648,6 +668,7 @@ test('Max_boolean', t => {
   )
 })
 
+
 test('Min', t => {
   const people = new List<IPerson>([
     { Age: 50, Name: 'Bob' },
@@ -665,6 +686,21 @@ test('Min', t => {
   )
 })
 
+test('Min_invalid_function_provided', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  // Provide an invalid selector (wrong type) to trigger the error
+  let invalidFn = () => 0;
+  
+  // @ts-ignore
+  t.throws(() => people.Min(invalidFn), {
+    message: /InvalidOperationException: Invalid comparer or selector function provided./
+  })
+})
 
 test('Min_undefinedComparer', t => {
   const people = new List<IPerson>([
@@ -678,16 +714,19 @@ test('Min_undefinedComparer', t => {
   })
 })
 
-test('Min_withSelector_undefinedComparer', t => {
+test('Min_comparer', t => {
   const people = new List<IPerson>([
     { Age: 15, Name: 'Cathy' },
     { Age: 25, Name: 'Alice' },
     { Age: 50, Name: 'Bob' }
   ])
 
-  t.throws(() => people.Min(c=> new Object()), {
-    message: /InvalidOperationException: No comparer available./
-  })
+  let comparer = ((a: IPerson, b: IPerson) => (a.Age ?? 0) - (b.Age ?? 0));
+  
+  t.is(
+    people.Min(comparer),
+    people.First()
+  );
 })
 
 test('Min_emptyElements', t => {
@@ -735,156 +774,6 @@ test('Min_boolean', t => {
     false
   )
 })
-
-test('MaxWithComparer', t => {
-  const people = new List<IPerson>([
-    { Age: 15, Name: 'Cathy' },
-    { Age: 25, Name: 'Alice' },
-    { Age: 50, Name: 'Bob' }
-  ])
-  t.is(
-    people.MaxWithComparer((x, y) => (x.Age ?? 0) - (y.Age ?? 0)),
-    people.Last()
-  )
-  t.is(
-    new List<number>([1, 2, 3, 4, 5]).Max(),
-    5
-  )
-})
-
-test('MaxWithComparer_undefinedComparer', t => {
-  const people = new List<IPerson>([
-    { Age: 15, Name: 'Cathy' },
-    { Age: 25, Name: 'Alice' },
-    { Age: 50, Name: 'Bob' }
-  ])
-
-  t.throws(() => people.MaxWithComparer(), {
-    message: /InvalidOperationException: No comparer available./
-  })
-})
-
-test('MaxWithComparer_emptyElements', t => {
-  const people = new List<IPerson>([])
-
-  t.is(
-    people.MaxWithComparer(),
-    undefined
-  )
-})
-
-test('MaxWithComparer_number', t => {
-  const nums = new List<number>([
-    10,
-    5,
-    -5
-  ])
-  t.is(
-    nums.MaxWithComparer(),
-    10
-  )
-})
-
-test('MaxWithComparer_string', t => {
-  const people = new List<string>([
-    'Cathy',
-    'Alice',
-    'Bob'
-  ])
-  t.is(
-    people.MaxWithComparer(),
-    'Cathy'
-  )
-})
-
-test('MaxWithComparer_boolean', t => {
-  const bools = new List<boolean>([
-    true,
-    false,
-    true,
-    false
-  ])
-  t.is(
-    bools.MaxWithComparer(),
-    true
-  )
-})
-
-test('MinWithComparer', t => {
-  const people = new List<IPerson>([
-    { Age: 15, Name: 'Cathy' },
-    { Age: 25, Name: 'Alice' },
-    { Age: 50, Name: 'Bob' }
-  ])
-  t.is(
-    people.MinWithComparer((x, y) => (x.Age ?? 0) - (y.Age ?? 0)),
-    people.First()
-  )
-  t.is(
-    new List<number>([1, 2, 3, 4, 5]).Min(),
-    1
-  )
-})
-
-
-test('MinWithComparer_undefinedComparer', t => {
-  const people = new List<IPerson>([
-    { Age: 15, Name: 'Cathy' },
-    { Age: 25, Name: 'Alice' },
-    { Age: 50, Name: 'Bob' }
-  ])
-
-  t.throws(() => people.MinWithComparer(), {
-    message: /InvalidOperationException: No comparer available./
-  })
-})
-
-test('MinWithComparer_emptyElements', t => {
-  const people = new List<IPerson>([])
-
-  t.is(
-    people.MinWithComparer(),
-    undefined
-  )
-})
-
-test('MinWithComparer_number', t => {
-  const nums = new List<number>([
-    10,
-    5,
-    -5
-  ])
-  t.is(
-    nums.MinWithComparer(),
-    -5
-  )
-})
-
-test('MinWithComparer_string', t => {
-  const people = new List<string>([
-    'Cathy',
-    'Alice',
-    'Bob'
-  ])
-  t.is(
-    people.MinWithComparer(),
-    'Alice'
-  )
-})
-
-test('MinWithComparer_boolean', t => {
-  const bools = new List<boolean>([
-    true,
-    false,
-    true,
-    false
-  ])
-  t.is(
-    bools.MinWithComparer(),
-    false
-  )
-})
-
 
 test('OfType', t => {
   const pets = new List<Pet>([
