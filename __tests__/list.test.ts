@@ -589,7 +589,6 @@ test('Max_invalid_function_provided', t => {
   // Provide an invalid selector (wrong type) to trigger the error
   let invalidFn = () => 0;
   
-  // @ts-ignore
   t.throws(() => people.Max(invalidFn), {
     message: /InvalidOperationException: Invalid comparer or selector function provided./
   })
@@ -696,7 +695,6 @@ test('Min_invalid_function_provided', t => {
   // Provide an invalid selector (wrong type) to trigger the error
   let invalidFn = () => 0;
   
-  // @ts-ignore
   t.throws(() => people.Min(invalidFn), {
     message: /InvalidOperationException: Invalid comparer or selector function provided./
   })
