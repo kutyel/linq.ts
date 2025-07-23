@@ -330,46 +330,144 @@ class List<T> {
   }
 
   /**
-   * Returns the maximum value in a generic sequence.
+   * Gets the maximum value in a generic sequence.
+   * @returns The maximum value in the sequence, or undefined if the sequence is empty.
    */
-  public Max(comparer?: (element: T) => number): T | undefined {
+  public Max(): T | undefined;
+
+  /**
+ * Gets the maximum value in a generic sequence.
+ * @returns The maximum value in the sequence, or undefined if the sequence is empty.
+ * @param selector - A function to select a value from each element for comparison.
+  */
+  public Max<R>(selector: (e: T) => R): R | undefined;
+
+  /**
+   * Gets the maximum value in a generic sequence.
+   * @returns The maximum value in the sequence, or undefined if the sequence is empty.
+   * @param comparer - A custom comparison function
+   */
+  public Max(comparer: (a: T, b: T) => number): T | undefined;
+
+  /**
+   * Gets the maximum value in a generic sequence.
+   * @returns The maximum value in the sequence, or undefined if the sequence is empty.
+    * @param comparerOrSelector - An optional custom comparison function or a selector function to select a value from each element for comparison.
+   */
+  public Max<R>(
+    comparerOrSelector?: ((a: T, b: T) => number) | ((e: T) => R)
+  ): T | R | undefined {
     if (this._elements.length === 0) return undefined;
 
-    let maxElem = this._elements[0];
-    let comparerToUse = comparer || List.getComparer<T>(maxElem);
+    if (!comparerOrSelector) {
+      // Max(): T | undefined;
+      return this.getMaxElement<T>(this._elements);
+
+    }
+
+    const fn = comparerOrSelector as Function;
+
+    if (!fn || fn.length > 2 || fn.length === 0) {
+      throw new Error('InvalidOperationException: Invalid comparer or selector function provided.')
+    }
+
+    if (fn.length === 1) {
+      // Max<R>(selector: (e: T) => R): R | undefined;
+      return this.getMaxElement<R>(this._elements.map(fn as (e: T) => R));
+    }
+
+    //fn.length === 2
+    // Max(comparer: (a: T, b: T) => number): T | undefined;
+    return this.getMaxElement<T>(this._elements, fn as (a: T, b: T) => number);
+  }
+
+  /**
+   * Returns the maximum value in a generic sequence.
+   * @param elements - The array of elements to find the maximum from.
+   * @param customComparer - An optional custom comparison function.
+   */
+  private getMaxElement<R>(elements: R[], customComparer?: ((a: R, b: R) => number)) {
+    const comparerToUse = customComparer || List.getComparer<R>(elements[0]);
 
     if (!comparerToUse) {
       throw new Error('InvalidOperationException: No comparer available.')
     }
 
-    this._elements.forEach(elem => {
-      if (comparerToUse(elem, maxElem) > 0) {
-        maxElem = elem;
-      }
-    })
+    return elements.reduce(
+      (currentMax, elem) =>
+        comparerToUse(elem, currentMax) > 0 ? elem : currentMax,
+      elements[0]
+    );
+  }
 
-    return maxElem;
+  /**
+   * Gets the minimum value in a generic sequence.
+   * @returns The minimum value in the sequence, or undefined if the sequence is empty.
+   */
+  public Min(): T | undefined;
+
+  /**
+ * Gets the minimum value in a generic sequence.
+ * @returns The minimum value in the sequence, or undefined if the sequence is empty.
+ * @param selector - A function to select a value from each element for comparison.
+  */
+  public Min<R>(selector: (e: T) => R): R | undefined;
+
+  /**
+   * Gets the minimum value in a generic sequence.
+   * @returns The minimum value in the sequence, or undefined if the sequence is empty.
+   * @param comparer - A custom comparison function
+   */
+  public Min(comparer: (a: T, b: T) => number): T | undefined;
+
+  /**
+   * Gets the minimum value in a generic sequence.
+   * @returns The minimum value in the sequence, or undefined if the sequence is empty.
+    * @param comparerOrSelector - An optional custom comparison function or a selector function to select a value from each element for comparison.
+   */
+  public Min<R>(
+    comparerOrSelector?: ((a: T, b: T) => number) | ((e: T) => R)
+  ): T | R | undefined {
+    if (this._elements.length === 0) return undefined;
+
+    if (!comparerOrSelector) {
+      // Min(): T | undefined;
+      return this.getMinElement<T>(this._elements);
+    }
+
+    const fn = comparerOrSelector as Function;
+
+    if (!fn || fn.length > 2 || fn.length === 0) {
+      throw new Error('InvalidOperationException: Invalid comparer or selector function provided.')
+    }
+
+    if (fn.length === 1) {
+      // Min<R>(selector: (e: T) => R): R | undefined;
+      return this.getMinElement<R>(this._elements.map(fn as (e: T) => R));
+    }
+
+    //fn.length === 2
+    // Min(comparer: (a: T, b: T) => number): T | undefined;
+    return this.getMinElement<T>(this._elements, fn as (a: T, b: T) => number);
   }
 
   /**
    * Returns the minimum value in a generic sequence.
+   * @param elements - The array of elements to find the minimum from.
+   * @param customComparer - An optional custom comparison function.
    */
-  public Min(comparer?: (element: T) => number): T | undefined {
-    if (this._elements.length === 0) return undefined;
-
-    let minElem = this._elements[0];
-    let comparerToUse = comparer || List.getComparer<T>(minElem);
+  private getMinElement<R>(elements: R[], customComparer?: ((a: R, b: R) => number)) {
+    const comparerToUse = customComparer || List.getComparer<R>(elements[0]);
 
     if (!comparerToUse) {
       throw new Error('InvalidOperationException: No comparer available.')
     }
 
-    this._elements.forEach(elem => {
-      if (comparerToUse(elem, minElem) < 0) {
-        minElem = elem;
-      }
-    })
-    return minElem;
+    return elements.reduce(
+      (currentMin, elem) =>
+        comparerToUse(elem, currentMin) < 0 ? elem : currentMin,
+      elements[0]
+    );
   }
 
   /**

@@ -561,20 +561,37 @@ test('LastOrDefault', t => {
   t.is(new List<string>().LastOrDefault('default'), 'default')
 })
 
+
 test('Max', t => {
+  const people = new List<IPerson>([
+    { Age: 50, Name: 'Bob' },
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' }
+    
+  ])
+  t.is(
+    people.Max(x => x.Age ?? 0),
+    50
+  )
+  t.is(
+    new List<number>([5, 4, 3, 2, 1]).Min(),
+    1
+  )
+})
+
+test('Max_invalid_function_provided', t => {
   const people = new List<IPerson>([
     { Age: 15, Name: 'Cathy' },
     { Age: 25, Name: 'Alice' },
     { Age: 50, Name: 'Bob' }
   ])
-  t.is(
-    people.Max(x => x.Age ?? 0),
-    people.Last()
-  )
-  t.is(
-    new List<number>([1, 2, 3, 4, 5]).Max(),
-    5
-  )
+
+  // Provide an invalid selector (wrong type) to trigger the error
+  let invalidFn = () => 0;
+  
+  t.throws(() => people.Max(invalidFn), {
+    message: /InvalidOperationException: Invalid comparer or selector function provided./
+  })
 })
 
 test('Max_undefinedComparer', t => {
@@ -598,10 +615,25 @@ test('Max_emptyElements', t => {
   )
 })
 
+test('Max_comparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  let comparer = ((a: IPerson, b: IPerson) => (a.Age ?? 0) - (b.Age ?? 0));
+  
+  t.is(
+    people.Max(comparer),
+    people.Last()
+  );
+})
+
 test('Max_number', t => {
   const nums = new List<number>([
-    10,
     5,
+    10,
     -5
   ])
   t.is(
@@ -635,22 +667,38 @@ test('Max_boolean', t => {
   )
 })
 
+
 test('Min', t => {
+  const people = new List<IPerson>([
+    { Age: 50, Name: 'Bob' },
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' }
+    
+  ])
+  t.is(
+    people.Min(x => x.Age ?? 0),
+    15
+  )
+  t.is(
+    new List<number>([5, 4, 3, 2, 1]).Min(),
+    1
+  )
+})
+
+test('Min_invalid_function_provided', t => {
   const people = new List<IPerson>([
     { Age: 15, Name: 'Cathy' },
     { Age: 25, Name: 'Alice' },
     { Age: 50, Name: 'Bob' }
   ])
-  t.is(
-    people.Min(x => x.Age ?? 0),
-    people.First()
-  )
-  t.is(
-    new List<number>([1, 2, 3, 4, 5]).Min(),
-    1
-  )
-})
 
+  // Provide an invalid selector (wrong type) to trigger the error
+  let invalidFn = () => 0;
+  
+  t.throws(() => people.Min(invalidFn), {
+    message: /InvalidOperationException: Invalid comparer or selector function provided./
+  })
+})
 
 test('Min_undefinedComparer', t => {
   const people = new List<IPerson>([
@@ -662,6 +710,21 @@ test('Min_undefinedComparer', t => {
   t.throws(() => people.Min(), {
     message: /InvalidOperationException: No comparer available./
   })
+})
+
+test('Min_comparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' },
+    { Age: 50, Name: 'Bob' }
+  ])
+
+  let comparer = ((a: IPerson, b: IPerson) => (a.Age ?? 0) - (b.Age ?? 0));
+  
+  t.is(
+    people.Min(comparer),
+    people.First()
+  );
 })
 
 test('Min_emptyElements', t => {
@@ -709,7 +772,6 @@ test('Min_boolean', t => {
     false
   )
 })
-
 
 test('OfType', t => {
   const pets = new List<Pet>([
@@ -1177,12 +1239,12 @@ test('ToDictionary', t => {
   // t.is(dictionary2['Alice'], 25)
   // Dictionary should behave just like in C#
   t.is(
-    dictionary.Max(x => x?.Value?.Age ?? 0)?.Value,
-    people.Last()
+    dictionary.Max(x => x?.Value?.Age ?? 0),
+    50
   )
   t.is(
-    dictionary.Min(x => x?.Value?.Age ?? 0)?.Value,
-    people.First()
+    dictionary.Min(x => x?.Value?.Age ?? 0),
+    15
   )
   const expectedKeys = new List(['Cathy', 'Alice', 'Bob'])
   t.deepEqual(
