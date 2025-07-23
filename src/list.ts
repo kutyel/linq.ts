@@ -387,21 +387,17 @@ class List<T> {
    * @param customComparer - An optional custom comparison function.
    */
   private getMaxElement<R>(elements: R[], customComparer?: ((a: R, b: R) => number)) {
-    let result = elements[0];
-
-    const comparerToUse = customComparer || List.getComparer<R>(result);
+    const comparerToUse = customComparer || List.getComparer<R>(elements[0]);
 
     if (!comparerToUse) {
       throw new Error('InvalidOperationException: No comparer available.')
     }
 
-    elements.forEach(elem => {
-      if (comparerToUse(elem, result) > 0) {
-        result = elem;
-      }
-    });
-
-    return result;
+    return elements.reduce(
+      (currentMax, elem) =>
+        comparerToUse(elem, currentMax) > 0 ? elem : currentMax,
+      elements[0]
+    );
   }
 
   /**
@@ -461,21 +457,17 @@ class List<T> {
    * @param customComparer - An optional custom comparison function.
    */
   private getMinElement<R>(elements: R[], customComparer?: ((a: R, b: R) => number)) {
-    let result = elements[0];
-
-    const comparerToUse = customComparer || List.getComparer<R>(result);
+    const comparerToUse = customComparer || List.getComparer<R>(elements[0]);
 
     if (!comparerToUse) {
       throw new Error('InvalidOperationException: No comparer available.')
     }
 
-    elements.forEach(elem => {
-      if (comparerToUse(elem, result) < 0) {
-        result = elem;
-      }
-    });
-
-    return result;
+    return elements.reduce(
+      (currentMin, elem) =>
+        comparerToUse(elem, currentMin) < 0 ? elem : currentMin,
+      elements[0]
+    );
   }
 
   /**
