@@ -389,7 +389,7 @@ class List<T> {
   private getMaxElement<R>(elements: R[], customComparer?: ((a: R, b: R) => number)) {
     let result = elements[0];
 
-    let comparerToUse = customComparer || List.getComparer<R>(result);
+    const comparerToUse = customComparer || List.getComparer<R>(result);
 
     if (!comparerToUse) {
       throw new Error('InvalidOperationException: No comparer available.')
@@ -463,7 +463,7 @@ class List<T> {
   private getMinElement<R>(elements: R[], customComparer?: ((a: R, b: R) => number)) {
     let result = elements[0];
 
-    let comparerToUse = customComparer || List.getComparer<R>(result);
+    const comparerToUse = customComparer || List.getComparer<R>(result);
 
     if (!comparerToUse) {
       throw new Error('InvalidOperationException: No comparer available.')
