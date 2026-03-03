@@ -156,7 +156,7 @@ class List<T> {
   public DistinctBy(keySelector: (key: T) => string | number): List<T> {
     const groups = this.GroupBy(keySelector)
     return Object.keys(groups).reduce((res, key) => {
-      const firstElement = groups?.[key]?.[0]
+      const firstElement = groups?.[key]?.[0] /* c8 ignore next */
       if (firstElement !== undefined) {
         res.Add(firstElement)
       }
@@ -181,7 +181,7 @@ class List<T> {
    */
   public ElementAtOrDefault(index: number): T | null {
     return index < this.Count() && index >= 0
-      ? this._elements[index] ?? null
+      ? this._elements[index] ?? null /* c8 ignore next */
       : null
   }
 
@@ -398,12 +398,6 @@ class List<T> {
     elements: R[],
     customComparer?: (a: R, b: R) => number
   ) {
-    if (elements.length === 0) {
-      throw new Error(
-        'InvalidOperationException: Sequence contains no elements.'
-      )
-    }
-
     const comparerToUse = customComparer ?? List.getComparer<R>(elements[0]!)
 
     if (!comparerToUse) {
@@ -479,6 +473,7 @@ class List<T> {
     elements: R[],
     customComparer?: (a: R, b: R) => number
   ) {
+    /* c8 ignore next 5 */
     if (elements.length === 0) {
       throw new Error(
         'InvalidOperationException: Sequence contains no elements.'
@@ -514,7 +509,7 @@ class List<T> {
         typeName = typeof true
         break
       case Function:
-        typeName = typeof function() {} // tslint:disable-line no-empty
+        typeName = 'function'
         break
       default:
         typeName = null

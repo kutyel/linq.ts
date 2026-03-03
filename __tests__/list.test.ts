@@ -575,6 +575,7 @@ test('Max', t => {
     new List<number>([5, 4, 3, 2, 1]).Min(),
     1
   )
+  t.is(new List().Max(), undefined)
 })
 
 test('Max_invalid_function_provided', t => {
@@ -1327,4 +1328,14 @@ test('Where().Select()', t => {
       .ToArray(),
     ['4a', '5a']
   )
+})
+
+test('Distinct_nestedObjects', t => {
+  const owner = new Person({ Name: 'Alice', Age: 30 })
+  const pets = new List<Pet>([
+    new Pet({ Age: 1, Name: 'Whiskers', Owner: owner }),
+    new Pet({ Age: 1, Name: 'Whiskers', Owner: owner }),
+    new Pet({ Age: 8, Name: 'Barley' })
+  ])
+  t.is(pets.Distinct().Count(), 2)
 })
