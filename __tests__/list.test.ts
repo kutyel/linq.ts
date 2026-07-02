@@ -1339,3 +1339,98 @@ test('Distinct_nestedObjects', t => {
   ])
   t.is(pets.Distinct().Count(), 2)
 })
+
+class PetList extends List<Pet> {
+  public Vaccinated(): this {
+    return this.Where(pet => pet.Vaccinated)
+  }
+
+  public Puppies(): this {
+    return this.Where(pet => (pet.Age ?? 0) < 2)
+  }
+}
+
+test('DerivedType_FluentChaining', t => {
+  // https://github.com/kutyel/linq.ts/issues/188
+  const pets = new PetList([
+    new Pet({ Age: 1, Name: 'Whiskers', Vaccinated: true }),
+    new Pet({ Age: 8, Name: 'Barley', Vaccinated: true }),
+    new Pet({ Age: 1, Name: 'Boots', Vaccinated: false })
+  ])
+  // derived methods keep chaining after type-preserving operators
+  const result = pets.Vaccinated().Puppies()
+  t.true(result instanceof PetList)
+  t.deepEqual(result.Select(pet => pet.Name).ToArray(), ['Whiskers'])
+})
+
+test('DerivedType_TypePreservingOperators', t => {
+  const barley = new Pet({ Age: 8, Name: 'Barley', Vaccinated: true })
+  const boots = new Pet({ Age: 1, Name: 'Boots', Vaccinated: false })
+  const pets = new PetList([barley, boots])
+  const others = new PetList([boots])
+  t.true(pets.Where(pet => pet.Vaccinated) instanceof PetList)
+  t.true(pets.Concat(others) instanceof PetList)
+  t.true(pets.Distinct() instanceof PetList)
+  t.true(pets.DistinctBy(pet => pet.Name) instanceof PetList)
+  t.true(pets.Except(others) instanceof PetList)
+  t.true(pets.Intersect(others) instanceof PetList)
+  t.true(pets.RemoveAll(pet => pet.Vaccinated) instanceof PetList)
+  t.true(pets.Reverse() instanceof PetList)
+  t.true(pets.Skip(1) instanceof PetList)
+  t.true(pets.SkipLast(1) instanceof PetList)
+  t.true(pets.SkipWhile(pet => pet.Vaccinated) instanceof PetList)
+  t.true(pets.Take(1) instanceof PetList)
+  t.true(pets.TakeLast(1) instanceof PetList)
+  t.true(pets.TakeWhile(pet => pet.Vaccinated) instanceof PetList)
+  t.true(pets.Union(others) instanceof PetList)
+  t.true(new PetList().DefaultIfEmpty(barley) instanceof PetList)
+  t.deepEqual(new PetList().DefaultIfEmpty(barley).ToArray(), [barley])
+})
+
+test('DerivedType_CustomConstructor_CloneWithOverride', t => {
+  class TaggedList extends List<number> {
+    constructor(public Tag: string, elements: number[] = []) {
+      super(elements)
+    }
+
+    protected cloneWith(elements: number[]): this {
+      return new TaggedList(this.Tag, elements) as this
+    }
+  }
+  const numbers = new TaggedList('evens', [1, 2, 3, 4])
+  const result = numbers.Where(x => x % 2 === 0).Take(1)
+  t.true(result instanceof TaggedList)
+  t.is(result.Tag, 'evens')
+  t.deepEqual(result.ToArray(), [2])
+})
+
+test('OrderedList_TypePreservingOperatorsKeepOrdering', t => {
+  const pets = new List<Pet>([
+    new Pet({ Age: 8, Name: 'Barley' }),
+    new Pet({ Age: 4, Name: 'Boots' }),
+    new Pet({ Age: 1, Name: 'Whiskers' }),
+    new Pet({ Age: 6, Name: 'Daisy' })
+  ])
+  const ordered = pets.OrderBy(pet => pet.Age)
+  t.deepEqual(
+    ordered
+      .Where(pet => (pet.Age ?? 0) > 1)
+      .Select(pet => pet.Name)
+      .ToArray(),
+    ['Boots', 'Daisy', 'Barley']
+  )
+  t.deepEqual(
+    ordered
+      .Take(2)
+      .Select(pet => pet.Name)
+      .ToArray(),
+    ['Whiskers', 'Boots']
+  )
+  t.deepEqual(
+    ordered
+      .Skip(2)
+      .Select(pet => pet.Name)
+      .ToArray(),
+    ['Daisy', 'Barley']
+  )
+})

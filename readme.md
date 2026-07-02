@@ -30,6 +30,37 @@ const query = people.Join(pets,
     ({ OwnerName: person.Name, Pet: pet.Name }));
 ```
 
+## Extending `List<T>`
+
+Type-preserving operators (`Where`, `Take`, `Skip`, `Distinct`, `Concat`, `Reverse`, etc.) return the type of the receiver, so subclasses keep their derived type and fluent chaining just works:
+
+```typescript
+class UserList extends List<User> {
+  public Active(): this {
+    return this.Where(user => user.Active);
+  }
+}
+
+const users = new UserList(seedUsers);
+users.Active().Take(10); // still a UserList ✨
+```
+
+New instances are created through a protected `cloneWith(elements: T[]): this` factory that calls the receiver's constructor with the elements array. If your subclass constructor has a different signature, override it:
+
+```typescript
+class TaggedList extends List<number> {
+  constructor(public Tag: string, elements: number[] = []) {
+    super(elements);
+  }
+
+  protected cloneWith(elements: number[]): this {
+    return new TaggedList(this.Tag, elements) as this;
+  }
+}
+```
+
+Projection operators that change the element type (`Select`, `SelectMany`, `Cast`, `OfType`, `GroupBy`, `Join`, `Zip`...) still return a plain `List<TOut>`, since a derived list of a different element type would be meaningless.
+
 ## Demo
 
 ![linqts.gif](https://raw.githubusercontent.com/kutyel/linq/master/linqts.gif)

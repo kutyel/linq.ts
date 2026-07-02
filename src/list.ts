@@ -29,6 +29,20 @@ class List<T> {
   }
 
   /**
+   * Creates a new list of the same type as the receiver, so that
+   * type-preserving operators (Where, Take, Skip, ...) return instances
+   * of the derived class instead of the base List<T>.
+   *
+   * Subclasses whose constructor signature differs from `(elements: T[])`
+   * MUST override this method, otherwise the receiver's constructor is
+   * called with an array as its single argument.
+   */
+  protected cloneWith(elements: T[]): this {
+    const Ctor = this.constructor as new (elements: T[]) => this
+    return new Ctor(elements)
+  }
+
+  /**
    * Adds an object to the end of the List<T>.
    */
   public Add(element: T): void {
@@ -109,8 +123,8 @@ class List<T> {
   /**
    * Concatenates two sequences.
    */
-  public Concat(list: List<T>): List<T> {
-    return new List<T>(this._elements.concat(list.ToArray()))
+  public Concat(list: List<T>): this {
+    return this.cloneWith(this._elements.concat(list.ToArray()))
   }
 
   /**
@@ -131,14 +145,14 @@ class List<T> {
    * Returns the elements of the specified sequence or the type parameter's default value
    * in a singleton collection if the sequence is empty.
    */
-  public DefaultIfEmpty(defaultValue?: T): List<T> {
-    return this.Count() ? this : new List<T>([defaultValue as T])
+  public DefaultIfEmpty(defaultValue?: T): this {
+    return this.Count() ? this : this.cloneWith([defaultValue as T])
   }
 
   /**
    * Returns distinct elements from a sequence by using the default equality comparer to compare values.
    */
-  public Distinct(): List<T> {
+  public Distinct(): this {
     return this.Where(
       (value, index, iter) =>
         (isObj(value)
@@ -153,15 +167,17 @@ class List<T> {
   /**
    * Returns distinct elements from a sequence according to specified key selector.
    */
-  public DistinctBy(keySelector: (key: T) => string | number): List<T> {
+  public DistinctBy(keySelector: (key: T) => string | number): this {
     const groups = this.GroupBy(keySelector)
-    return Object.keys(groups).reduce((res, key) => {
-      const firstElement = groups?.[key]?.[0] /* c8 ignore next */
-      if (firstElement !== undefined) {
-        res.Add(firstElement)
-      }
-      return res
-    }, new List<T>())
+    return this.cloneWith(
+      Object.keys(groups).reduce((res: T[], key) => {
+        const firstElement = groups?.[key]?.[0] /* c8 ignore next */
+        if (firstElement !== undefined) {
+          res.push(firstElement)
+        }
+        return res
+      }, [])
+    )
   }
 
   /**
@@ -188,7 +204,7 @@ class List<T> {
   /**
    * Produces the set difference of two sequences by using the default equality comparer to compare values.
    */
-  public Except(source: List<T>): List<T> {
+  public Except(source: List<T>): this {
     return this.Where(x => !source.Contains(x))
   }
 
@@ -277,7 +293,7 @@ class List<T> {
   /**
    * Produces the set intersection of two sequences by using the default equality comparer to compare values.
    */
-  public Intersect(source: List<T>): List<T> {
+  public Intersect(source: List<T>): this {
     return this.Where(x => source.Contains(x))
   }
 
@@ -568,7 +584,7 @@ class List<T> {
   /**
    * Removes all the elements that match the conditions defined by the specified predicate.
    */
-  public RemoveAll(predicate: PredicateType<T>): List<T> {
+  public RemoveAll(predicate: PredicateType<T>): this {
     return this.Where((value, index, list) => !predicate(value, index, list))
   }
 
@@ -582,8 +598,8 @@ class List<T> {
   /**
    * Reverses the order of the elements in the entire List<T>.
    */
-  public Reverse(): List<T> {
-    return new List<T>(this._elements.reverse())
+  public Reverse(): this {
+    return this.cloneWith(this._elements.reverse())
   }
 
   /**
@@ -641,21 +657,21 @@ class List<T> {
   /**
    * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
    */
-  public Skip(amount: number): List<T> {
-    return new List<T>(this._elements.slice(Math.max(0, amount)))
+  public Skip(amount: number): this {
+    return this.cloneWith(this._elements.slice(Math.max(0, amount)))
   }
 
   /**
    * Omit the last specified number of elements in a sequence and then returns the remaining elements.
    */
-  public SkipLast(amount: number): List<T> {
-    return new List<T>(this._elements.slice(0, -Math.max(0, amount)))
+  public SkipLast(amount: number): this {
+    return this.cloneWith(this._elements.slice(0, -Math.max(0, amount)))
   }
 
   /**
    * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
    */
-  public SkipWhile(predicate: PredicateType<T>): List<T> {
+  public SkipWhile(predicate: PredicateType<T>): this {
     return this.Skip(
       this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
     )
@@ -676,21 +692,21 @@ class List<T> {
   /**
    * Returns a specified number of contiguous elements from the start of a sequence.
    */
-  public Take(amount: number): List<T> {
-    return new List<T>(this._elements.slice(0, Math.max(0, amount)))
+  public Take(amount: number): this {
+    return this.cloneWith(this._elements.slice(0, Math.max(0, amount)))
   }
 
   /**
    * Returns a specified number of contiguous elements from the end of a sequence.
    */
-  public TakeLast(amount: number): List<T> {
-    return new List<T>(this._elements.slice(-Math.max(0, amount)))
+  public TakeLast(amount: number): this {
+    return this.cloneWith(this._elements.slice(-Math.max(0, amount)))
   }
 
   /**
    * Returns elements from a sequence as long as a specified condition is true.
    */
-  public TakeWhile(predicate: PredicateType<T>): List<T> {
+  public TakeWhile(predicate: PredicateType<T>): this {
     return this.Take(
       this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
     )
@@ -743,15 +759,15 @@ class List<T> {
   /**
    * Produces the set union of two sequences by using the default equality comparer.
    */
-  public Union(list: List<T>): List<T> {
+  public Union(list: List<T>): this {
     return this.Concat(list).Distinct()
   }
 
   /**
    * Filters a sequence of values based on a predicate.
    */
-  public Where(predicate: PredicateType<T>): List<T> {
-    return new List<T>(this._elements.filter(predicate))
+  public Where(predicate: PredicateType<T>): this {
+    return this.cloneWith(this._elements.filter(predicate))
   }
 
   /**
@@ -777,6 +793,16 @@ class OrderedList<T> extends List<T> {
   constructor(elements: T[], private _comparer: (a: T, b: T) => number) {
     super(elements)
     this._elements.sort(this._comparer)
+  }
+
+  /**
+   * Keeps the resulting list ordered with the receiver's comparer.
+   * Overridden because the OrderedList constructor signature differs
+   * from the `(elements: T[])` one assumed by the base implementation.
+   * @override
+   */
+  protected cloneWith(elements: T[]): this {
+    return new OrderedList<T>(elements, this._comparer) as this
   }
 
   /**
