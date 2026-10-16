@@ -2,6 +2,45 @@ import { composeComparers, isObj, equal, keyComparer } from './helpers.js'
 
 type PredicateType<T> = (value: T, index?: number, list?: T[]) => boolean
 
+const ownedArrays = new WeakSet<object>()
+
+/**
+ * Marks a freshly allocated array so the List constructor adopts it
+ * instead of copying. Callers must not reuse the array afterwards.
+ * @internal
+ */
+export const own = <T>(elements: T[]): T[] => {
+  // Where, Select, Take, Skip, and Concat already allocated this buffer.
+  // Mark it so the constructor adopts it instead of copying again. Public
+  // new List(arr) still copies caller input.
+  ownedArrays.add(elements)
+  return elements
+}
+
+const elementsOf = <T>(list: List<T>): T[] =>
+  ((list as unknown) as { _elements: T[] })._elements
+
+const indexBy = <U>(
+  elements: readonly U[],
+  keySelector: (item: U) => any
+): Map<any, U[]> => {
+  const groups = new Map<any, U[]>()
+  for (let i = 0; i < elements.length; i++) {
+    const item = elements[i]!
+    const key = keySelector(item)
+    const existing = groups.get(key)
+    if (existing) {
+      existing.push(item)
+    } else {
+      groups.set(key, [item])
+    }
+  }
+  return groups
+}
+
+const countOutOfRange = (): Error =>
+  new Error('ArgumentOutOfRangeException: count is less than 0.')
+
 class List<T> {
   protected _elements: T[];
 
@@ -25,7 +64,12 @@ class List<T> {
    * Defaults the elements of the list
    */
   constructor(elements: T[] = []) {
-    this._elements = [...elements]
+    if (ownedArrays.has(elements)) {
+      ownedArrays.delete(elements)
+      this._elements = elements
+    } else {
+      this._elements = elements.slice()
+    }
   }
 
   /**
@@ -39,7 +83,7 @@ class List<T> {
    */
   protected cloneWith(elements: T[]): this {
     const Ctor = this.constructor as new (elements: T[]) => this
-    return new Ctor(elements)
+    return new Ctor(own(elements))
   }
 
   /**
@@ -67,7 +111,12 @@ class List<T> {
    * Adds the elements of the specified collection to the end of the List<T>.
    */
   public AddRange(elements: T[]): void {
-    this._elements.push(...elements)
+    // Append one element at a time. push(...elements) spreads every element
+    // into one call; engines cap arguments (often ~100,000) and throw
+    // RangeError, appending nothing, past that limit.
+    for (let i = 0; i < elements.length; i++) {
+      this._elements.push(elements[i]!)
+    }
   }
 
   /**
@@ -103,7 +152,18 @@ class List<T> {
   public Average(
     transform?: (value?: T, index?: number, list?: T[]) => any
   ): number {
-    return this.Sum(transform) / this.Count(transform)
+    // One pass: divide Sum by the element count. Sum(transform) /
+    // Count(transform) treated the selector as a predicate, so 0 was
+    // dropped. Empty throws; zeros stay in the count.
+    if (this._elements.length === 0) {
+      throw new Error(
+        'InvalidOperationException: The source sequence is empty.'
+      )
+    }
+    return (
+      this.Sum(transform as (value?: T, index?: number, list?: T[]) => number) /
+      this._elements.length
+    )
   }
 
   /**
@@ -124,7 +184,7 @@ class List<T> {
    * Concatenates two sequences.
    */
   public Concat(list: List<T>): this {
-    return this.cloneWith(this._elements.concat(list.ToArray()))
+    return this.cloneWith(this._elements.concat(elementsOf(list)))
   }
 
   /**
@@ -138,7 +198,20 @@ class List<T> {
    * Returns the number of elements in a sequence.
    */
   public Count(predicate?: PredicateType<T>): number {
-    return predicate ? this.Where(predicate).Count() : this._elements.length
+    if (!predicate) {
+      return this._elements.length
+    }
+    let count = 0
+    const elements = this._elements
+    // Count matches in one pass. Where(predicate).Count() builds a filtered
+    // list just to read .length; this keeps O(1) extra memory and skips
+    // that allocation.
+    for (let i = 0; i < elements.length; i++) {
+      if (predicate(elements[i]!, i, elements)) {
+        count++
+      }
+    }
+    return count
   }
 
   /**
@@ -153,31 +226,53 @@ class List<T> {
    * Returns distinct elements from a sequence by using the default equality comparer to compare values.
    */
   public Distinct(): this {
-    return this.Where(
-      (value, index, iter) =>
-        (isObj(value)
-          ? iter &&
-            iter.findIndex(obj =>
-              equal(obj as object, value as Record<string, unknown>)
-            )
-          : iter && iter.indexOf(value)) === index
-    )
+    const elements = this._elements
+    const result: T[] = []
+    // Primitives go through a Set in one pass.
+    // Where + indexOf/findIndex rescanned each prefix (O(n²)).
+    const seenPrimitives = new Set<T>()
+    for (let i = 0; i < elements.length; i++) {
+      const value = elements[i]!
+      if (isObj(value)) {
+        let duplicate = false
+        for (let j = 0; j < result.length; j++) {
+          if (
+            equal(result[j] as object, value as Record<string, unknown>)
+          ) {
+            duplicate = true
+            break
+          }
+        }
+        if (!duplicate) {
+          result.push(value)
+        }
+      } else if (!seenPrimitives.has(value)) {
+        seenPrimitives.add(value)
+        result.push(value)
+      }
+    }
+    return this.cloneWith(result)
   }
 
   /**
    * Returns distinct elements from a sequence according to specified key selector.
    */
   public DistinctBy(keySelector: (key: T) => string | number): this {
-    const groups = this.GroupBy(keySelector)
-    return this.cloneWith(
-      Object.keys(groups).reduce((res: T[], key) => {
-        const firstElement = groups?.[key]?.[0] /* c8 ignore next */
-        if (firstElement !== undefined) {
-          res.push(firstElement)
-        }
-        return res
-      }, [])
-    )
+    // Distinct keys in one pass. GroupBy stored every element in per-key
+    // arrays, then copied the first of each group; memory tracked the full
+    // input, not the distinct keys. First occurrences stay in order.
+    const seen = new Set<string | number>()
+    const result: T[] = []
+    const elements = this._elements
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i]!
+      const key = keySelector(element)
+      if (!seen.has(key)) {
+        seen.add(key)
+        result.push(element)
+      }
+    }
+    return this.cloneWith(result)
   }
 
   /**
@@ -205,15 +300,38 @@ class List<T> {
    * Produces the set difference of two sequences by using the default equality comparer to compare values.
    */
   public Except(source: List<T>): this {
-    return this.Where(x => !source.Contains(x))
+    const excluded = new Set<T>(elementsOf(source))
+    const result: T[] = []
+    const elements = this._elements
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i]!
+      if (!excluded.has(element)) {
+        result.push(element)
+      }
+    }
+    return this.cloneWith(result)
   }
 
   /**
    * Returns the first element of a sequence.
    */
   public First(predicate?: PredicateType<T>): T {
-    if (this.Count()) {
-      return predicate ? this.Where(predicate).First() : this._elements[0]!
+    const elements = this._elements
+    if (!predicate) {
+      if (elements.length === 0) {
+        throw new Error(
+          'InvalidOperationException: The source sequence is empty.'
+        )
+      }
+      return elements[0]!
+    }
+    // Stop at the first match. The old code filtered the whole list, then
+    // read one element.
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i]!
+      if (predicate(element, i, elements)) {
+        return element
+      }
     }
     throw new Error('InvalidOperationException: The source sequence is empty.')
   }
@@ -264,12 +382,19 @@ class List<T> {
     key2: (k: U) => any,
     result: (first: T, second: List<U>) => R
   ): List<R> {
-    return this.Select(x =>
-      result(
-        x,
-        list.Where(z => key1(x) === key2(z))
-      )
-    )
+    // Index the inner sequence by key once, then scan the outer sequence
+    // once. Nested Where/SelectMany was about n²·m comparisons. Result
+    // order is unchanged.
+    const groups = indexBy(elementsOf(list), key2)
+    const results: R[] = []
+    const elements = this._elements
+    for (let i = 0; i < elements.length; i++) {
+      const item = elements[i]!
+      const matches = groups.get(key1(item))
+      const group = matches ? matches.slice() : []
+      results.push(result(item, new List<U>(own(group))))
+    }
+    return new List<R>(own(results))
   }
 
   /**
@@ -294,7 +419,18 @@ class List<T> {
    * Produces the set intersection of two sequences by using the default equality comparer to compare values.
    */
   public Intersect(source: List<T>): this {
-    return this.Where(x => source.Contains(x))
+    // One Set of the other side; receiver order is kept. Contains on each
+    // element was O(n·m).
+    const included = new Set<T>(elementsOf(source))
+    const result: T[] = []
+    const elements = this._elements
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i]!
+      if (included.has(element)) {
+        result.push(element)
+      }
+    }
+    return this.cloneWith(result)
   }
 
   /**
@@ -306,19 +442,40 @@ class List<T> {
     key2: (key: U) => any,
     result: (first: T, second: U) => R
   ): List<R> {
-    return this.SelectMany(x =>
-      list.Where(y => key2(y) === key1(x)).Select(z => result(x, z))
-    )
+    // Index the inner sequence by key once, then scan the outer sequence once.
+    const groups = indexBy(elementsOf(list), key2)
+    const results: R[] = []
+    const elements = this._elements
+    for (let i = 0; i < elements.length; i++) {
+      const item = elements[i]!
+      const matches = groups.get(key1(item))
+      if (!matches) {
+        continue
+      }
+      for (let j = 0; j < matches.length; j++) {
+        results.push(result(item, matches[j]!))
+      }
+    }
+    return new List<R>(own(results))
   }
 
   /**
    * Returns the last element of a sequence.
    */
   public Last(predicate?: PredicateType<T>): T {
-    if (this.Count()) {
-      return predicate
-        ? this.Where(predicate).Last()
-        : this._elements[this.Count() - 1]!
+    const elements = this._elements
+    if (!predicate) {
+      if (elements.length === 0) {
+        throw Error('InvalidOperationException: The source sequence is empty.')
+      }
+      return elements[elements.length - 1]!
+    }
+    // Walk from the end and stop at the first match.
+    for (let i = elements.length - 1; i >= 0; i--) {
+      const element = elements[i]!
+      if (predicate(element, i, elements)) {
+        return element
+      }
     }
     throw Error('InvalidOperationException: The source sequence is empty.')
   }
@@ -397,12 +554,35 @@ class List<T> {
 
     if (fn.length === 1) {
       // Max<R>(selector: (e: T) => R): R | undefined;
-      return this.getMaxElement<R>(this._elements.map(fn as (e: T) => R))
+      // One pass over the selector, no parallel mapped array. The old code
+      // projected every element into a second list, then walked that list.
+      return this.pickExtreme(fn as (e: T) => R, true)
     }
 
     //fn.length === 2
     // Max(comparer: (a: T, b: T) => number): T | undefined;
     return this.getMaxElement<T>(this._elements, fn as (a: T, b: T) => number)
+  }
+
+  /**
+   * One pass over the source, projecting each element with selector.
+   * chooseMax picks the greater projected value; otherwise the lesser.
+   */
+  private pickExtreme<R>(selector: (element: T) => R, chooseMax: boolean): R {
+    const elements = this._elements
+    let best = selector(elements[0]!)
+    const comparerToUse = List.getComparer<R>(best)
+    if (!comparerToUse) {
+      throw new Error('InvalidOperationException: No comparer available.')
+    }
+    for (let i = 1; i < elements.length; i++) {
+      const candidate = selector(elements[i]!)
+      const comparison = comparerToUse(candidate, best)
+      if (chooseMax ? comparison > 0 : comparison < 0) {
+        best = candidate
+      }
+    }
+    return best
   }
 
   /**
@@ -472,7 +652,9 @@ class List<T> {
 
     if (fn.length === 1) {
       // Min<R>(selector: (e: T) => R): R | undefined;
-      return this.getMinElement<R>(this._elements.map(fn as (e: T) => R))
+      // One pass over the selector, no parallel mapped array. The old code
+      // projected every element into a second list, then walked that list.
+      return this.pickExtreme(fn as (e: T) => R, false)
     }
 
     //fn.length === 2
@@ -592,6 +774,9 @@ class List<T> {
    * Removes the element at the specified index of the List<T>.
    */
   public RemoveAt(index: number): void {
+    if (index < 0 || index >= this._elements.length) {
+      throw new Error('Index is out of range.')
+    }
     this._elements.splice(index, 1)
   }
 
@@ -599,7 +784,10 @@ class List<T> {
    * Reverses the order of the elements in the entire List<T>.
    */
   public Reverse(): this {
-    return this.cloneWith(this._elements.reverse())
+    // Copy, then reverse the copy. this._elements.reverse() mutated the source.
+    const copy = this._elements.slice()
+    copy.reverse()
+    return this.cloneWith(copy)
   }
 
   /**
@@ -608,7 +796,7 @@ class List<T> {
   public Select<TOut>(
     selector: (element: T, index: number) => TOut
   ): List<TOut> {
-    return new List<TOut>(this._elements.map(selector))
+    return new List<TOut>(own(this._elements.map(selector)))
   }
 
   /**
@@ -617,34 +805,66 @@ class List<T> {
   public SelectMany<TOut extends List<any>>(
     selector: (element: T, index: number) => TOut
   ): TOut {
-    return this.Aggregate(
-      (ac, _, i) => (
-        ac.AddRange(
-          this.Select(selector)
-            .ElementAt(i)
-            .ToArray()
-        ),
-        ac
-      ),
-      new List<TOut>()
-    )
+    // Run the selector once per element into one buffer.
+    const result: any[] = []
+    const elements = this._elements
+    for (let i = 0; i < elements.length; i++) {
+      const nested = elementsOf(selector(elements[i]!, i))
+      for (let j = 0; j < nested.length; j++) {
+        result.push(nested[j])
+      }
+    }
+    return (new List<any>(own(result)) as unknown) as TOut
   }
 
   /**
    * Determines whether two sequences are equal by comparing the elements by using the default equality comparer for their type.
    */
   public SequenceEqual(list: List<T>): boolean {
-    return this.All(e => list.Contains(e))
+    // Compare length, then index i with ===.
+    const left = this._elements
+    const right = elementsOf(list)
+    if (left.length !== right.length) {
+      return false
+    }
+    for (let i = 0; i < left.length; i++) {
+      if (left[i] !== right[i]) {
+        return false
+      }
+    }
+    return true
   }
 
   /**
    * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
    */
   public Single(predicate?: PredicateType<T>): T {
-    if (this.Count(predicate) !== 1) {
+    const elements = this._elements
+    if (!predicate) {
+      if (elements.length !== 1) {
+        throw new Error('The collection does not contain exactly one element.')
+      }
+      return elements[0]!
+    }
+    let match: T | undefined
+    let found = false
+    // One pass that counts matches.
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i]!
+      if (predicate(element, i, elements)) {
+        if (found) {
+          throw new Error(
+            'The collection does not contain exactly one element.'
+          )
+        }
+        found = true
+        match = element
+      }
+    }
+    if (!found) {
       throw new Error('The collection does not contain exactly one element.')
     }
-    return this.First(predicate)
+    return match!
   }
 
   /**
@@ -665,16 +885,25 @@ class List<T> {
    * Omit the last specified number of elements in a sequence and then returns the remaining elements.
    */
   public SkipLast(amount: number): this {
-    return this.cloneWith(this._elements.slice(0, -Math.max(0, amount)))
+    // amount 0 returns every element; a negative amount throws.
+    if (amount < 0) {
+      throw countOutOfRange()
+    }
+    const end = this.Count() - amount
+    return this.cloneWith(this._elements.slice(0, end > 0 ? end : 0))
   }
 
   /**
    * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
    */
   public SkipWhile(predicate: PredicateType<T>): this {
-    return this.Skip(
-      this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
-    )
+    // Stop calling the predicate after the first failure, then slice once.
+    const elements = this._elements
+    let i = 0
+    while (i < elements.length && predicate(elements[i]!, i, elements)) {
+      i++
+    }
+    return this.cloneWith(elements.slice(i))
   }
 
   /**
@@ -684,9 +913,19 @@ class List<T> {
   public Sum(
     transform?: (value?: T, index?: number, list?: T[]) => number
   ): number {
-    return transform
-      ? this.Select(transform).Sum()
-      : this.Aggregate((ac, v) => (ac += +v), 0)
+    let sum = 0
+    const elements = this._elements
+    if (transform) {
+      // One pass over the transform.
+      for (let i = 0; i < elements.length; i++) {
+        sum += +transform(elements[i], i, elements)
+      }
+    } else {
+      for (let i = 0; i < elements.length; i++) {
+        sum += +(elements[i] as any)
+      }
+    }
+    return sum
   }
 
   /**
@@ -700,23 +939,35 @@ class List<T> {
    * Returns a specified number of contiguous elements from the end of a sequence.
    */
   public TakeLast(amount: number): this {
-    return this.cloneWith(this._elements.slice(-Math.max(0, amount)))
+    if (amount < 0) {
+      throw countOutOfRange()
+    }
+    if (amount === 0) {
+      return this.cloneWith([])
+    }
+    const start = this.Count() - amount
+    return this.cloneWith(this._elements.slice(start > 0 ? start : 0))
   }
 
   /**
    * Returns elements from a sequence as long as a specified condition is true.
    */
   public TakeWhile(predicate: PredicateType<T>): this {
-    return this.Take(
-      this.Aggregate(ac => (predicate(this.ElementAt(ac)) ? ++ac : ac), 0)
-    )
+    // Stop calling the predicate after the first failure, then slice once.
+    const elements = this._elements
+    let i = 0
+    while (i < elements.length && predicate(elements[i]!, i, elements)) {
+      i++
+    }
+    return this.cloneWith(elements.slice(0, i))
   }
 
   /**
    * Copies the elements of the List<T> to a new array.
    */
   public ToArray(): T[] {
-    return this._elements
+    // Shallow copy of the internal buffer.
+    return this._elements.slice()
   }
 
   /**
@@ -726,17 +977,17 @@ class List<T> {
     key: (key: T) => TKey,
     value?: (value: T) => TValue
   ): List<{ Key: TKey; Value: T | TValue }> {
-    return this.Aggregate((dicc, v, i) => {
-      // const dictionaryKey = String(this.Select(key).ElementAt(i))
-      // ;((dicc as unknown) as Record<string, T | TValue>)[dictionaryKey] = value
-      //   ? this.Select(value).ElementAt(i)
-      //   : v
-      dicc.Add({
-        Key: this.Select(key).ElementAt(i),
-        Value: !!value ? this.Select(value).ElementAt(i) : v
-      })
-      return dicc
-    }, new List<{ Key: TKey; Value: T | TValue }>())
+    // One pass into a List of {Key, Value} pairs.
+    const elements = this._elements
+    const result = new Array<{ Key: TKey; Value: T | TValue }>(elements.length)
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i]!
+      result[i] = {
+        Key: key(element),
+        Value: value ? value(element) : element
+      }
+    }
+    return new List<{ Key: TKey; Value: T | TValue }>(own(result))
   }
 
   /**
@@ -802,7 +1053,7 @@ class OrderedList<T> extends List<T> {
    * @override
    */
   protected cloneWith(elements: T[]): this {
-    return new OrderedList<T>(elements, this._comparer) as this
+    return new OrderedList<T>(own(elements), this._comparer) as this
   }
 
   /**
