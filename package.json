@@ -9,6 +9,7 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "bench": "tsx bench/list.bench.ts",
     "commit": "git-cz",
     "prebuild": "rimraf dist",
     "pretty": "prettier src/*.ts --write",
@@ -54,10 +55,12 @@
     "prettier": "^1.13.7",
     "rimraf": "^2.6.2",
     "tap-nyan": "^1.1.0",
+    "tinybench": "^6.2.2",
     "ts-node": "^10.9.1",
     "tslint": "^5.10.0",
     "tslint-config-prettier": "^1.13.0",
     "tslint-config-standard": "^7.1.0",
+    "tsx": "^4.23.15",
     "typedoc": "^0.26.5",
     "typescript": "^5.5.4"
   },

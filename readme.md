@@ -77,6 +77,8 @@ $ npm t
 
 Powered by [AVA](https://github.com/sindresorhus/ava).
 
+Benchmark results are in [benchmark.md](benchmark.md).
+
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
