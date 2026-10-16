@@ -421,6 +421,18 @@ test('GroupBy', t => {
   )
 })
 
+test('GroupBy_defaultMapper', t => {
+  const barley = new Pet({ Age: 8, Name: 'Barley' })
+  const boots = new Pet({ Age: 4, Name: 'Boots' })
+  const daisy = new Pet({ Age: 4, Name: 'Daisy' })
+  const pets = new List<Pet>([barley, boots, daisy])
+
+  t.deepEqual(pets.GroupBy(pet => pet.Age), {
+    '4': [boots, daisy],
+    '8': [barley]
+  })
+})
+
 test('GroupJoin', t => {
   const magnus = new Person({ Name: 'Hedlund, Magnus' })
   const terry = new Person({ Name: 'Adams, Terry' })
@@ -455,6 +467,29 @@ test('GroupJoin', t => {
     query.Select(obj => `${obj.OwnerName}: ${obj.Pets.ToArray()}`).ToArray(),
     expected
   )
+})
+
+test('GroupJoin_unmatchedOuter', t => {
+  const magnus = new Person({ Name: 'Hedlund, Magnus' })
+  const terry = new Person({ Name: 'Adams, Terry' })
+  const barley = new Pet({ Name: 'Barley', Owner: terry })
+
+  const people = new List<Person>([magnus, terry])
+  const pets = new List<Pet>([barley])
+
+  const query = people.GroupJoin(
+    pets,
+    person => person,
+    pet => pet.Owner,
+    (person, petCollection) => ({
+      OwnerName: person.Name,
+      PetCount: petCollection.Count()
+    })
+  )
+  t.deepEqual(query.ToArray(), [
+    { OwnerName: 'Hedlund, Magnus', PetCount: 0 },
+    { OwnerName: 'Adams, Terry', PetCount: 1 }
+  ])
 })
 
 test('IndexOf', t => {
@@ -537,6 +572,23 @@ test('Join', t => {
   )
 })
 
+test('Join_unmatchedOuter', t => {
+  const magnus = new Person({ Name: 'Hedlund, Magnus' })
+  const terry = new Person({ Name: 'Adams, Terry' })
+  const barley = new Pet({ Name: 'Barley', Owner: terry })
+
+  const people = new List<Person>([magnus, terry])
+  const pets = new List<Pet>([barley])
+
+  const query = people.Join(
+    pets,
+    person => person,
+    pet => pet.Owner,
+    (person, pet) => `${person.Name} - ${pet.Name}`
+  )
+  t.deepEqual(query.ToArray(), ['Adams, Terry - Barley'])
+})
+
 test('Last', t => {
   t.is(
     new List<string>(['hey', 'hola', 'que', 'tal']).Last(),
@@ -601,6 +653,17 @@ test('Max_undefinedComparer', t => {
   ])
 
   t.throws(() => people.Max(), {
+    message: /InvalidOperationException: No comparer available./
+  })
+})
+
+test('Max_selectorWithoutComparer', t => {
+  const people = new List<IPerson>([
+    { Age: 15, Name: 'Cathy' },
+    { Age: 25, Name: 'Alice' }
+  ])
+
+  t.throws(() => people.Max(person => ({ Name: person.Name })), {
     message: /InvalidOperationException: No comparer available./
   })
 })
@@ -1433,4 +1496,197 @@ test('OrderedList_TypePreservingOperatorsKeepOrdering', t => {
       .ToArray(),
     ['Daisy', 'Barley']
   )
+})
+
+test('SequenceEqual_orderLengthAndDuplicates', t => {
+  t.false(
+    new List<number>([1, 2]).SequenceEqual(
+      new List<number>([2, 1])
+    )
+  )
+  t.false(
+    new List<number>([1]).SequenceEqual(
+      new List<number>([1, 2])
+    )
+  )
+  t.false(
+    new List<number>([1, 1]).SequenceEqual(
+      new List<number>([1])
+    )
+  )
+  t.false(
+    new List<number>([1, 2, 2]).SequenceEqual(
+      new List<number>([1, 1, 2])
+    )
+  )
+  t.true(
+    new List<number>([1, 1, 2]).SequenceEqual(
+      new List<number>([1, 1, 2])
+    )
+  )
+})
+
+test('Reverse_doesNotMutateSource', t => {
+  const list = new List<number>([1, 2, 3])
+  const snapshot = list.ToArray()
+  const reversed = list.Reverse()
+  t.deepEqual(list.ToArray(), [1, 2, 3])
+  t.deepEqual(snapshot, [1, 2, 3])
+  t.deepEqual(reversed.ToArray(), [3, 2, 1])
+  const reversedAgain = list.Reverse()
+  t.deepEqual(snapshot, [1, 2, 3])
+  t.deepEqual(list.ToArray(), [1, 2, 3])
+  t.deepEqual(reversedAgain.ToArray(), [3, 2, 1])
+})
+
+test('SkipLast_TakeLast_zeroAndNegative', t => {
+  const list = new List<number>([1, 2, 3])
+  t.deepEqual(list.SkipLast(0).ToArray(), [1, 2, 3])
+  t.deepEqual(list.TakeLast(0).ToArray(), [])
+  t.deepEqual(list.SkipLast(5).ToArray(), [])
+  t.deepEqual(list.TakeLast(5).ToArray(), [1, 2, 3])
+  t.throws(() => list.SkipLast(-1), {
+    message: /ArgumentOutOfRangeException: count is less than 0./
+  })
+  t.throws(() => list.TakeLast(-1), {
+    message: /ArgumentOutOfRangeException: count is less than 0./
+  })
+  t.deepEqual(list.ToArray(), [1, 2, 3])
+})
+
+test('Average_includesZeros', t => {
+  t.is(
+    new List<number>([0, 10, 20]).Average(),
+    10
+  )
+  const ages = new List<IPerson>([
+    { Age: 0, Name: 'Ann' },
+    { Age: 10, Name: 'Bea' },
+    { Age: 20, Name: 'Cy' }
+  ])
+  t.is(
+    ages.Average(person => person?.Age ?? 0),
+    10
+  )
+  t.is(
+    ages.Sum(person => person?.Age ?? 0),
+    30
+  )
+  t.throws(() => new List<number>().Average(), {
+    message: /InvalidOperationException: The source sequence is empty./
+  })
+})
+
+test('Distinct_nan', t => {
+  const distinct = new List<number>([NaN, NaN]).Distinct()
+  t.is(distinct.Count(), 1)
+  t.true(Number.isNaN(distinct.First()))
+})
+
+test('Distinct_nullNestedAndDates', t => {
+  const rows = new List([
+    { Name: 'A', Owner: null as null | { Name: string } },
+    { Name: 'A', Owner: null as null | { Name: string } },
+    { Name: 'A', Owner: { Name: 'Ann' } },
+    { Name: 'B', Owner: undefined as { Name: string } | undefined }
+  ])
+  t.is(rows.Distinct().Count(), 3)
+  t.is(new List([new Date(0), new Date(0), new Date(1)]).Distinct().Count(), 2)
+})
+
+test('Distinct_mixedNestedTypes', t => {
+  const primitiveThenObject = new List<string | { Name: string }>([
+    'Ann',
+    { Name: 'Ann' }
+  ])
+  t.is(primitiveThenObject.Distinct().Count(), 2)
+
+  const objectThenPrimitive = new List([
+    { Name: 'A', Owner: { Name: 'Ann' } as { Name: string } | string },
+    { Name: 'A', Owner: 'Ann' as { Name: string } | string }
+  ])
+  t.is(objectThenPrimitive.Distinct().Count(), 2)
+})
+
+test('RemoveAt_outOfRange', t => {
+  const list = new List<string>(['a', 'b'])
+  t.throws(() => list.RemoveAt(-1), { message: /Index is out of range./ })
+  t.throws(() => list.RemoveAt(list.Count()), {
+    message: /Index is out of range./
+  })
+  t.deepEqual(list.ToArray(), ['a', 'b'])
+})
+
+test('ToArray_isCopy', t => {
+  const input = [1, 2, 3]
+  const list = new List<number>(input)
+  input.push(4)
+  t.deepEqual(list.ToArray(), [1, 2, 3])
+  const copy = list.ToArray()
+  copy.push(9)
+  t.deepEqual(list.ToArray(), [1, 2, 3])
+  list.Add(5)
+  t.deepEqual(copy, [1, 2, 3, 9])
+  t.deepEqual(list.ToArray(), [1, 2, 3, 5])
+})
+
+test('Count_First_Sum_regression', t => {
+  const numbers = new List<number>([1, 2, 3, 4, 5])
+  t.is(numbers.Count(), 5)
+  t.is(
+    numbers.Count(value => value > 3),
+    2
+  )
+  t.is(numbers.First(), 1)
+  t.is(
+    numbers.First(value => value > 2),
+    3
+  )
+  t.throws(() => numbers.First(value => value > 10), {
+    message: /InvalidOperationException: The source sequence is empty./
+  })
+  t.is(
+    numbers.Last(value => value > 2),
+    5
+  )
+  t.throws(() => numbers.Last(value => value > 10), {
+    message: /InvalidOperationException: The source sequence is empty./
+  })
+  t.is(numbers.Sum(), 15)
+  t.is(
+    new List<IPerson>([
+      { Age: 15, Name: 'Cathy' },
+      { Age: 25, Name: 'Alice' },
+      { Age: 50, Name: 'Bob' }
+    ]).Sum(person => person?.Age ?? 0),
+    90
+  )
+})
+
+test('SelectMany_selectorOncePerElement', t => {
+  let calls = 0
+  const flat = new List<number>([1, 2, 3]).SelectMany(value => {
+    calls++
+    return new List<number>([value, value])
+  })
+  t.is(calls, 3)
+  t.deepEqual(flat.ToArray(), [1, 1, 2, 2, 3, 3])
+})
+
+test('SkipWhile_TakeWhile_stopOnFail', t => {
+  let skipCalls = 0
+  const skipped = new List<number>([1, 2, 3, 4]).SkipWhile(value => {
+    skipCalls++
+    return value < 3
+  })
+  t.is(skipCalls, 3)
+  t.deepEqual(skipped.ToArray(), [3, 4])
+
+  let takeCalls = 0
+  const taken = new List<number>([1, 2, 3, 4]).TakeWhile(value => {
+    takeCalls++
+    return value < 3
+  })
+  t.is(takeCalls, 3)
+  t.deepEqual(taken.ToArray(), [1, 2])
 })
